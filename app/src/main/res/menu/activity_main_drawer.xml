@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+           android:title="Main"
+        android:id="@+id/drawer_group_general">
         <item
-            android:icon="@drawable/ic_menu_clock"
-            android:title="History" />
+            android:icon="@drawable/ic_nav_current"
+            android:title="Current"
+            android:id="@+id/nav_current"/>
+        <item
+            android:icon="@drawable/ic_nav_clock"
+            android:title="History"
+            android:id="@+id/nav_history"/>
     </group>
 
-    <item android:title="Customize">
-        <menu>
+    <group android:title="Customize"
+        android:checkableBehavior="none"
+        android:id="@+id/drawer_group_customize">
             <item
-                android:icon="@drawable/ic_menu_settings"
-                android:title="Settings" />
-        </menu>
-    </item>
+                android:icon="@drawable/ic_hav_settings"
+                android:title="Settings"
+                android:id="@+id/nav_settings"/>
+    </group>
 
 </menu>

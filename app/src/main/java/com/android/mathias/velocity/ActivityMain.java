@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -61,8 +60,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent settingsIntent = new Intent(this, ActivitySettings.class);
-            startActivity(settingsIntent);
+            startActivity(new Intent(this, ActivitySettings.class));
         }
 
         return super.onOptionsItemSelected(item);
@@ -74,12 +72,14 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.nav_current:
+                setContentView(R.layout.activity_current);
+                break;
             case R.id.nav_history:
                 setContentView(R.layout.activity_main);
                 break;
             case R.id.nav_settings:
-                Intent settingsIntent = new Intent(this, ActivitySettings.class);
-                startActivity(settingsIntent);
+                startActivity(new Intent(this, ActivitySettings.class));
                 break;
             default:
                 break;
