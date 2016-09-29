@@ -5,11 +5,11 @@
            android:title="Main"
         android:id="@+id/drawer_group_general">
         <item
-            android:icon="@drawable/ic_nav_current"
+            android:icon="@drawable/ic_current"
             android:title="Current"
             android:id="@+id/nav_current"/>
         <item
-            android:icon="@drawable/ic_nav_clock"
+            android:icon="@drawable/ic_clock"
             android:title="History"
             android:id="@+id/nav_history"/>
     </group>
@@ -18,7 +18,7 @@
         android:checkableBehavior="none"
         android:id="@+id/drawer_group_customize">
             <item
-                android:icon="@drawable/ic_hav_settings"
+                android:icon="@drawable/ic_settings"
                 android:title="Settings"
                 android:id="@+id/nav_settings"/>
     </group>

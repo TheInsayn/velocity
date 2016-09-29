@@ -16,21 +16,20 @@ public class ActivityMain extends Activity implements NavigationView.OnNavigatio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.layout_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.nav_drawer);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_current);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.nav_drawer);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -41,7 +40,7 @@ public class ActivityMain extends Activity implements NavigationView.OnNavigatio
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -62,10 +61,10 @@ public class ActivityMain extends Activity implements NavigationView.OnNavigatio
 
         switch (id) {
             case R.id.nav_current:
-                setContentView(R.layout.activity_current);
+                setContentView(R.layout.fragment_current);
                 break;
             case R.id.nav_history:
-                setContentView(R.layout.activity_main);
+                setContentView(R.layout.fragment_current);
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, ActivitySettings.class));
@@ -74,7 +73,7 @@ public class ActivityMain extends Activity implements NavigationView.OnNavigatio
                 break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.nav_drawer);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
