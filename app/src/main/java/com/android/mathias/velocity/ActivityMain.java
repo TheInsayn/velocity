@@ -26,9 +26,11 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Fragment fragmentCurrent = new FragmentCurrent();
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_content, fragmentCurrent).commit();
     }
 
     @Override
@@ -43,7 +45,6 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -68,10 +69,10 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 fragmentClass = FragmentCurrent.class;
                 break;
             case R.id.nav_history:
-                fragmentClass = FragmentCurrent.class;
+                fragmentClass = FragmentHistory.class;
                 break;
             case R.id.nav_routes:
-                fragmentClass = FragmentHistory.class;
+                fragmentClass = FragmentRoutes.class;
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, ActivitySettings.class));
