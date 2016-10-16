@@ -51,6 +51,9 @@ public class ActivitySettings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_settings);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         getFragmentManager().beginTransaction().replace(R.id.frame_preferences, new FragmentPreferences()).commit();
     }
 
@@ -66,7 +69,7 @@ public class ActivitySettings extends AppCompatActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), ActivitySettings.class));
+                getActivity().finish();
                 return true;
             }
             return super.onOptionsItemSelected(item);
