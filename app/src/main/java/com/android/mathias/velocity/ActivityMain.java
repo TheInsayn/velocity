@@ -36,7 +36,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.navigation);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.layout_main);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
