@@ -7,15 +7,15 @@
         <item
             android:id="@+id/nav_current"
             android:icon="@drawable/ic_current"
-            android:title="Current"/>
+            android:title="@string/nav_item_current"/>
         <item
             android:id="@+id/nav_history"
             android:icon="@drawable/ic_clock"
-            android:title="History"/>
+            android:title="@string/nav_item_history"/>
         <item
             android:id="@+id/nav_routes"
             android:icon="@drawable/ic_route"
-            android:title="Routes"/>
+            android:title="@string/nav_item_routes"/>
     </group>
 
     <group
@@ -24,11 +24,11 @@
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
-            android:title="Settings"/>
+            android:title="@string/nav_item_settings"/>
         <item
             android:id="@+id/nav_info"
             android:icon="@drawable/ic_info"
-            android:title="About"/>
+            android:title="@string/nav_item_info"/>
     </group>
 
 </menu>
