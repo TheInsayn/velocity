@@ -6,6 +6,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="menu_main_settings">Settings</string>
 
+    <!-- Nav Drawer -->
     <string name="nav_item_current">Current</string>
     <string name="nav_item_history">History</string>
     <string name="nav_item_routes">Routes</string>
