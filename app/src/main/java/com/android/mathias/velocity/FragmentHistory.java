@@ -16,6 +16,7 @@ import java.util.Date;
 public class FragmentHistory extends android.support.v4.app.Fragment {
 
     ListView walks;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View historyView = inflater.inflate(R.layout.fragment_history, container, false);
