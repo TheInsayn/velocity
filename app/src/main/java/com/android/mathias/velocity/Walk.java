@@ -7,6 +7,11 @@ public class Walk {
     private Date mDate;
     private Route mRoute;
 
+    public Walk () {
+        mDuration = 0;
+        mDate = new Date();
+        mRoute = new Route("NOT SET");
+    }
     public Walk (long duration, Date date, Route route) {
         mDuration = duration;
         mDate = date;
@@ -16,7 +21,7 @@ public class Walk {
     public long getDuration() {
         return mDuration;
     }
-    public void setmDuration(long duration) {
+    public void setDuration(long duration) {
         mDuration = duration;
     }
 

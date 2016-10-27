@@ -15,7 +15,9 @@
                                         android:layout_gravity="center"
                                         android:clickable="true"
                                         android:foreground="?android:attr/selectableItemBackground"
-                                        card_view:cardCornerRadius="@dimen/note_corner_radius">
+                                        card_view:cardCornerRadius="@dimen/note_corner_radius"
+                                        android:elevation="@dimen/walk_card_elevation"
+                                        card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:layout_width="match_parent"

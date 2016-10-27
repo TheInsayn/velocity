@@ -15,9 +15,7 @@ import java.util.List;
 
 public class FragmentHistory extends android.support.v4.app.Fragment {
 
-    private RecyclerView mRvHistory;
     private RecyclerAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     private final List<Walk> mListWalks = new ArrayList<>();
 
     @Override
@@ -26,18 +24,22 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
         initRecyclerView(historyView);
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         long time = sharedPref.getLong("TIME", 0);
+        List<Walk> walks = DBManager.getWalks(getContext(), null);
         addWalk(time, new Date(), new Route("To Work"));
+        for (Walk w : walks) {
+            addWalk(w.getDuration(), w.getDate(), w.getRoute());
+        }
         return historyView;
     }
 
     private void initRecyclerView(View historyView) {
-        mRvHistory = (RecyclerView) historyView.findViewById(R.id.list_walks);
+        RecyclerView rvHistory = (RecyclerView) historyView.findViewById(R.id.list_walks);
         mAdapter = new RecyclerAdapter(mListWalks);
-        mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        mRvHistory.setHasFixedSize(true);
-        mRvHistory.setLayoutManager(mLayoutManager);
-        mRvHistory.setItemAnimator(new DefaultItemAnimator());
-        mRvHistory.setAdapter(mAdapter);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        rvHistory.setHasFixedSize(true);
+        rvHistory.setLayoutManager(layoutManager);
+        rvHistory.setItemAnimator(new DefaultItemAnimator());
+        rvHistory.setAdapter(mAdapter);
     }
 
     private void addWalk(long duration, Date date, Route route) {

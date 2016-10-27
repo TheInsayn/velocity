@@ -9,18 +9,15 @@ import android.widget.TextView;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Mathias.
- */
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.WalkCardHolder> {
+class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.WalkCardHolder> {
     private List<Walk> mWalkList;
 
-    public class WalkCardHolder extends RecyclerView.ViewHolder {
+    class WalkCardHolder extends RecyclerView.ViewHolder {
         TextView mWalkDuration;
         TextView mWalkDate;
         TextView mWalkRoute;
 
-        public WalkCardHolder(View view) {
+        WalkCardHolder(View view) {
             super(view);
             mWalkDuration = (TextView) view.findViewById(R.id.txt_walk_duration);
             mWalkDate = (TextView) view.findViewById(R.id.txt_walk_date);
@@ -28,7 +25,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.WalkCa
         }
     }
 
-    public RecyclerAdapter(List<Walk> notes) {
+    RecyclerAdapter(List<Walk> notes) {
         mWalkList = notes;
     }
 

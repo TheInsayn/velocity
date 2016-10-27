@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
 
+import java.util.Date;
+
 
 public class FragmentCurrent extends android.support.v4.app.Fragment {
 
@@ -59,9 +61,11 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
             }
         } else {
             mStopwatch.stop();
-            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putLong("TIME", SystemClock.elapsedRealtime() - mStopwatch.getBase()).apply();
+            //SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            //SharedPreferences.Editor editor = sharedPref.edit();
+            //editor.putLong("TIME", SystemClock.elapsedRealtime() - mStopwatch.getBase()).apply();
+            Walk walk = new Walk(SystemClock.elapsedRealtime() - mStopwatch.getBase(), new Date(), new Route("DATABASE"));
+            DBManager.saveWalk(getContext(), walk);
             mLastStopTime = 0;
             fabPlayPause.setImageResource(android.R.drawable.ic_media_play);
             mStopwatchState = StopwatchState.STOPPED;
