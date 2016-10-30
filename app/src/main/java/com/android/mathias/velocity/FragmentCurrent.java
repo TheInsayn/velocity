@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
@@ -22,6 +24,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View currentView = inflater.inflate(R.layout.fragment_current, container, false);
+        setHasOptionsMenu(true);
         mStopwatch = (Chronometer) currentView.findViewById(R.id.stopwatch);
         FloatingActionButton fabPlayPause = (FloatingActionButton) currentView.findViewById(R.id.fab_current_play_pause);
         FloatingActionButton fabStop = (FloatingActionButton) currentView.findViewById(R.id.fab_current_stop);
@@ -61,10 +64,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
             }
         } else {
             mStopwatch.stop();
-            //SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-            //SharedPreferences.Editor editor = sharedPref.edit();
-            //editor.putLong("TIME", SystemClock.elapsedRealtime() - mStopwatch.getBase()).apply();
-            Walk walk = new Walk(SystemClock.elapsedRealtime() - mStopwatch.getBase(), new Date(), new Route("DATABASE"));
+            Walk walk = new Walk(SystemClock.elapsedRealtime() - mStopwatch.getBase(), new Date(), new Route("To work"));
             DBManager.saveWalk(getContext(), walk);
             mLastStopTime = 0;
             fabPlayPause.setImageResource(android.R.drawable.ic_media_play);
@@ -72,6 +72,12 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
             fabStop.setClickable(false);
             fabStop.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_current, menu);
     }
 
     enum StopwatchState {

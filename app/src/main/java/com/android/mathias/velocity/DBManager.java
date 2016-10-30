@@ -8,7 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,7 @@ final class DBManager {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(WalkEntry.COLUMN_NAME_DURATION, walk.getDuration());
-        values.put(WalkEntry.COLUMN_NAME_DATE, walk.getDate().toString());
+        values.put(WalkEntry.COLUMN_NAME_DATE, DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG).format(walk.getDate()));
         values.put(WalkEntry.COLUMN_NAME_ROUTE, walk.getRoute().getName());
         long newRowId = db.insert(WalkEntry.TABLE_NAME, null, values);
     }
@@ -56,7 +57,11 @@ final class DBManager {
             if (c.moveToFirst()) {
                 do {
                     long walkDuration = c.getLong(c.getColumnIndexOrThrow(WalkEntry.COLUMN_NAME_DURATION));
-                    Date walkDate = new Date();// TODO (c.getString(c.getColumnIndexOrThrow(WalkEntry.COLUMN_NAME_DATE)));
+                    Date walkDate = new Date();
+                    try {
+                        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG);
+                        walkDate = df.parse(c.getString(c.getColumnIndexOrThrow(WalkEntry.COLUMN_NAME_DATE)));
+                    } catch (ParseException e) { e.printStackTrace(); }
                     Route walkRoute = new Route(c.getString(c.getColumnIndexOrThrow(WalkEntry.COLUMN_NAME_ROUTE)));
                     walks.add(new Walk(walkDuration, walkDate, walkRoute));
                 } while (c.moveToNext());
@@ -79,6 +84,12 @@ final class DBManager {
         String selection = WalkEntry.COLUMN_NAME_ROUTE + " LIKE ?";
         String[] selectionArgs = { route.getName() };
         db.delete(WalkEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
+    public static void deleteAllData(Context context) {
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(WalkEntry.TABLE_NAME, null, null);
     }
 
     private static final class DBHelper extends SQLiteOpenHelper {
