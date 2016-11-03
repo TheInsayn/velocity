@@ -1,7 +1,11 @@
 package com.android.mathias.velocity;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,13 +13,54 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FragmentRoutes extends android.support.v4.app.Fragment {
 
+    private RecyclerAdapterRoutes mAdapter;
+    private final List<Route> mListRoutes = new ArrayList<>();
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View routesView = inflater.inflate(R.layout.fragment_routes, container, false);
+        initRecyclerView(routesView);
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_routes, container, false);
+        List<Route> routes = DBManager.getRoutes(getContext());
+        routes = addDemoCards(routes);
+        for (Route r : routes) {
+            addRouteCard(r);
+        }
+        return routesView;
+    }
+
+    private List<Route> addDemoCards(List<Route> routes) {
+        Location startPoint = new Location("start");
+        startPoint.setLongitude(20.5);
+        startPoint.setLatitude(10.5);
+        Location endPoint = new Location("end");
+        endPoint.setLongitude(20.7);
+        endPoint.setLatitude(10.6);
+        Route route = new Route("To work", startPoint, endPoint);
+        route.setStartName("Home");
+        route.setEndName("Work");
+        routes.add(route);
+        return routes;
+    }
+
+    private void initRecyclerView(View routesView) {
+        RecyclerView rvRoutes = (RecyclerView) routesView.findViewById(R.id.list_routes);
+        mAdapter = new RecyclerAdapterRoutes(mListRoutes);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        rvRoutes.setHasFixedSize(true);
+        rvRoutes.setLayoutManager(layoutManager);
+        rvRoutes.setItemAnimator(new DefaultItemAnimator());
+        rvRoutes.setAdapter(mAdapter);
+    }
+
+    private void addRouteCard(Route route) {
+        mListRoutes.add(route);
+        mAdapter.notifyItemInserted(mListRoutes.size()-1);
     }
 
     @Override

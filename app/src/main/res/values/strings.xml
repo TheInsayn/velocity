@@ -9,11 +9,15 @@
     <string name="menu_clear_history">Clear history</string>
     <string name="menu_delete_all_routes">Delete all routes</string>
 
-    <!-- Card texts -->
+    <!-- Card default texts -->
     <string name="default_walk_route">default_route</string>
     <string name="default_walk_duration">00:00</string>
     <string name="default_walk_date">01.01.2016</string>
     <string name="default_walk_weekday">Weekday</string>
+    <string name="default_route_name">route_name</string>
+    <string name="default_route_distance">100m</string>
+    <string name="default_route_start_point">Start point</string>
+    <string name="default_route_end_point">End point</string>
 
     <!-- Nav Drawer -->
     <string name="nav_item_current">Current</string>

@@ -5,7 +5,9 @@ import android.location.Location;
 public class Route {
     private String mName;
     private Location mStartPoint;
+    private String mStartName;
     private Location mEndPoint;
+    private String mEndName;
 
     public Route(String name) {
         mName = name;
@@ -40,5 +42,19 @@ public class Route {
 
     public float getApproximateDistance () {
         return mStartPoint.distanceTo(mEndPoint);
+    }
+
+    public String getStartName() {
+        return mStartName;
+    }
+    public void setStartName(String startName) {
+        mStartName = startName;
+    }
+
+    public String getEndName() {
+        return mEndName;
+    }
+    public void setEndName(String endName) {
+        mEndName = endName;
     }
 }

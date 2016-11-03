@@ -4,63 +4,63 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
-              android:paddingLeft="@dimen/walk_card_padding"
-              android:paddingRight="@dimen/walk_card_padding"
-              android:paddingTop="@dimen/walk_card_padding">
+              android:paddingLeft="@dimen/route_card_padding"
+              android:paddingRight="@dimen/route_card_padding"
+              android:paddingTop="@dimen/route_card_padding">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                        android:id="@+id/note_card_view"
+                                        android:id="@+id/route_card_view"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
                                         android:clickable="true"
                                         android:foreground="?android:attr/selectableItemBackground"
-                                        card_view:cardCornerRadius="@dimen/walk_card_corner_radius"
-                                        android:elevation="@dimen/walk_card_elevation"
+                                        card_view:cardCornerRadius="@dimen/route_card_corner_radius"
+                                        android:elevation="@dimen/route_card_elevation"
                                         card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorWalkCard"
-            android:padding="@dimen/walk_card_padding">
+            android:background="@color/colorRouteCard"
+            android:padding="@dimen/route_card_padding">
 
             <TextView
-                android:id="@+id/txt_walk_duration"
+                android:id="@+id/txt_route_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/default_walk_duration"
+                android:text="@string/default_route_name"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"/>
 
             <TextView
-                android:id="@+id/txt_walk_route"
+                android:id="@+id/txt_route_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/txt_walk_duration"
+                android:layout_below="@+id/txt_route_name"
                 android:layout_marginTop="@dimen/walk_card_margin_middle"
-                android:text="@string/default_walk_route"
+                android:text="@string/default_route_distance"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                 android:textStyle="italic"/>
 
             <TextView
-                android:id="@+id/txt_walk_date"
+                android:id="@+id/txt_route_start_point"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/txt_walk_route"
+                android:layout_alignTop="@id/txt_route_name"
                 android:layout_alignParentEnd="true"
                 android:layout_gravity="end"
-                android:text="@string/default_walk_date"
+                android:text="@string/default_route_start_point"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
 
             <TextView
-                android:id="@+id/txt_walk_weekday"
+                android:id="@+id/txt_route_end_point"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@id/txt_walk_duration"
+                android:layout_alignBottom="@id/txt_route_distance"
                 android:layout_alignParentEnd="true"
                 android:layout_gravity="end"
-                android:text="@string/default_walk_weekday"
+                android:text="@string/default_route_end_point"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
         </RelativeLayout>
 

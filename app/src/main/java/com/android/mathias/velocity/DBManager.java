@@ -92,6 +92,10 @@ final class DBManager {
         db.delete(WalkEntry.TABLE_NAME, null, null);
     }
 
+    public static List<Route> getRoutes (Context context) {
+        return new ArrayList<>();
+    }
+
     private static final class DBHelper extends SQLiteOpenHelper {
         // METADATA
         private static final int DATABASE_VERSION = 1;

@@ -8,14 +8,14 @@ public class Walk {
     private Date mDate;
 
     public Walk () {
+        mRoute = new Route("NOT SET");
         mDuration = 0;
         mDate = new Date();
-        mRoute = new Route("NOT SET");
     }
     public Walk (long duration, Date date, Route route) {
+        mRoute = route;
         mDuration = duration;
         mDate = date;
-        mRoute = route;
     }
 
     public Route getRoute() {

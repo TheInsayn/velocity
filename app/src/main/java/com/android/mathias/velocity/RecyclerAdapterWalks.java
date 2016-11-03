@@ -9,7 +9,7 @@ import android.widget.TextView;
 import java.util.Date;
 import java.util.List;
 
-class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.WalkCardHolder> {
+class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.WalkCardHolder> {
     private List<Walk> mWalkList;
 
     class WalkCardHolder extends RecyclerView.ViewHolder {
@@ -27,8 +27,8 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.WalkCardHolde
         }
     }
 
-    RecyclerAdapter(List<Walk> notes) {
-        mWalkList = notes;
+    RecyclerAdapterWalks(List<Walk> routes) {
+        mWalkList = routes;
     }
 
     @Override

@@ -17,7 +17,7 @@ import java.util.List;
 
 public class FragmentHistory extends android.support.v4.app.Fragment {
 
-    private RecyclerAdapter mAdapter;
+    private RecyclerAdapterWalks mAdapter;
     private final List<Walk> mListWalks = new ArrayList<>();
 
     @Override
@@ -27,14 +27,14 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
         setHasOptionsMenu(true);
         List<Walk> walks = DBManager.getWalks(getContext(), null);
         for (Walk w : walks) {
-            addWalkCard(w.getDuration(), w.getDate(), w.getRoute());
+            addWalkCard(w);
         }
         return historyView;
     }
 
     private void initRecyclerView(View historyView) {
         RecyclerView rvHistory = (RecyclerView) historyView.findViewById(R.id.list_walks);
-        mAdapter = new RecyclerAdapter(mListWalks);
+        mAdapter = new RecyclerAdapterWalks(mListWalks);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         rvHistory.setHasFixedSize(true);
         rvHistory.setLayoutManager(layoutManager);
@@ -42,9 +42,9 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
         rvHistory.setAdapter(mAdapter);
     }
 
-    private void addWalkCard(long duration, Date date, Route route) {
-        mListWalks.add(new Walk(duration, date, route));
-        mAdapter.notifyItemInserted(0);
+    private void addWalkCard(Walk walk) {
+        mListWalks.add(walk);
+        mAdapter.notifyItemInserted(mListWalks.size()-1);
     }
 
     @Override

@@ -9,4 +9,5 @@
     <color name="colorSecondaryText">#757575</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorWalkCard">#FFFFFF</color>
+    <color name="colorRouteCard">#FFFFFF</color>
 </resources>
