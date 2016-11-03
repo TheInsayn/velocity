@@ -22,9 +22,9 @@ final class DBManager {
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
+        values.put(WalkEntry.COLUMN_NAME_ROUTE, walk.getRoute().getName());
         values.put(WalkEntry.COLUMN_NAME_DURATION, walk.getDuration());
         values.put(WalkEntry.COLUMN_NAME_DATE, DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG).format(walk.getDate()));
-        values.put(WalkEntry.COLUMN_NAME_ROUTE, walk.getRoute().getName());
         long newRowId = db.insert(WalkEntry.TABLE_NAME, null, values);
     }
 
@@ -33,9 +33,9 @@ final class DBManager {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] projection = {
             WalkEntry._ID,
+            WalkEntry.COLUMN_NAME_ROUTE,
             WalkEntry.COLUMN_NAME_DURATION,
-            WalkEntry.COLUMN_NAME_DATE,
-            WalkEntry.COLUMN_NAME_ROUTE
+            WalkEntry.COLUMN_NAME_DATE
         };
         String selection = WalkEntry.COLUMN_NAME_ROUTE + " LIKE ?";
         String[] selectionArgs = { route != null ? route.getName() : "%" };
@@ -56,13 +56,13 @@ final class DBManager {
         if (c != null) {
             if (c.moveToFirst()) {
                 do {
+                    Route walkRoute = new Route(c.getString(c.getColumnIndexOrThrow(WalkEntry.COLUMN_NAME_ROUTE)));
                     long walkDuration = c.getLong(c.getColumnIndexOrThrow(WalkEntry.COLUMN_NAME_DURATION));
                     Date walkDate = new Date();
                     try {
                         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG);
                         walkDate = df.parse(c.getString(c.getColumnIndexOrThrow(WalkEntry.COLUMN_NAME_DATE)));
                     } catch (ParseException e) { e.printStackTrace(); }
-                    Route walkRoute = new Route(c.getString(c.getColumnIndexOrThrow(WalkEntry.COLUMN_NAME_ROUTE)));
                     walks.add(new Walk(walkDuration, walkDate, walkRoute));
                 } while (c.moveToNext());
             }
@@ -103,10 +103,10 @@ final class DBManager {
         private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + WalkEntry.TABLE_NAME;
         private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + WalkEntry.TABLE_NAME + " (" +
-                WalkEntry._ID + " INTEGER PRIMARY KEY," +
-                WalkEntry.COLUMN_NAME_DURATION + INTEGER_TYPE + COMMA_SEP +
-                WalkEntry.COLUMN_NAME_DATE + TEXT_TYPE + COMMA_SEP +
-                WalkEntry.COLUMN_NAME_ROUTE + TEXT_TYPE + " )";
+                    WalkEntry._ID + " INTEGER PRIMARY KEY," +
+                    WalkEntry.COLUMN_NAME_ROUTE + TEXT_TYPE + COMMA_SEP +
+                    WalkEntry.COLUMN_NAME_DURATION + INTEGER_TYPE +COMMA_SEP +
+                    WalkEntry.COLUMN_NAME_DATE + TEXT_TYPE + " )";
 
         DBHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -131,9 +131,9 @@ final class DBManager {
 
     private static class WalkEntry implements BaseColumns {
         private static final String TABLE_NAME = "walks";
+        private static final String COLUMN_NAME_ROUTE = "route";
         private static final String COLUMN_NAME_DURATION = "duration";
         private static final String COLUMN_NAME_DATE = "date";
-        private static final String COLUMN_NAME_ROUTE = "route";
     }
 }
 
