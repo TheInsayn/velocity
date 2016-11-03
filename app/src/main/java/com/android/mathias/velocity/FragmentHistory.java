@@ -1,8 +1,6 @@
 package com.android.mathias.velocity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,7 +27,7 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
         setHasOptionsMenu(true);
         List<Walk> walks = DBManager.getWalks(getContext(), null);
         for (Walk w : walks) {
-            addWalk(w.getDuration(), w.getDate(), w.getRoute());
+            addWalkCard(w.getDuration(), w.getDate(), w.getRoute());
         }
         return historyView;
     }
@@ -44,8 +42,8 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
         rvHistory.setAdapter(mAdapter);
     }
 
-    private void addWalk(long duration, Date date, Route route) {
-        mListWalks.add(0, (new Walk(duration, date, route)));
+    private void addWalkCard(long duration, Date date, Route route) {
+        mListWalks.add(new Walk(duration, date, route));
         mAdapter.notifyItemInserted(0);
     }
 
@@ -63,6 +61,7 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
                 break;
             case R.id.action_delete_walks:
                 DBManager.deleteAllData(getActivity());
+                mListWalks.clear();
                 mAdapter.notifyDataSetChanged();
                 break;
             default:

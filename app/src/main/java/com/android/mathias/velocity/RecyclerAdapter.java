@@ -13,15 +13,17 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.WalkCardHolde
     private List<Walk> mWalkList;
 
     class WalkCardHolder extends RecyclerView.ViewHolder {
+        TextView mWalkRoute;
         TextView mWalkDuration;
         TextView mWalkDate;
-        TextView mWalkRoute;
+        TextView mWalkWeekday;
 
         WalkCardHolder(View view) {
             super(view);
+            mWalkRoute = (TextView) view.findViewById(R.id.txt_walk_route);
             mWalkDuration = (TextView) view.findViewById(R.id.txt_walk_duration);
             mWalkDate = (TextView) view.findViewById(R.id.txt_walk_date);
-            mWalkRoute = (TextView) view.findViewById(R.id.txt_walk_route);
+            mWalkWeekday = (TextView) view.findViewById(R.id.txt_walk_weekday);
         }
     }
 
@@ -38,9 +40,10 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.WalkCardHolde
     @Override
     public void onBindViewHolder(WalkCardHolder holder, int position) {
         Walk walk = mWalkList.get(position);
+        holder.mWalkRoute.setText(walk.getRoute().getName());
         holder.mWalkDuration.setText(android.text.format.DateFormat.format("mm:ss", new Date(walk.getDuration())));
         holder.mWalkDate.setText(android.text.format.DateFormat.format("dd.MM.yyyy", walk.getDate()));
-        holder.mWalkRoute.setText(walk.getRoute().getName());
+        holder.mWalkWeekday.setText(android.text.format.DateFormat.format("EEEE", walk.getDate()));
     }
 
     @Override

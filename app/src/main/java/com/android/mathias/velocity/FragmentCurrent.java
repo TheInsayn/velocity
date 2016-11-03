@@ -1,7 +1,5 @@
 package com.android.mathias.velocity;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
@@ -28,50 +26,50 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mStopwatch = (Chronometer) currentView.findViewById(R.id.stopwatch);
         FloatingActionButton fabPlayPause = (FloatingActionButton) currentView.findViewById(R.id.fab_current_play_pause);
         FloatingActionButton fabStop = (FloatingActionButton) currentView.findViewById(R.id.fab_current_stop);
-        fabPlayPause.setOnClickListener(view1 -> handleFabEvent(currentView, fabPlayPause));
-        fabStop.setOnClickListener(view1 -> handleFabEvent(currentView, fabStop));
+        fabPlayPause.setOnClickListener(view1 -> handlePlayPauseFabEvent(currentView, fabPlayPause));
+        fabStop.setOnClickListener(view1 -> handleStopFabEvent(currentView, fabStop));
         mStopwatchState = StopwatchState.STOPPED;
         return currentView;
     }
 
-    private void handleFabEvent(View currentView, FloatingActionButton fab) {
-        FloatingActionButton fabPlayPause = (FloatingActionButton) currentView.findViewById(R.id.fab_current_play_pause);
+    private void handlePlayPauseFabEvent(View currentView, FloatingActionButton fab) {
         FloatingActionButton fabStop = (FloatingActionButton) currentView.findViewById(R.id.fab_current_stop);
-        if (fab.getId() == R.id.fab_current_play_pause) {
-            switch (mStopwatchState) {
-                case STOPPED:
-                    mStopwatch.setBase(SystemClock.elapsedRealtime());
-                    mStopwatch.start();
-                    fab.setImageResource(android.R.drawable.ic_media_pause);
-                    mStopwatchState = StopwatchState.RUNNING;
-                    fabStop.setClickable(true);
-                    fabStop.setVisibility(View.VISIBLE);
-                    break;
-                case RUNNING:
-                    mStopwatch.stop();
-                    mLastStopTime = SystemClock.elapsedRealtime();
-                    fab.setImageResource(android.R.drawable.ic_media_play);
-                    mStopwatchState = StopwatchState.PAUSED;
-                    break;
-                case PAUSED:
-                    mStopwatch.setBase(mStopwatch.getBase() + (SystemClock.elapsedRealtime() - mLastStopTime));
-                    mStopwatch.start();
-                    fab.setImageResource(android.R.drawable.ic_media_pause);
-                    mStopwatchState = StopwatchState.RUNNING;
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            mStopwatch.stop();
-            Walk walk = new Walk(SystemClock.elapsedRealtime() - mStopwatch.getBase(), new Date(), new Route("To work"));
-            DBManager.saveWalk(getContext(), walk);
-            mLastStopTime = 0;
-            fabPlayPause.setImageResource(android.R.drawable.ic_media_play);
-            mStopwatchState = StopwatchState.STOPPED;
-            fabStop.setClickable(false);
-            fabStop.setVisibility(View.INVISIBLE);
+        switch (mStopwatchState) {
+            case STOPPED:
+                mStopwatch.setBase(SystemClock.elapsedRealtime());
+                mStopwatch.start();
+                fab.setImageResource(android.R.drawable.ic_media_pause);
+                mStopwatchState = StopwatchState.RUNNING;
+                fabStop.setClickable(true);
+                fabStop.setVisibility(View.VISIBLE);
+                break;
+            case RUNNING:
+                mStopwatch.stop();
+                mLastStopTime = SystemClock.elapsedRealtime();
+                fab.setImageResource(android.R.drawable.ic_media_play);
+                mStopwatchState = StopwatchState.PAUSED;
+                break;
+            case PAUSED:
+                mStopwatch.setBase(mStopwatch.getBase() + (SystemClock.elapsedRealtime() - mLastStopTime));
+                mStopwatch.start();
+                fab.setImageResource(android.R.drawable.ic_media_pause);
+                mStopwatchState = StopwatchState.RUNNING;
+                break;
+            default:
+                break;
         }
+    }
+
+    private void handleStopFabEvent(View currentView, FloatingActionButton fab) {
+        FloatingActionButton fabPlayPause = (FloatingActionButton) currentView.findViewById(R.id.fab_current_play_pause);
+        mStopwatch.stop();
+        Walk walk = new Walk(SystemClock.elapsedRealtime() - mStopwatch.getBase(), new Date(), new Route("To work"));
+        DBManager.saveWalk(getContext(), walk);
+        mLastStopTime = 0;
+        fabPlayPause.setImageResource(android.R.drawable.ic_media_play);
+        mStopwatchState = StopwatchState.STOPPED;
+        fab.setClickable(false);
+        fab.setVisibility(View.INVISIBLE);
     }
 
     @Override
