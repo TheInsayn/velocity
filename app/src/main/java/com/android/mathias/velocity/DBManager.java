@@ -41,8 +41,6 @@ final class DBManager {
         String selection = WalkEntry.COLUMN_NAME_ROUTE + " LIKE ?";
         String[] selectionArgs = { route != null ? route.getName() : "%" };
         String sortOrder = WalkEntry.COLUMN_NAME_DATE + " DESC";
-
-
         Cursor c = db.query(
             WalkEntry.TABLE_NAME,    // The table to query
             projection,              // The columns to return
@@ -52,7 +50,6 @@ final class DBManager {
             null,                    // don't filter by row groups
             sortOrder                // The sort order
         );
-
         List<Walk> walks = new ArrayList<>();
         if (c != null) {
             if (c.moveToFirst()) {
@@ -123,8 +120,6 @@ final class DBManager {
         String selection = RouteEntry.COLUMN_NAME_NAME + " LIKE ?";
         String[] selectionArgs = { name != null ? name : "%" };
         String sortOrder = RouteEntry.COLUMN_NAME_NAME + " DESC";
-
-
         Cursor c = db.query(
             RouteEntry.TABLE_NAME,   // The table to query
             projection,              // The columns to return
@@ -134,7 +129,6 @@ final class DBManager {
             null,                    // don't filter by row groups
             sortOrder                // The sort order
         );
-
         List<Route> routes = new ArrayList<>();
         if (c != null) {
             if (c.moveToFirst()) {
@@ -157,8 +151,13 @@ final class DBManager {
             }
         }
         c.close();
-
         return routes;
+    }
+
+    public static void deleteAllRoutes(Context context) {
+        DBHelperRoutes dbHelper = new DBHelperRoutes(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(RouteEntry.TABLE_NAME, null, null);
     }
 
     private static final class DBHelperWalks extends SQLiteOpenHelper {

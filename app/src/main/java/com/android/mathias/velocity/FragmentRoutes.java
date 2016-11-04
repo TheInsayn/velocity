@@ -75,7 +75,9 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
                 startActivity(new Intent(getActivity(), ActivitySettings.class));
                 break;
             case R.id.action_delete_routes:
-                // TODO DBManager.deleteRoutes(getActivity());
+                DBManager.deleteAllRoutes(getActivity());
+                mListRoutes.clear();
+                mAdapter.notifyDataSetChanged();
                 break;
             default:
                 break;
