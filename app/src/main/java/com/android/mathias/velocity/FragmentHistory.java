@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class FragmentHistory extends android.support.v4.app.Fragment {
@@ -60,7 +59,7 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
                 startActivity(new Intent(getActivity(), ActivitySettings.class));
                 break;
             case R.id.action_delete_walks:
-                DBManager.deleteAllData(getActivity());
+                DBManager.deleteAllWalks(getActivity());
                 mListWalks.clear();
                 mAdapter.notifyDataSetChanged();
                 break;

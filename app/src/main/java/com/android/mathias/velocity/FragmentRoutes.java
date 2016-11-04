@@ -26,15 +26,15 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
         View routesView = inflater.inflate(R.layout.fragment_routes, container, false);
         initRecyclerView(routesView);
         setHasOptionsMenu(true);
-        List<Route> routes = DBManager.getRoutes(getContext());
-        routes = addDemoCards(routes);
+        addDemoRoutes();
+        List<Route> routes = DBManager.getRoutes(getContext(), null);
         for (Route r : routes) {
             addRouteCard(r);
         }
         return routesView;
     }
 
-    private List<Route> addDemoCards(List<Route> routes) {
+    private void addDemoRoutes() {
         Location startPoint = new Location("start");
         startPoint.setLongitude(20.5);
         startPoint.setLatitude(10.5);
@@ -44,8 +44,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
         Route route = new Route("To work", startPoint, endPoint);
         route.setStartName("Home");
         route.setEndName("Work");
-        routes.add(route);
-        return routes;
+        DBManager.saveRoute(getContext(), route);
     }
 
     private void initRecyclerView(View routesView) {

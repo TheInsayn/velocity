@@ -5,8 +5,8 @@ import android.location.Location;
 public class Route {
     private String mName;
     private Location mStartPoint;
-    private String mStartName;
     private Location mEndPoint;
+    private String mStartName;
     private String mEndName;
 
     public Route(String name) {
@@ -17,6 +17,14 @@ public class Route {
         mName = name;
         mStartPoint = startPoint;
         mEndPoint = endPoint;
+    }
+
+    public Route(String name, Location startPoint, Location endPoint, String startName, String endName) {
+        mName = name;
+        mStartPoint = startPoint;
+        mEndPoint = endPoint;
+        mStartName = startName;
+        mEndName = endName;
     }
 
     public String getName() {
