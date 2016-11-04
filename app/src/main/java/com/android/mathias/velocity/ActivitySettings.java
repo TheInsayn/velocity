@@ -1,7 +1,6 @@
 package com.android.mathias.velocity;
 
 
-import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -49,7 +48,7 @@ public class ActivitySettings extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_settings);
+        setContentView(R.layout.activity_settings);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

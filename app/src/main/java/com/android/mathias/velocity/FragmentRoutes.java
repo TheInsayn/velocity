@@ -3,6 +3,7 @@ package com.android.mathias.velocity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,12 +27,18 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
         View routesView = inflater.inflate(R.layout.fragment_routes, container, false);
         initRecyclerView(routesView);
         setHasOptionsMenu(true);
+        FloatingActionButton fabCreate = (FloatingActionButton) routesView.findViewById(R.id.fab_create_route);
+        fabCreate.setOnClickListener(view -> handleFabEvent(fabCreate));
         addDemoRoutes();
         List<Route> routes = DBManager.getRoutes(getContext(), null);
         for (Route r : routes) {
             addRouteCard(r);
         }
         return routesView;
+    }
+
+    private void handleFabEvent(FloatingActionButton fab) {
+        startActivity(new Intent(getActivity(), ActivityCreateRoute.class));
     }
 
     private void addDemoRoutes() {

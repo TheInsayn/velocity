@@ -63,4 +63,5 @@
     <string name="pref_title_notifications_led">LED</string>
     <string name="pref_title_notifications_vibrate">Vibrate</string>
     <string name="pref_sound_none">None</string>
+    <string name="title_activity_create_route">Create a route</string>
 </resources>

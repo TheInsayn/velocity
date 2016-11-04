@@ -2,6 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 tools:context="com.android.mathias.velocity.FragmentRoutes">
 
     <android.support.v7.widget.RecyclerView
@@ -13,5 +14,16 @@
         android:longClickable="true"
         android:scrollbars="vertical"
         android:textFilterEnabled="false"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_plus"
+        android:layout_margin="@dimen/fab_margin"
+        android:id="@+id/fab_create_route"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>
