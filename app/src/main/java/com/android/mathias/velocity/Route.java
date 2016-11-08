@@ -2,10 +2,12 @@ package com.android.mathias.velocity;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Route {
     private String mName;
-    private Location mStartPoint;
-    private Location mEndPoint;
+    private LatLng mStartLoc;
+    private LatLng mEndLoc;
     private String mStartName;
     private String mEndName;
 
@@ -13,16 +15,16 @@ public class Route {
         mName = name;
     }
 
-    public Route(String name, Location startPoint, Location endPoint) {
+    public Route(String name, LatLng startLoc, LatLng endLoc) {
         mName = name;
-        mStartPoint = startPoint;
-        mEndPoint = endPoint;
+        mStartLoc = startLoc;
+        mEndLoc = endLoc;
     }
 
-    public Route(String name, Location startPoint, Location endPoint, String startName, String endName) {
+    public Route(String name, LatLng startLoc, LatLng endLoc, String startName, String endName) {
         mName = name;
-        mStartPoint = startPoint;
-        mEndPoint = endPoint;
+        mStartLoc = startLoc;
+        mEndLoc = endLoc;
         mStartName = startName;
         mEndName = endName;
     }
@@ -34,22 +36,18 @@ public class Route {
         mName = name;
     }
 
-    public Location getStartPoint() {
-        return mStartPoint;
+    public LatLng getStartLoc() {
+        return mStartLoc;
     }
-    public void setStartPoint(Location startPoint) {
-        mStartPoint = startPoint;
-    }
-
-    public Location getEndPoint() {
-        return mEndPoint;
-    }
-    public void setEndPoint(Location endPoint) {
-        mEndPoint = endPoint;
+    public void setStartLoc(LatLng startLoc) {
+        mStartLoc = startLoc;
     }
 
-    public float getApproximateDistance () {
-        return mStartPoint.distanceTo(mEndPoint);
+    public LatLng getEndLoc() {
+        return mEndLoc;
+    }
+    public void setEndLoc(LatLng endLoc) {
+        mEndLoc = endLoc;
     }
 
     public String getStartName() {
@@ -64,5 +62,15 @@ public class Route {
     }
     public void setEndName(String endName) {
         mEndName = endName;
+    }
+
+    public float getApproximateDistance () {
+        Location startLoc = new Location("start");
+        startLoc.setLatitude(mStartLoc.latitude);
+        startLoc.setLongitude(mStartLoc.longitude);
+        Location endLoc = new Location("end");
+        endLoc.setLatitude(mEndLoc.latitude);
+        endLoc.setLongitude(mEndLoc.longitude);
+        return startLoc.distanceTo(endLoc);
     }
 }

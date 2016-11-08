@@ -1,7 +1,6 @@
 package com.android.mathias.velocity;
 
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,6 +12,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,15 +43,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
     }
 
     private void addDemoRoutes() {
-        Location startPoint = new Location("start");
-        startPoint.setLongitude(20.5);
-        startPoint.setLatitude(10.5);
-        Location endPoint = new Location("end");
-        endPoint.setLongitude(20.7);
-        endPoint.setLatitude(10.6);
-        Route route = new Route("To work", startPoint, endPoint);
-        route.setStartName("Home");
-        route.setEndName("Work");
+        Route route = new Route("To work", new LatLng(10.5,20.5), new LatLng(10.6,20.7), "Home", "Work");
         DBManager.saveRoute(getContext(), route);
     }
 

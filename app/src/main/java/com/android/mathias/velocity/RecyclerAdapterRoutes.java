@@ -40,8 +40,8 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
     public void onBindViewHolder(RouteCardHolder holder, int position) {
         Route route = mRouteList.get(position);
         holder.mRouteName.setText(route.getName());
-        holder.mRouteStartPoint.setText(route.getStartName());
-        holder.mRouteEndPoint.setText(route.getEndName());
+        holder.mRouteStartPoint.setText(String.format("From: %s", route.getStartName()));
+        holder.mRouteEndPoint.setText(String.format("To: %s", route.getEndName()));
         holder.mRouteDistance.setText(String.format("Distance: %.1fm", route.getApproximateDistance()));
     }
 
