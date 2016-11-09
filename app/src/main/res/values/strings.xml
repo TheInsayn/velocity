@@ -33,6 +33,16 @@
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">Mathias Wöß</string>
 
+    <!-- Default Route -->
+    <string name="pref_header_default_route">Default route</string>
+    <string name="pref_title_default_route">Default route</string>
+    <string-array name="pref_default_route_titles">
+        <item>None</item>
+    </string-array>
+    <string-array name="pref_default_route_values">
+        <item>""</item>
+    </string-array>
+
     <!-- Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
     <string name="pref_title_sync_frequency">Sync frequency</string>
@@ -63,5 +73,7 @@
     <string name="pref_title_notifications_led">LED</string>
     <string name="pref_title_notifications_vibrate">Vibrate</string>
     <string name="pref_sound_none">None</string>
+
+    <!-- Titles -->
     <string name="title_activity_create_route">Create a route</string>
 </resources>

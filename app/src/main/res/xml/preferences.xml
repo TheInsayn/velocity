@@ -11,6 +11,10 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/pref_title_display_name"/>
+        <ListPreference
+            android:defaultValue="None"
+            android:key="default_route"
+            android:title="@string/pref_title_default_route"/>
     </PreferenceCategory>
 
     <PreferenceCategory

@@ -62,6 +62,13 @@ public class ActivitySettings extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
             setHasOptionsMenu(true);
+
+            final ListPreference routePref = (ListPreference) findPreference("default_route");
+            CharSequence[] entries = { "Route1", "Route2", "Route3" };
+            CharSequence[] entryValues = { "Route1", "Route2", "Route3" };
+            routePref.setEntries(entries);
+            routePref.setDefaultValue("Route1");
+            routePref.setEntryValues(entryValues);
         }
 
         @Override
