@@ -43,8 +43,10 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
     }
 
     private void addDemoRoutes() {
-        Route route = new Route("To work", new LatLng(10.5,20.5), new LatLng(10.6,20.7), "Home", "Work");
-        DBManager.saveRoute(getContext(), route);
+        Route route1 = new Route("To work", new LatLng(10.55,20.55), new LatLng(10.56,20.57), "Home", "Work");
+        Route route2 = new Route("Back home", new LatLng(10.56,20.57), new LatLng(10.55,20.55), "Work", "Home");
+        DBManager.saveRoute(getContext(), route1);
+        DBManager.saveRoute(getContext(), route2);
     }
 
     private void initRecyclerView(View routesView) {
