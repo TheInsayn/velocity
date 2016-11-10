@@ -10,8 +10,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -38,7 +41,6 @@ public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyC
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
-    private Location mLastKnownLocation;
     private LatLng mStartLoc;
     private LatLng mEndLoc;
 
@@ -49,23 +51,7 @@ public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyC
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         Button btnSave = (Button) findViewById(R.id.btn_save_route);
-        btnSave.setOnClickListener(view -> {
-            if (mStartLoc != null && mEndLoc != null) {
-                Intent returnIntent = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putDoubleArray(START_LOC, new double[]{mStartLoc.latitude, mStartLoc.longitude});
-                bundle.putDoubleArray(END_LOC, new double[]{mEndLoc.latitude, mEndLoc.longitude});
-                bundle.putString(START_LOC_NAME, "Start");
-                bundle.putString(END_LOC_NAME, "End");
-                bundle.putString(ROUTE_NAME, "New Route");
-                returnIntent.putExtra(String.valueOf(RESULT_BUNDLE), bundle);
-                setResult(RESULT_OK, returnIntent);
-                finish();
-            } else {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-        });
+        btnSave.setOnClickListener(view -> promptForNameAndReturn());
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -73,6 +59,33 @@ public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyC
                     .addApi(LocationServices.API)
                     .addApi(AppIndex.API).build();
         }
+    }
+
+    private void promptForNameAndReturn() {
+        final String[] name = new String[1];
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        new AlertDialog.Builder(this)
+                .setTitle("Route name")
+                .setView(input)
+                .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
+                    name[0] = input.getText().toString();
+                    if (mStartLoc != null && mEndLoc != null) {
+                        Intent returnIntent = new Intent();
+                        Bundle bundle = new Bundle();
+                        bundle.putDoubleArray(START_LOC, new double[]{mStartLoc.latitude, mStartLoc.longitude});
+                        bundle.putDoubleArray(END_LOC, new double[]{mEndLoc.latitude, mEndLoc.longitude});
+                        bundle.putString(START_LOC_NAME, "Start");
+                        bundle.putString(END_LOC_NAME, "End");
+                        bundle.putString(ROUTE_NAME, name[0]);
+                        returnIntent.putExtra(String.valueOf(RESULT_BUNDLE), bundle);
+                        setResult(RESULT_OK, returnIntent);
+                        finish();
+                    } else {
+                        setResult(RESULT_CANCELED);
+                        finish();
+                    }
+                }).show();
     }
 
     @Override
@@ -86,35 +99,7 @@ public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyC
         updateLocation();
     }
 
-    private void updateLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_LOCATION);
-        } else {
-            mLastKnownLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            if (mLastKnownLocation != null) {
-                LatLng lastKnown = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-                mMap.setMyLocationEnabled(true);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastKnown,14f));
-
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_ACCESS_LOCATION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    updateLocation();
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-            }
-        }
-    }
-
-    private void handleMapClick(GoogleMap gMap, LatLng latLng){
+    private void handleMapClick(GoogleMap gMap, LatLng latLng) {
         if (mStartLoc == null) {
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
@@ -139,16 +124,32 @@ public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyC
 
     }
 
-    protected void onStart() {
-        mGoogleApiClient.connect();
-        super.onStart();
-        AppIndex.AppIndexApi.start(mGoogleApiClient, getIndexApiAction());
+    private void updateLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_LOCATION);
+        } else {
+            Location mLastKnownLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (mLastKnownLocation != null) {
+                LatLng lastKnown = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                mMap.setMyLocationEnabled(true);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastKnown, 14f));
+
+            }
+        }
     }
 
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-        AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_LOCATION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    updateLocation();
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+            }
+        }
     }
 
     @Override
@@ -162,5 +163,17 @@ public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyC
     public Action getIndexApiAction() {
         Thing object = new Thing.Builder().setName("RoutePicker").setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]")).build();
         return new Action.Builder(Action.TYPE_VIEW).setObject(object).setActionStatus(Action.STATUS_TYPE_COMPLETED).build();
+    }
+
+    protected void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+        AppIndex.AppIndexApi.start(mGoogleApiClient, getIndexApiAction());
+    }
+
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+        AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
     }
 }
