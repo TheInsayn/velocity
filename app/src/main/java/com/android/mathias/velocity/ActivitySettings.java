@@ -15,6 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ActivitySettings extends AppCompatActivity {
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = (preference, value) -> {
         String stringValue = value.toString();
@@ -64,11 +67,13 @@ public class ActivitySettings extends AppCompatActivity {
             setHasOptionsMenu(true);
 
             final ListPreference routePref = (ListPreference) findPreference("default_route");
-            CharSequence[] entries = { "Route1", "Route2", "Route3" };
-            CharSequence[] entryValues = { "Route1", "Route2", "Route3" };
-            routePref.setEntries(entries);
-            routePref.setDefaultValue("Route1");
-            routePref.setEntryValues(entryValues);
+            List<Route> routes = DBManager.getRoutes(getContext(), null);
+            List<String> routeNames = new ArrayList<>();
+            for (Route r : routes) { routeNames.add(r.getName()); }
+            routeNames.add("None");
+            routePref.setEntries(routeNames.toArray(new CharSequence[routeNames.size()]));
+            routePref.setEntryValues(routeNames.toArray(new CharSequence[routeNames.size()]));
+            routePref.setDefaultValue("None");
         }
 
         @Override
