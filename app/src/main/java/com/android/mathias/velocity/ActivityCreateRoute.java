@@ -1,6 +1,7 @@
 package com.android.mathias.velocity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -9,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -25,10 +28,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
+    protected static final String ROUTE_NAME = "ROUTE_NAME";
+    protected static final String START_LOC = "START_LOC";
+    protected static final String END_LOC = "END_LOC";
+    protected static final String START_LOC_NAME = "START_LOC_NAME";
+    protected static final String END_LOC_NAME = "END_LOC_NAME";
+    protected static final String RESULT_BUNDLE = "RESULT_BUNDLE";
+
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastKnownLocation;
-    private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 1234;
+    private LatLng mStartLoc;
+    private LatLng mEndLoc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +48,24 @@ public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyC
         setContentView(R.layout.activity_create_route);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        Button btnSave = (Button) findViewById(R.id.btn_save_route);
+        btnSave.setOnClickListener(view -> {
+            if (mStartLoc != null && mEndLoc != null) {
+                Intent returnIntent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putDoubleArray(START_LOC, new double[]{mStartLoc.latitude, mStartLoc.longitude});
+                bundle.putDoubleArray(END_LOC, new double[]{mEndLoc.latitude, mEndLoc.longitude});
+                bundle.putString(START_LOC_NAME, "Start");
+                bundle.putString(END_LOC_NAME, "End");
+                bundle.putString(ROUTE_NAME, "New Route");
+                returnIntent.putExtra(String.valueOf(RESULT_BUNDLE), bundle);
+                setResult(RESULT_OK, returnIntent);
+                finish();
+            } else {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+        });
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -48,6 +78,7 @@ public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyC
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMapClickListener(latLng -> handleMapClick(googleMap, latLng));
     }
 
     @Override
@@ -62,17 +93,15 @@ public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyC
             mLastKnownLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (mLastKnownLocation != null) {
                 LatLng lastKnown = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(lastKnown).title("Last known location"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(lastKnown));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(300));
+                mMap.setMyLocationEnabled(true);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastKnown,14f));
 
             }
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -83,6 +112,31 @@ public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyC
                 }
             }
         }
+    }
+
+    private void handleMapClick(GoogleMap gMap, LatLng latLng){
+        if (mStartLoc == null) {
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            markerOptions.title("Route: start position");
+            markerOptions.flat(true);
+            mStartLoc = latLng;
+            gMap.addMarker(markerOptions);
+        } else if (mEndLoc == null) {
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            markerOptions.title("Route: target location");
+            markerOptions.flat(true);
+            mEndLoc = latLng;
+            gMap.addMarker(markerOptions);
+            findViewById(R.id.btn_save_route).setVisibility(View.VISIBLE);
+        } else {
+            mStartLoc = null;
+            mEndLoc = null;
+            gMap.clear();
+            findViewById(R.id.btn_save_route).setVisibility(View.GONE);
+        }
+
     }
 
     protected void onStart() {

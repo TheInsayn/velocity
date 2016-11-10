@@ -18,10 +18,14 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class FragmentRoutes extends android.support.v4.app.Fragment {
 
     private RecyclerAdapterRoutes mAdapter;
     private final List<Route> mListRoutes = new ArrayList<>();
+
+    protected static final int REQUEST_ROUTE_DATA = 200;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,7 +34,6 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
         setHasOptionsMenu(true);
         FloatingActionButton fabCreate = (FloatingActionButton) routesView.findViewById(R.id.fab_create_route);
         fabCreate.setOnClickListener(view -> handleFabEvent(fabCreate));
-        addDemoRoutes();
         List<Route> routes = DBManager.getRoutes(getContext(), null);
         for (Route r : routes) {
             addRouteCard(r);
@@ -39,14 +42,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
     }
 
     private void handleFabEvent(FloatingActionButton fab) {
-        startActivity(new Intent(getActivity(), ActivityCreateRoute.class));
-    }
-
-    private void addDemoRoutes() {
-        Route route1 = new Route("To work", new LatLng(10.55,20.55), new LatLng(10.56,20.57), "Home", "Work");
-        Route route2 = new Route("Back home", new LatLng(10.56,20.57), new LatLng(10.55,20.55), "Work", "Home");
-        DBManager.saveRoute(getContext(), route1);
-        DBManager.saveRoute(getContext(), route2);
+        startActivityForResult(new Intent(getActivity(),ActivityCreateRoute.class), REQUEST_ROUTE_DATA);
     }
 
     private void initRecyclerView(View routesView) {
@@ -62,6 +58,27 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
     private void addRouteCard(Route route) {
         mListRoutes.add(route);
         mAdapter.notifyItemInserted(mListRoutes.size()-1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ROUTE_DATA) {
+            if (resultCode == RESULT_OK) {
+                Route newRoute = new Route();
+                Bundle result = data.getBundleExtra(ActivityCreateRoute.RESULT_BUNDLE);
+                newRoute.setName(result.getString(ActivityCreateRoute.ROUTE_NAME));
+                double[] start = result.getDoubleArray(ActivityCreateRoute.START_LOC);
+                newRoute.setStartLoc(new LatLng(start[0], start[1]));
+                double[] end = result.getDoubleArray(ActivityCreateRoute.END_LOC);
+                newRoute.setEndLoc(new LatLng(end[0], end[1]));
+                newRoute.setStartName(result.getString(ActivityCreateRoute.START_LOC_NAME));
+                newRoute.setEndName(result.getString(ActivityCreateRoute.END_LOC_NAME));
+                DBManager.saveRoute(getContext(), newRoute);
+                addRouteCard(newRoute);
+
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

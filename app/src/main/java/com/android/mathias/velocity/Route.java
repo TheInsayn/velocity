@@ -11,6 +11,8 @@ public class Route {
     private String mStartName;
     private String mEndName;
 
+    public Route() { }
+
     public Route(String name) {
         mName = name;
     }
