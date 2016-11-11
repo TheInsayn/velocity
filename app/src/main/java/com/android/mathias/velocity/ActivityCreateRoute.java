@@ -8,10 +8,12 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,7 +31,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class ActivityCreateRoute extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
     protected static final String ROUTE_NAME = "ROUTE_NAME";
@@ -50,6 +52,10 @@ public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyC
         setContentView(R.layout.activity_create_route);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         Button btnSave = (Button) findViewById(R.id.btn_save_route);
         btnSave.setOnClickListener(view -> promptForNameAndReturn());
         if (mGoogleApiClient == null) {
@@ -158,6 +164,16 @@ public class ActivityCreateRoute extends FragmentActivity implements OnMapReadyC
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public Action getIndexApiAction() {
