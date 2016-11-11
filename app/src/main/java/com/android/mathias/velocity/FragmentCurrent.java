@@ -3,6 +3,7 @@ package com.android.mathias.velocity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -65,7 +66,12 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     private void handleStopFabEvent(View currentView, FloatingActionButton fab) {
         FloatingActionButton fabPlayPause = (FloatingActionButton) currentView.findViewById(R.id.fab_current_play_pause);
         mStopwatch.stop();
-        Walk walk = new Walk(SystemClock.elapsedRealtime() - mStopwatch.getBase(), new Date(), new Route("To work"));
+        long walkTime = SystemClock.elapsedRealtime() - mStopwatch.getBase();
+        String defaultRouteName = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("default_route", "None");
+        Route route;
+        if (defaultRouteName == "None") { route = new Route("No route set"); }
+        else { route = DBManager.getRoutes(getContext(), defaultRouteName).get(0); }
+        Walk walk = new Walk(walkTime, new Date(), route);
         DBManager.saveWalk(getContext(), walk);
         mLastStopTime = 0;
         fabPlayPause.setImageResource(android.R.drawable.ic_media_play);

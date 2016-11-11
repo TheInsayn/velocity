@@ -40,6 +40,7 @@ public class ActivitySettings extends AppCompatActivity {
         } else {
             preference.setSummary(stringValue);
         }
+        bindPreferenceSummaryToValue(preference);
         return true;
     };
 
