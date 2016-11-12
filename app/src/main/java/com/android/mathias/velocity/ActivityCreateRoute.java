@@ -150,10 +150,11 @@ public class ActivityCreateRoute extends AppCompatActivity implements OnMapReady
             case PERMISSIONS_REQUEST_ACCESS_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     updateLocation();
-                } else {
+                }
+                // else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                }
+                // }
             }
         }
     }
