@@ -55,7 +55,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         fabStop.setClickable(true);
         fabStop.setVisibility(View.VISIBLE);
         String defaultRouteName = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("default_route", "None");
-        if (defaultRouteName == "None") { mCurrentWalkRoute = new Route("No route set"); }
+        if (defaultRouteName.equals("None")) { mCurrentWalkRoute = new Route("No route set"); }
         else { mCurrentWalkRoute = DBManager.getRoutes(getContext(), defaultRouteName).get(0); }
         ((TextView)currentView.findViewById(R.id.txt_current_route)).setText(mCurrentWalkRoute.getName());
     }
