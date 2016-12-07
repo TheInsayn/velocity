@@ -3,6 +3,7 @@ package com.android.mathias.velocity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -31,6 +32,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+
 public class ActivityCreateRoute extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
@@ -45,6 +48,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements OnMapReady
     private GoogleApiClient mGoogleApiClient;
     private LatLng mStartLoc;
     private LatLng mEndLoc;
+    private Geocoder mGeocoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements OnMapReady
                     .addApi(LocationServices.API)
                     .addApi(AppIndex.API).build();
         }
+        mGeocoder = new Geocoder(this.getApplicationContext());
     }
 
     private void promptForNameAndReturn() {
@@ -77,12 +82,18 @@ public class ActivityCreateRoute extends AppCompatActivity implements OnMapReady
                 .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
                     name[0] = input.getText().toString();
                     if (mStartLoc != null && mEndLoc != null) {
+                        String startLocName = "Start";
+                        String endLocName = "End";
+                        try {
+                            startLocName = mGeocoder.getFromLocation(mStartLoc.latitude, mStartLoc.longitude ,1).get(0).getAddressLine(0);
+                            endLocName = mGeocoder.getFromLocation(mEndLoc.latitude, mEndLoc.longitude ,1).get(0).getAddressLine(0);
+                        } catch (IOException ex) { ex.printStackTrace(); }
                         Intent returnIntent = new Intent();
                         Bundle bundle = new Bundle();
                         bundle.putDoubleArray(START_LOC, new double[]{mStartLoc.latitude, mStartLoc.longitude});
                         bundle.putDoubleArray(END_LOC, new double[]{mEndLoc.latitude, mEndLoc.longitude});
-                        bundle.putString(START_LOC_NAME, "Start");
-                        bundle.putString(END_LOC_NAME, "End");
+                        bundle.putString(START_LOC_NAME, startLocName);
+                        bundle.putString(END_LOC_NAME, endLocName);
                         bundle.putString(ROUTE_NAME, name[0]);
                         returnIntent.putExtra(String.valueOf(RESULT_BUNDLE), bundle);
                         setResult(RESULT_OK, returnIntent);
@@ -106,27 +117,32 @@ public class ActivityCreateRoute extends AppCompatActivity implements OnMapReady
     }
 
     private void handleMapClick(GoogleMap gMap, LatLng latLng) {
-        if (mStartLoc == null) {
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(latLng);
-            markerOptions.title("Route: start position");
-            markerOptions.flat(true);
-            mStartLoc = latLng;
-            gMap.addMarker(markerOptions);
-        } else if (mEndLoc == null) {
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(latLng);
-            markerOptions.title("Route: target location");
-            markerOptions.flat(true);
-            mEndLoc = latLng;
-            gMap.addMarker(markerOptions);
-            findViewById(R.id.btn_save_route).setVisibility(View.VISIBLE);
-        } else {
-            mStartLoc = null;
-            mEndLoc = null;
-            gMap.clear();
-            findViewById(R.id.btn_save_route).setVisibility(View.GONE);
+        try {
+            if (mStartLoc == null) {
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title("From: " + mGeocoder.getFromLocation(latLng.latitude, latLng.longitude ,1).get(0).getAddressLine(0));
+                markerOptions.flat(true);
+                mStartLoc = latLng;
+                gMap.addMarker(markerOptions);
+            } else if (mEndLoc == null) {
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title("To: " + mGeocoder.getFromLocation(latLng.latitude, latLng.longitude ,1).get(0).getAddressLine(0));
+                markerOptions.flat(true);
+                mEndLoc = latLng;
+                gMap.addMarker(markerOptions);
+                findViewById(R.id.btn_save_route).setVisibility(View.VISIBLE);
+            } else {
+                mStartLoc = null;
+                mEndLoc = null;
+                gMap.clear();
+                findViewById(R.id.btn_save_route).setVisibility(View.GONE);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
+
 
     }
 
