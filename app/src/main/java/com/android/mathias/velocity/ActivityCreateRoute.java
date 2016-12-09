@@ -6,10 +6,10 @@ import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,11 +30,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 
-public class ActivityCreateRoute extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class ActivityCreateRoute extends AppCompatActivity implements
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
     protected static final String ROUTE_NAME = "ROUTE_NAME";
@@ -55,11 +59,11 @@ public class ActivityCreateRoute extends AppCompatActivity implements OnMapReady
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_route);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        mapFragment.getMapAsync(this);
         Button btnSave = (Button) findViewById(R.id.btn_save_route);
         btnSave.setOnClickListener(view -> promptForNameAndReturn());
         if (mGoogleApiClient == null) {
@@ -119,19 +123,23 @@ public class ActivityCreateRoute extends AppCompatActivity implements OnMapReady
     private void handleMapClick(GoogleMap gMap, LatLng latLng) {
         try {
             if (mStartLoc == null) {
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title("From: " + mGeocoder.getFromLocation(latLng.latitude, latLng.longitude ,1).get(0).getAddressLine(0));
-                markerOptions.flat(true);
+                Marker marker = gMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title("Start")
+                        .snippet(mGeocoder.getFromLocation(latLng.latitude, latLng.longitude ,1).get(0).getAddressLine(0))
+                        .flat(true)
+                        .draggable(true));
                 mStartLoc = latLng;
-                gMap.addMarker(markerOptions);
+                marker.showInfoWindow();
             } else if (mEndLoc == null) {
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title("To: " + mGeocoder.getFromLocation(latLng.latitude, latLng.longitude ,1).get(0).getAddressLine(0));
-                markerOptions.flat(true);
+                Marker marker = gMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title("End")
+                        .snippet(mGeocoder.getFromLocation(latLng.latitude, latLng.longitude ,1).get(0).getAddressLine(0))
+                        .flat(true)
+                        .draggable(true));
                 mEndLoc = latLng;
-                gMap.addMarker(markerOptions);
+                marker.showInfoWindow();
                 findViewById(R.id.btn_save_route).setVisibility(View.VISIBLE);
             } else {
                 mStartLoc = null;
