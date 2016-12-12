@@ -38,8 +38,7 @@ import java.io.IOException;
 public class ActivityCreateRoute extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMarkerDragListener {
+        GoogleApiClient.OnConnectionFailedListener {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
     protected static final String ROUTE_NAME = "ROUTE_NAME";
@@ -114,7 +113,27 @@ public class ActivityCreateRoute extends AppCompatActivity implements
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setOnMapClickListener(latLng -> handleMapClick(googleMap, latLng));
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) { }
+            @Override
+            public void onMarkerDrag(Marker marker) { }
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                try {
+                    marker.setPosition(marker.getPosition());
+                    marker.setSnippet(mGeocoder.getFromLocation(marker.getPosition().latitude, marker.getPosition().longitude, 1).get(0).getAddressLine(0));
+                } catch (IOException e) { e.printStackTrace(); }
+                if (mEndLoc != null) {
+                    mEndLoc = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+                } else {
+                    mStartLoc = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+                }
+                marker.showInfoWindow();
+            }
+        });
     }
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -132,7 +151,6 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                         .draggable(true));
                 mStartLoc = latLng;
                 marker.showInfoWindow();
-                gMap.setOnMarkerDragListener(this);
             } else if (mEndLoc == null) {
                 Marker marker = gMap.addMarker(new MarkerOptions()
                         .position(latLng)
@@ -143,7 +161,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                 mEndLoc = latLng;
                 marker.showInfoWindow();
                 findViewById(R.id.btn_save_route).setVisibility(View.VISIBLE);
-                gMap.setOnMarkerDragListener(this);
+
             } else {
                 mStartLoc = null;
                 mEndLoc = null;
@@ -166,7 +184,6 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                 LatLng lastKnown = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
                 mMap.setMyLocationEnabled(true);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(lastKnown, 14f));
-
             }
         }
     }
@@ -219,21 +236,5 @@ public class ActivityCreateRoute extends AppCompatActivity implements
         mGoogleApiClient.disconnect();
         super.onStop();
         AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
-    }
-
-    @Override
-    public void onMarkerDragStart(Marker marker) {
-    }
-    @Override
-    public void onMarkerDrag(Marker marker) {
-    }
-    @Override
-    public void onMarkerDragEnd(Marker marker) {
-        try {
-            marker.setPosition(marker.getPosition());
-            marker.setSnippet(mGeocoder.getFromLocation(marker.getPosition().latitude, marker.getPosition().longitude, 1).get(0).getAddressLine(0));
-        } catch (IOException e) { e.printStackTrace(); }
-        mEndLoc = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
-        marker.showInfoWindow();
     }
 }
