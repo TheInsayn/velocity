@@ -38,7 +38,8 @@ import java.io.IOException;
 public class ActivityCreateRoute extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnMarkerDragListener {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
     protected static final String ROUTE_NAME = "ROUTE_NAME";
@@ -131,6 +132,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                         .draggable(true));
                 mStartLoc = latLng;
                 marker.showInfoWindow();
+                gMap.setOnMarkerDragListener(this);
             } else if (mEndLoc == null) {
                 Marker marker = gMap.addMarker(new MarkerOptions()
                         .position(latLng)
@@ -141,6 +143,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                 mEndLoc = latLng;
                 marker.showInfoWindow();
                 findViewById(R.id.btn_save_route).setVisibility(View.VISIBLE);
+                gMap.setOnMarkerDragListener(this);
             } else {
                 mStartLoc = null;
                 mEndLoc = null;
@@ -216,5 +219,21 @@ public class ActivityCreateRoute extends AppCompatActivity implements
         mGoogleApiClient.disconnect();
         super.onStop();
         AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
+    }
+
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+    }
+    @Override
+    public void onMarkerDrag(Marker marker) {
+    }
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+        try {
+            marker.setPosition(marker.getPosition());
+            marker.setSnippet(mGeocoder.getFromLocation(marker.getPosition().latitude, marker.getPosition().longitude, 1).get(0).getAddressLine(0));
+        } catch (IOException e) { e.printStackTrace(); }
+        mEndLoc = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+        marker.showInfoWindow();
     }
 }
