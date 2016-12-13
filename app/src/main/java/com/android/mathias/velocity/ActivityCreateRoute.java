@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,9 +18,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -70,8 +66,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .addApi(AppIndex.API).build();
+                    .addApi(LocationServices.API).build();
         }
         mGeocoder = new Geocoder(this.getApplicationContext());
     }
@@ -196,8 +191,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                     updateLocation();
                 }
                 // else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    // permission denied, boo! Disable the functionality that depends on this permission.
                 // }
             }
         }
@@ -219,22 +213,5 @@ public class ActivityCreateRoute extends AppCompatActivity implements
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder().setName("RoutePicker").setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]")).build();
-        return new Action.Builder(Action.TYPE_VIEW).setObject(object).setActionStatus(Action.STATUS_TYPE_COMPLETED).build();
-    }
-
-    protected void onStart() {
-        mGoogleApiClient.connect();
-        super.onStart();
-        AppIndex.AppIndexApi.start(mGoogleApiClient, getIndexApiAction());
-    }
-
-    protected void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-        AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
     }
 }
