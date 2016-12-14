@@ -1,6 +1,7 @@
 package com.android.mathias.velocity;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
@@ -61,7 +62,12 @@ public class ActivityCreateRoute extends AppCompatActivity implements
         }
         mapFragment.getMapAsync(this);
         Button btnSave = (Button) findViewById(R.id.btn_save_route);
-        btnSave.setOnClickListener(view -> promptForNameAndReturn());
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptForNameAndReturn();
+            }
+        });
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -78,28 +84,33 @@ public class ActivityCreateRoute extends AppCompatActivity implements
         new AlertDialog.Builder(this)
                 .setTitle("Route name")
                 .setView(input)
-                .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-                    name[0] = input.getText().toString();
-                    if (mStartLoc != null && mEndLoc != null) {
-                        String startLocName = "Start";
-                        String endLocName = "End";
-                        try {
-                            startLocName = mGeocoder.getFromLocation(mStartLoc.latitude, mStartLoc.longitude ,1).get(0).getAddressLine(0);
-                            endLocName = mGeocoder.getFromLocation(mEndLoc.latitude, mEndLoc.longitude ,1).get(0).getAddressLine(0);
-                        } catch (IOException ex) { ex.printStackTrace(); }
-                        Intent returnIntent = new Intent();
-                        Bundle bundle = new Bundle();
-                        bundle.putDoubleArray(START_LOC, new double[]{mStartLoc.latitude, mStartLoc.longitude});
-                        bundle.putDoubleArray(END_LOC, new double[]{mEndLoc.latitude, mEndLoc.longitude});
-                        bundle.putString(START_LOC_NAME, startLocName);
-                        bundle.putString(END_LOC_NAME, endLocName);
-                        bundle.putString(ROUTE_NAME, name[0]);
-                        returnIntent.putExtra(String.valueOf(RESULT_BUNDLE), bundle);
-                        setResult(RESULT_OK, returnIntent);
-                        finish();
-                    } else {
-                        setResult(RESULT_CANCELED);
-                        finish();
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        name[0] = input.getText().toString();
+                        if (mStartLoc != null && mEndLoc != null) {
+                            String startLocName = "Start";
+                            String endLocName = "End";
+                            try {
+                                startLocName = mGeocoder.getFromLocation(mStartLoc.latitude, mStartLoc.longitude, 1).get(0).getAddressLine(0);
+                                endLocName = mGeocoder.getFromLocation(mEndLoc.latitude, mEndLoc.longitude, 1).get(0).getAddressLine(0);
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                            Intent returnIntent = new Intent();
+                            Bundle bundle = new Bundle();
+                            bundle.putDoubleArray(START_LOC, new double[]{mStartLoc.latitude, mStartLoc.longitude});
+                            bundle.putDoubleArray(END_LOC, new double[]{mEndLoc.latitude, mEndLoc.longitude});
+                            bundle.putString(START_LOC_NAME, startLocName);
+                            bundle.putString(END_LOC_NAME, endLocName);
+                            bundle.putString(ROUTE_NAME, name[0]);
+                            returnIntent.putExtra(String.valueOf(RESULT_BUNDLE), bundle);
+                            ActivityCreateRoute.this.setResult(RESULT_OK, returnIntent);
+                            ActivityCreateRoute.this.finish();
+                        } else {
+                            ActivityCreateRoute.this.setResult(RESULT_CANCELED);
+                            ActivityCreateRoute.this.finish();
+                        }
                     }
                 }).show();
     }
@@ -107,7 +118,12 @@ public class ActivityCreateRoute extends AppCompatActivity implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setOnMapClickListener(latLng -> handleMapClick(googleMap, latLng));
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                ActivityCreateRoute.this.handleMapClick(mMap, latLng);
+            }
+        });
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) { }

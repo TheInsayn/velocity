@@ -45,16 +45,15 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         Fragment fragment = null;
-        Class fragmentClass = null;
         switch (item.getItemId()) {
             case R.id.nav_current:
-                fragmentClass = FragmentCurrent.class;
+                fragment = new FragmentCurrent();
                 break;
             case R.id.nav_history:
-                fragmentClass = FragmentHistory.class;
+                fragment = new FragmentHistory();
                 break;
             case R.id.nav_routes:
-                fragmentClass = FragmentRoutes.class;
+                fragment = new FragmentRoutes();
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, ActivitySettings.class));
@@ -62,18 +61,12 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
             default:
                 break;
         }
-        if (fragmentClass != null) {
-            try {
-                fragment = (Fragment) fragmentClass.newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_content, fragment).commit();
             item.setChecked(true);
             setTitle(item.getTitle());
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.layout_main);
         drawer.closeDrawer(GravityCompat.START);
         return true;

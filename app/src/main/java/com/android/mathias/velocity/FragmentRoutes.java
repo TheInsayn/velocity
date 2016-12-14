@@ -32,8 +32,13 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
         View routesView = inflater.inflate(R.layout.fragment_routes, container, false);
         initRecyclerView(routesView);
         setHasOptionsMenu(true);
-        FloatingActionButton fabCreate = (FloatingActionButton) routesView.findViewById(R.id.fab_create_route);
-        fabCreate.setOnClickListener(view -> handleFabEvent(fabCreate));
+        final FloatingActionButton fabCreate = (FloatingActionButton) routesView.findViewById(R.id.fab_create_route);
+        fabCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentRoutes.this.handleFabEvent(fabCreate);
+            }
+        });
         List<Route> routes = DBManager.getRoutes(getContext(), null);
         for (Route r : routes) {
             addRouteCard(r);

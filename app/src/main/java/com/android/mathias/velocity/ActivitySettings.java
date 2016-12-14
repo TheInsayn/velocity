@@ -19,29 +19,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActivitySettings extends AppCompatActivity {
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = (preference, value) -> {
-        String stringValue = value.toString();
-        if (preference instanceof ListPreference) {
-            ListPreference listPreference = (ListPreference) preference;
-            int index = listPreference.findIndexOfValue(stringValue);
-            preference.setSummary(index >= 0 ? listPreference.getEntries()[index] : null);
-        } else if (preference instanceof RingtonePreference) {
-            if (TextUtils.isEmpty(stringValue)) {
-                preference.setSummary(R.string.pref_sound_none);
-            } else {
-                Ringtone ringtone = RingtoneManager.getRingtone(preference.getContext(), Uri.parse(stringValue));
-                if (ringtone == null) {
-                    preference.setSummary(null);
+    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object value) {
+            String stringValue = value.toString();
+            if (preference instanceof ListPreference) {
+                ListPreference listPreference = (ListPreference) preference;
+                int index = listPreference.findIndexOfValue(stringValue);
+                preference.setSummary(index >= 0 ? listPreference.getEntries()[index] : null);
+            } else if (preference instanceof RingtonePreference) {
+                if (TextUtils.isEmpty(stringValue)) {
+                    preference.setSummary(R.string.pref_sound_none);
                 } else {
-                    String name = ringtone.getTitle(preference.getContext());
-                    preference.setSummary(name);
+                    Ringtone ringtone = RingtoneManager.getRingtone(preference.getContext(), Uri.parse(stringValue));
+                    if (ringtone == null) {
+                        preference.setSummary(null);
+                    } else {
+                        String name = ringtone.getTitle(preference.getContext());
+                        preference.setSummary(name);
+                    }
                 }
+            } else {
+                preference.setSummary(stringValue);
             }
-        } else {
-            preference.setSummary(stringValue);
+            bindPreferenceSummaryToValue(preference);
+            return true;
         }
-        bindPreferenceSummaryToValue(preference);
-        return true;
     };
 
     private static void bindPreferenceSummaryToValue(Preference preference) {

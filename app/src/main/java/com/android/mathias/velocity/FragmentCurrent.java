@@ -26,13 +26,23 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View currentView = inflater.inflate(R.layout.fragment_current, container, false);
+        final View currentView = inflater.inflate(R.layout.fragment_current, container, false);
         setHasOptionsMenu(true);
         mStopwatch = (Chronometer) currentView.findViewById(R.id.stopwatch);
-        FloatingActionButton fabPlayPause = (FloatingActionButton) currentView.findViewById(R.id.fab_current_play_pause);
-        FloatingActionButton fabStop = (FloatingActionButton) currentView.findViewById(R.id.fab_current_stop);
-        fabPlayPause.setOnClickListener(view1 -> handlePlayPauseFabEvent(currentView, fabPlayPause));
-        fabStop.setOnClickListener(view1 -> handleStopFabEvent(currentView, fabStop));
+        final FloatingActionButton fabPlayPause = (FloatingActionButton) currentView.findViewById(R.id.fab_current_play_pause);
+        final FloatingActionButton fabStop = (FloatingActionButton) currentView.findViewById(R.id.fab_current_stop);
+        fabPlayPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handlePlayPauseFabEvent(currentView, fabPlayPause);
+            }
+        });
+        fabStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleStopFabEvent(currentView, fabStop);
+            }
+        });
         mStopwatchState = StopwatchState.STOPPED;
         return currentView;
     }
