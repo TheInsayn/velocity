@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -71,6 +72,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
+                    .enableAutoManage(this, this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API).build();
         }
@@ -153,31 +155,39 @@ public class ActivityCreateRoute extends AppCompatActivity implements
 
     private void handleMapClick(GoogleMap gMap, LatLng latLng) {
         try {
+            String address = mGeocoder.getFromLocation(latLng.latitude, latLng.longitude ,1).get(0).getAddressLine(0);
             if (mStartLoc == null) {
                 Marker marker = gMap.addMarker(new MarkerOptions()
                         .position(latLng)
                         .title("Start")
-                        .snippet(mGeocoder.getFromLocation(latLng.latitude, latLng.longitude ,1).get(0).getAddressLine(0))
+                        .snippet(address)
                         .flat(true)
                         .draggable(true));
                 mStartLoc = latLng;
                 marker.showInfoWindow();
+                TextView txtStartAddress = (TextView) findViewById(R.id.txt_start_address);
+                txtStartAddress.setText("Start: " + address);
+                txtStartAddress.setVisibility(View.VISIBLE);
             } else if (mEndLoc == null) {
                 Marker marker = gMap.addMarker(new MarkerOptions()
                         .position(latLng)
                         .title("End")
-                        .snippet(mGeocoder.getFromLocation(latLng.latitude, latLng.longitude ,1).get(0).getAddressLine(0))
+                        .snippet(address)
                         .flat(true)
                         .draggable(true));
                 mEndLoc = latLng;
                 marker.showInfoWindow();
                 findViewById(R.id.btn_save_route).setVisibility(View.VISIBLE);
-
+                TextView txtEndAddress = (TextView) findViewById(R.id.txt_end_address);
+                txtEndAddress.setText("End:   " + address);
+                txtEndAddress.setVisibility(View.VISIBLE);
             } else {
                 mStartLoc = null;
                 mEndLoc = null;
                 gMap.clear();
                 findViewById(R.id.btn_save_route).setVisibility(View.GONE);
+                findViewById(R.id.txt_start_address).setVisibility(View.GONE);
+                findViewById(R.id.txt_end_address).setVisibility(View.GONE);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
