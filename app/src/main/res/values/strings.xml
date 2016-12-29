@@ -29,6 +29,8 @@
     <!-- ActivityCreateRoute -->
     <string name="title_activity_create_route">Create a route</string>
     <string name="title_btn_save">Save Route</string>
+    <string name="route_start_prefix">Start: %s</string>
+    <string name="route_end_prefix">End:&#160;&#160; %s</string>
 
     <!-- Settings -->
     <string name="activity_title_settings">Settings</string>

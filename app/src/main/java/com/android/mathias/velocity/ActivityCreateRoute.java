@@ -166,7 +166,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                 mStartLoc = latLng;
                 marker.showInfoWindow();
                 TextView txtStartAddress = (TextView) findViewById(R.id.txt_start_address);
-                txtStartAddress.setText("Start: " + address);
+                txtStartAddress.setText(String.format(getString(R.string.route_start_prefix), address));
                 txtStartAddress.setVisibility(View.VISIBLE);
             } else if (mEndLoc == null) {
                 Marker marker = gMap.addMarker(new MarkerOptions()
@@ -179,7 +179,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                 marker.showInfoWindow();
                 findViewById(R.id.btn_save_route).setVisibility(View.VISIBLE);
                 TextView txtEndAddress = (TextView) findViewById(R.id.txt_end_address);
-                txtEndAddress.setText("End:   " + address);
+                txtEndAddress.setText(String.format(getString(R.string.route_end_prefix), address));
                 txtEndAddress.setVisibility(View.VISIBLE);
             } else {
                 mStartLoc = null;
@@ -210,7 +210,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
