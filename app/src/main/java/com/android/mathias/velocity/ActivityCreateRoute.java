@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ActivityCreateRoute extends AppCompatActivity implements
         OnMapReadyCallback,
@@ -155,7 +157,9 @@ public class ActivityCreateRoute extends AppCompatActivity implements
 
     private void handleMapClick(GoogleMap gMap, LatLng latLng) {
         try {
-            String address = mGeocoder.getFromLocation(latLng.latitude, latLng.longitude ,1).get(0).getAddressLine(0);
+            List<Address> addresses = mGeocoder.getFromLocation(latLng.latitude, latLng.longitude ,1);
+            if (addresses.size() == 0) { return; }
+            String address = addresses.get(0).getAddressLine(0);
             if (mStartLoc == null) {
                 Marker marker = gMap.addMarker(new MarkerOptions()
                         .position(latLng)
