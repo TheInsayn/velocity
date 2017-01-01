@@ -42,7 +42,7 @@ public class ActivitySettings extends AppCompatActivity {
             } else {
                 preference.setSummary(stringValue);
             }
-            bindPreferenceSummaryToValue(preference);
+            //bindPreferenceSummaryToValue(preference);
             return true;
         }
     };
@@ -78,6 +78,10 @@ public class ActivitySettings extends AppCompatActivity {
             routePref.setEntries(routeNames.toArray(new CharSequence[routeNames.size()]));
             routePref.setEntryValues(routeNames.toArray(new CharSequence[routeNames.size()]));
             routePref.setDefaultValue("None");
+
+            bindPreferenceSummaryToValue(routePref);
+            bindPreferenceSummaryToValue(findPreference("display_name"));
+            bindPreferenceSummaryToValue(findPreference("notifications_sound"));
         }
 
         @Override
