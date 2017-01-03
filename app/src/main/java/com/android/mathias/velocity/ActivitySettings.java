@@ -82,6 +82,7 @@ public class ActivitySettings extends AppCompatActivity {
             bindPreferenceSummaryToValue(routePref);
             bindPreferenceSummaryToValue(findPreference("display_name"));
             bindPreferenceSummaryToValue(findPreference("notifications_sound"));
+            bindPreferenceSummaryToValue(findPreference("sync_frequency"));
         }
 
         @Override
