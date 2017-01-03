@@ -60,7 +60,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="6dp"
                     android:layout_marginTop="1sp"
-                    android:src="@drawable/ic_start_point"/>
+                    android:src="@drawable/ic_pin"/>
             </LinearLayout>
 
 
@@ -85,7 +85,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="6dp"
                     android:layout_marginTop="1sp"
-                    android:src="@drawable/ic_end_point"/>
+                    android:src="@drawable/ic_walk"/>
             </LinearLayout>
 
         </RelativeLayout>
