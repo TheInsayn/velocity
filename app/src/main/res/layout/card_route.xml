@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical">
@@ -9,9 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:background="?android:colorBackground"
         android:clickable="true"
-        android:elevation="@dimen/route_card_elevation"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardElevation="@dimen/route_card_elevation">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -37,25 +39,55 @@
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                 android:textStyle="italic"/>
 
-            <TextView
-                android:id="@+id/txt_route_start_point"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@id/txt_route_name"
-                android:layout_gravity="end"
-                android:text="@string/default_route_start_point"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+                android:layout_gravity="end">
 
-            <TextView
-                android:id="@+id/txt_route_end_point"
+                <TextView
+                    android:id="@+id/txt_route_start_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_route_start_point"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+
+                <ImageView
+                    android:id="@+id/route_start_icon"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="1sp"
+                    android:src="@drawable/ic_start_point"/>
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/txt_route_distance"
                 android:layout_alignParentEnd="true"
-                android:layout_gravity="end"
-                android:text="@string/default_route_end_point"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+                android:layout_gravity="end">
+
+                <TextView
+                    android:id="@+id/txt_route_end_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_route_end_point"
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+
+                <ImageView
+                    android:id="@+id/route_end_icon"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="1sp"
+                    android:src="@drawable/ic_end_point"/>
+            </LinearLayout>
+
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
