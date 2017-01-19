@@ -151,8 +151,8 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                         mStartLoc = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
                         ((TextView) findViewById(R.id.txt_start_address)).setText(String.format(getString(R.string.route_start_prefix), address));
                     }
+                    marker.showInfoWindow();
                 }
-                marker.showInfoWindow();
             }
         });
     }
