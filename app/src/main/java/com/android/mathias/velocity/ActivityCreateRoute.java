@@ -139,18 +139,18 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                 String address = null;
                 try {
                     List<Address> addresses = mGeocoder.getFromLocation(marker.getPosition().latitude, marker.getPosition().longitude ,1);
-                    address= addresses.get(0).getAddressLine(0);
+                    address = addresses.get(0).getAddressLine(0);
                 } catch (IOException e) { e.printStackTrace(); }
-                try {
+                if (address != null) {
                     marker.setPosition(marker.getPosition());
-                    marker.setSnippet(mGeocoder.getFromLocation(marker.getPosition().latitude, marker.getPosition().longitude, 1).get(0).getAddressLine(0));
-                } catch (IOException e) { e.printStackTrace(); }
-                if (address != null && marker.getTitle().equals(getString(R.string.end_address_title))) {
-                    mEndLoc = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
-                    ((TextView) findViewById(R.id.txt_end_address)).setText(String.format(getString(R.string.route_end_prefix), address));
-                } else {
-                    mStartLoc = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
-                    ((TextView) findViewById(R.id.txt_start_address)).setText(String.format(getString(R.string.route_start_prefix), address));
+                    marker.setSnippet(address);
+                    if (marker.getTitle().equals(getString(R.string.end_address_title))) {
+                        mEndLoc = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+                        ((TextView) findViewById(R.id.txt_end_address)).setText(String.format(getString(R.string.route_end_prefix), address));
+                    } else {
+                        mStartLoc = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+                        ((TextView) findViewById(R.id.txt_start_address)).setText(String.format(getString(R.string.route_start_prefix), address));
+                    }
                 }
                 marker.showInfoWindow();
             }
