@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_name_prompt"
+        android:inputType="text"
+        android:layout_marginTop="@dimen/dialog_route_margin"
+        android:layout_marginLeft="@dimen/dialog_route_margin"
+        android:layout_marginRight="@dimen/dialog_route_margin"/>
+</LinearLayout>

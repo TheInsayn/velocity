@@ -1,6 +1,7 @@
 package com.android.mathias.velocity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,7 +15,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -82,41 +82,42 @@ public class ActivityCreateRoute extends AppCompatActivity implements
     }
 
     private void promptForNameAndReturn() {
-        final String[] name = new String[1];
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
         new AlertDialog.Builder(this)
                 .setTitle("Route name")
-                .setView(input)
+                .setView(R.layout.dialog_route)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        name[0] = input.getText().toString();
-                        if (mStartLoc != null && mEndLoc != null) {
-                            String startLocName = "Start";
-                            String endLocName = "End";
-                            try {
-                                startLocName = mGeocoder.getFromLocation(mStartLoc.latitude, mStartLoc.longitude, 1).get(0).getAddressLine(0);
-                                endLocName = mGeocoder.getFromLocation(mEndLoc.latitude, mEndLoc.longitude, 1).get(0).getAddressLine(0);
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-                            Intent returnIntent = new Intent();
-                            Bundle bundle = new Bundle();
-                            bundle.putDoubleArray(START_LOC, new double[]{mStartLoc.latitude, mStartLoc.longitude});
-                            bundle.putDoubleArray(END_LOC, new double[]{mEndLoc.latitude, mEndLoc.longitude});
-                            bundle.putString(START_LOC_NAME, startLocName);
-                            bundle.putString(END_LOC_NAME, endLocName);
-                            bundle.putString(ROUTE_NAME, name[0]);
-                            returnIntent.putExtra(String.valueOf(RESULT_BUNDLE), bundle);
-                            ActivityCreateRoute.this.setResult(RESULT_OK, returnIntent);
-                            ActivityCreateRoute.this.finish();
-                        } else {
-                            ActivityCreateRoute.this.setResult(RESULT_CANCELED);
-                            ActivityCreateRoute.this.finish();
-                        }
+                        String routeName = ((EditText) ((Dialog) dialogInterface).findViewById(R.id.txt_name_prompt)).getText().toString();
+                        finish(routeName);
                     }
                 }).show();
+    }
+
+    private void finish(String routeName) {
+        if (mStartLoc != null && mEndLoc != null) {
+            String startLocName = "Start";
+            String endLocName = "End";
+            try {
+                startLocName = mGeocoder.getFromLocation(mStartLoc.latitude, mStartLoc.longitude, 1).get(0).getAddressLine(0);
+                endLocName = mGeocoder.getFromLocation(mEndLoc.latitude, mEndLoc.longitude, 1).get(0).getAddressLine(0);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            Intent returnIntent = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putDoubleArray(START_LOC, new double[]{mStartLoc.latitude, mStartLoc.longitude});
+            bundle.putDoubleArray(END_LOC, new double[]{mEndLoc.latitude, mEndLoc.longitude});
+            bundle.putString(START_LOC_NAME, startLocName);
+            bundle.putString(END_LOC_NAME, endLocName);
+            bundle.putString(ROUTE_NAME, routeName);
+            returnIntent.putExtra(String.valueOf(RESULT_BUNDLE), bundle);
+            ActivityCreateRoute.this.setResult(RESULT_OK, returnIntent);
+            ActivityCreateRoute.this.finish();
+        } else {
+            ActivityCreateRoute.this.setResult(RESULT_CANCELED);
+            ActivityCreateRoute.this.finish();
+        }
     }
 
     @Override
