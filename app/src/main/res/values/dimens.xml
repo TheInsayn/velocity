@@ -23,5 +23,5 @@
     <dimen name="address_text_elevation">8dp</dimen>
     <dimen name="address_text_margin">6dp</dimen>
 
-    <dimen name="dialog_route_margin">20dp</dimen>
+    <dimen name="dialog_route_margin">22dp</dimen>
 </resources>
