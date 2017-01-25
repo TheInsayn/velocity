@@ -1,23 +1,7 @@
 <resources>
+    <!-- MAIN -->
     <string name="app_name">Walking Times</string>
     <string name="author_email">mat.woess@gmail.com</string>
-
-    <!-- Menus -->
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="menu_main_settings">Settings</string>
-    <string name="menu_clear_history">Clear history</string>
-    <string name="menu_delete_all_routes">Delete all routes</string>
-
-    <!-- Card default texts -->
-    <string name="default_walk_route">default_route</string>
-    <string name="default_walk_duration">00:00</string>
-    <string name="default_walk_date">01.01.2016</string>
-    <string name="default_walk_weekday">Weekday</string>
-    <string name="default_route_name">route_name</string>
-    <string name="default_route_distance">100m</string>
-    <string name="default_route_start_point">Start point</string>
-    <string name="default_route_end_point">End point</string>
 
     <!-- Nav Drawer -->
     <string name="nav_item_current">Current</string>
@@ -26,16 +10,14 @@
     <string name="nav_item_settings">Settings</string>
     <string name="nav_item_info">About</string>
 
-    <!-- ActivityCreateRoute -->
-    <string name="title_activity_create_route">Create a route</string>
-    <string name="title_btn_save">Save Route</string>
-    <string name="route_start_prefix">Start: %s</string>
-    <string name="route_end_prefix">End:&#160;&#160; %s</string>
-    <string name="end_address_title">End</string>
-    <string name="start_address_title">Start</string>
-    <string name="route_name">Name</string>
+    <!-- Menus -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="menu_main_settings">Settings</string>
+    <string name="menu_clear_history">Clear history</string>
+    <string name="menu_delete_all_routes">Delete all routes</string>
 
-    <!-- Settings -->
+    <!-- SETTINGS -->
     <string name="activity_title_settings">Settings</string>
     <!-- General -->
     <string name="pref_header_general">General</string>
@@ -82,4 +64,28 @@
     <string name="pref_title_notifications_led">LED</string>
     <string name="pref_title_notifications_vibrate">Vibrate</string>
     <string name="pref_sound_none">None</string>
+
+    <!-- ACTIVITIES AND CONTROLS -->
+    <!-- ActivityCreateRoute -->
+    <string name="title_activity_create_route">Create a route</string>
+    <string name="title_btn_save">Save Route</string>
+    <string name="route_start_prefix">Start: %s</string>
+    <string name="route_end_prefix">End:&#160;&#160; %s</string>
+    <string name="end_address_title">End</string>
+    <string name="start_address_title">Start</string>
+    <string name="route_name">Name</string>
+
+    <!-- Card default texts -->
+    <string name="default_walk_route">default_route</string>
+    <string name="default_walk_duration">00:00</string>
+    <string name="default_walk_date">01.01.2016</string>
+    <string name="default_walk_weekday">Weekday</string>
+    <string name="default_route_name">route_name</string>
+    <string name="default_route_distance">100m</string>
+    <string name="default_route_start_point">Start point</string>
+    <string name="default_route_end_point">End point</string>
+
+    <!-- Dialog route -->
+    <string name="dialog_route_used_hint">Name already used!</string>
+    <string name="dialog_route_title">Route name</string>
 </resources>

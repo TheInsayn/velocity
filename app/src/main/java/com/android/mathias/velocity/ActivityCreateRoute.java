@@ -16,6 +16,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -85,17 +87,41 @@ public class ActivityCreateRoute extends AppCompatActivity implements
 
     private void promptForNameAndReturn() {
         final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        new AlertDialog.Builder(this)
-                .setTitle("Route name")
+        final List<Route> routes = DBManager.getRoutes(this, null);
+        final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setView(R.layout.dialog_route)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        String routeName = ((EditText) ((Dialog) dialogInterface).findViewById(R.id.txt_name_prompt)).getText().toString();
+                        String routeName = ((EditText) ((Dialog) dialogInterface).findViewById(R.id.txt_dialog_route_name)).getText().toString();
                         finish(routeName);
                         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                     }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    }
                 }).show();
+        ((EditText) dialog.findViewById(R.id.txt_dialog_route_name)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                boolean match = false;
+                for (Route r : routes) {
+                    match = r.getName().contentEquals(charSequence);
+                    if (match) break;
+                }
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(!match);
+                dialog.findViewById(R.id.txt_dialog_name_hint).setVisibility(match ? View.VISIBLE : View.INVISIBLE);
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 
@@ -117,11 +143,11 @@ public class ActivityCreateRoute extends AppCompatActivity implements
             bundle.putString(END_LOC_NAME, endLocName);
             bundle.putString(ROUTE_NAME, routeName);
             returnIntent.putExtra(String.valueOf(RESULT_BUNDLE), bundle);
-            ActivityCreateRoute.this.setResult(RESULT_OK, returnIntent);
-            ActivityCreateRoute.this.finish();
+            this.setResult(RESULT_OK, returnIntent);
+            finish();
         } else {
-            ActivityCreateRoute.this.setResult(RESULT_CANCELED);
-            ActivityCreateRoute.this.finish();
+            this.setResult(RESULT_CANCELED);
+            this.finish();
         }
     }
 
@@ -233,9 +259,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     updateLocation();
                 }
-                // else {
-                    // permission denied, boo! Disable the functionality that depends on this permission.
-                // }
+                // else { permission denied, boo! Disable the functionality that depends on this permission. }
             }
         }
     }
