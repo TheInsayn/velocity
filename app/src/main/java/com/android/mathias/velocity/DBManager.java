@@ -65,19 +65,19 @@ final class DBManager {
                     walks.add(new Walk(walkDuration, walkDate, walkRoute));
                 } while (c.moveToNext());
             }
+            c.close();
         }
-        c.close();
         return walks;
     }
 
-    public static void deleteWalks(Context context, Date date) {
+    static void deleteWalks(Context context, Date date) {
         DBHelperWalks dbHelper = new DBHelperWalks(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = WalkEntry.COLUMN_NAME_DATE + " LIKE ?";
         String[] selectionArgs = { date.toString() };
         db.delete(WalkEntry.TABLE_NAME, selection, selectionArgs);
     }
-    public static void deleteWalks(Context context, Route route) {
+    static void deleteWalks(Context context, Route route) {
         DBHelperWalks dbHelper = new DBHelperWalks(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String selection = WalkEntry.COLUMN_NAME_ROUTE + " LIKE ?";
@@ -85,13 +85,13 @@ final class DBManager {
         db.delete(WalkEntry.TABLE_NAME, selection, selectionArgs);
     }
 
-    public static void deleteAllWalks(Context context) {
+    static void deleteAllWalks(Context context) {
         DBHelperWalks dbHelper = new DBHelperWalks(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete(WalkEntry.TABLE_NAME, null, null);
     }
 
-    public static void saveRoute(Context context, Route route) {
+    static void saveRoute(Context context, Route route) {
         DBHelperRoutes dbHelper = new DBHelperRoutes(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -105,7 +105,7 @@ final class DBManager {
         long newRowId = db.insert(RouteEntry.TABLE_NAME, null, values);
     }
 
-    public static List<Route> getRoutes (Context context, String name) {
+    static List<Route> getRoutes (Context context, String name) {
         DBHelperRoutes dbHelper = new DBHelperRoutes(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] projection = {
@@ -146,12 +146,12 @@ final class DBManager {
                     routes.add(new Route(routeName, startLoc, endLoc, routeStartName, routeEndName));
                 } while (c.moveToNext());
             }
+            c.close();
         }
-        c.close();
         return routes;
     }
 
-    public static void deleteAllRoutes(Context context) {
+    static void deleteAllRoutes(Context context) {
         DBHelperRoutes dbHelper = new DBHelperRoutes(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete(RouteEntry.TABLE_NAME, null, null);

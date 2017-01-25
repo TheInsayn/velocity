@@ -2,7 +2,7 @@ package com.android.mathias.velocity;
 
 import java.util.Date;
 
-public class Walk {
+class Walk {
     private Route mRoute;
     private long mDuration;
     private Date mDate;
@@ -12,30 +12,30 @@ public class Walk {
         mDuration = 0;
         mDate = new Date();
     }
-    public Walk (long duration, Date date, Route route) {
+    Walk (long duration, Date date, Route route) {
         mRoute = route;
         mDuration = duration;
         mDate = date;
     }
 
-    public Route getRoute() {
+    Route getRoute() {
         return mRoute;
     }
-    public void setRoute(Route route) {
+    void setRoute(Route route) {
         mRoute = route;
     }
 
-    public long getDuration() {
+    long getDuration() {
         return mDuration;
     }
-    public void setDuration(long duration) {
+    void setDuration(long duration) {
         mDuration = duration;
     }
 
-    public Date getDate() {
+    Date getDate() {
         return mDate;
     }
-    public void setDate(Date date) {
+    void setDate(Date date) {
         mDate = date;
     }
 }

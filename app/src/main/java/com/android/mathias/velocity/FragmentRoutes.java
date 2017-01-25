@@ -71,16 +71,17 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
             if (resultCode == RESULT_OK) {
                 Route newRoute = new Route();
                 Bundle result = data.getBundleExtra(ActivityCreateRoute.RESULT_BUNDLE);
-                newRoute.setName(result.getString(ActivityCreateRoute.ROUTE_NAME));
                 double[] start = result.getDoubleArray(ActivityCreateRoute.START_LOC);
-                newRoute.setStartLoc(new LatLng(start[0], start[1]));
                 double[] end = result.getDoubleArray(ActivityCreateRoute.END_LOC);
-                newRoute.setEndLoc(new LatLng(end[0], end[1]));
-                newRoute.setStartName(result.getString(ActivityCreateRoute.START_LOC_NAME));
-                newRoute.setEndName(result.getString(ActivityCreateRoute.END_LOC_NAME));
-                DBManager.saveRoute(getContext(), newRoute);
-                addRouteCard(newRoute);
-
+                if (start != null && end != null) {
+                    newRoute.setName(result.getString(ActivityCreateRoute.ROUTE_NAME));
+                    newRoute.setStartLoc(new LatLng(start[0], start[1]));
+                    newRoute.setEndLoc(new LatLng(end[0], end[1]));
+                    newRoute.setStartName(result.getString(ActivityCreateRoute.START_LOC_NAME));
+                    newRoute.setEndName(result.getString(ActivityCreateRoute.END_LOC_NAME));
+                    DBManager.saveRoute(getContext(), newRoute);
+                    addRouteCard(newRoute);
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

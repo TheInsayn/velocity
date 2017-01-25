@@ -117,7 +117,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    enum StopwatchState {
+    private enum StopwatchState {
         RUNNING, PAUSED, STOPPED
     }
 }

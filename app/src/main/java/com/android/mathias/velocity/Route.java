@@ -4,7 +4,7 @@ import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class Route {
+class Route {
     private String mName;
     private LatLng mStartLoc;
     private LatLng mEndLoc;
@@ -38,35 +38,35 @@ public class Route {
         mName = name;
     }
 
-    public LatLng getStartLoc() {
+    LatLng getStartLoc() {
         return mStartLoc;
     }
-    public void setStartLoc(LatLng startLoc) {
+    void setStartLoc(LatLng startLoc) {
         mStartLoc = startLoc;
     }
 
-    public LatLng getEndLoc() {
+    LatLng getEndLoc() {
         return mEndLoc;
     }
-    public void setEndLoc(LatLng endLoc) {
+    void setEndLoc(LatLng endLoc) {
         mEndLoc = endLoc;
     }
 
-    public String getStartName() {
+    String getStartName() {
         return mStartName;
     }
-    public void setStartName(String startName) {
+    void setStartName(String startName) {
         mStartName = startName;
     }
 
-    public String getEndName() {
+    String getEndName() {
         return mEndName;
     }
-    public void setEndName(String endName) {
+    void setEndName(String endName) {
         mEndName = endName;
     }
 
-    public float getApproximateDistance () {
+    float getApproximateDistance () {
         Location startLoc = new Location("start");
         startLoc.setLatitude(mStartLoc.latitude);
         startLoc.setLongitude(mStartLoc.longitude);
