@@ -59,8 +59,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
             case R.id.nav_settings:
                 startActivity(new Intent(this, ActivitySettings.class));
                 break;
-            default:
-                break;
+            default: break;
         }
         if (fragment != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();

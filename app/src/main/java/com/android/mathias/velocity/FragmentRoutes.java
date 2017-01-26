@@ -104,8 +104,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
                 mListRoutes.clear();
                 mAdapter.notifyDataSetChanged();
                 break;
-            default:
-                break;
+            default: break;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -11,10 +11,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Chronometer;
+import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class FragmentCurrent extends android.support.v4.app.Fragment {
@@ -47,9 +52,39 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         return currentView;
     }
 
-    private void handlePlayPauseFabEvent(View currentView, FloatingActionButton fab) {
+    private void handlePlayPauseFabEvent(final View currentView, final FloatingActionButton fab) {
         switch (mStopwatchState) {
-            case STOPPED: startStopwatch(currentView, fab); break;
+            case STOPPED:
+                final List<String> routeNames = new ArrayList<>();
+                for (Route r : DBManager.getRoutes(getContext(), null)) { routeNames.add(r.getName()); }
+                String defaultRouteName = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("default_route", "None");
+                if (defaultRouteName.equals("None")) { mCurrentWalkRoute = new Route("No route set"); }
+                else { mCurrentWalkRoute = DBManager.getRoutes(getContext(), defaultRouteName).get(0); }
+                if (routeNames.size() > 1 && defaultRouteName.equals("None")) {
+                    final ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item);
+                    adapter.addAll(routeNames);
+                    adapter.add("None");
+                    final ListPopupWindow lpw = new ListPopupWindow(getContext());
+                    lpw.setAdapter(adapter);
+                    lpw.setAnchorView(fab);
+                    lpw.setContentWidth(300);
+                    lpw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            if (adapterView.getItemAtPosition(i).toString().equals("None")) {
+                                mCurrentWalkRoute = new Route("No route set");
+                            } else {
+                                mCurrentWalkRoute = DBManager.getRoutes(getContext(), adapterView.getItemAtPosition(i).toString()).get(0);
+                            }
+                            startStopwatch(currentView, fab);
+                            lpw.dismiss();
+                        }
+                    });
+                    lpw.show();
+                } else {
+                    startStopwatch(currentView, fab);
+                }
+                break;
             case RUNNING: pauseStopwatch(fab); break;
             case PAUSED:  continueStopwatch(fab); break;
             default: break;
@@ -64,9 +99,6 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mStopwatchState = StopwatchState.RUNNING;
         fabStop.setClickable(true);
         fabStop.setVisibility(View.VISIBLE);
-        String defaultRouteName = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("default_route", "None");
-        if (defaultRouteName.equals("None")) { mCurrentWalkRoute = new Route("No route set"); }
-        else { mCurrentWalkRoute = DBManager.getRoutes(getContext(), defaultRouteName).get(0); }
         ((TextView)currentView.findViewById(R.id.txt_current_route)).setText(mCurrentWalkRoute.getName());
     }
 
@@ -111,8 +143,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
             case R.id.action_settings:
                 startActivity(new Intent(getActivity(), ActivitySettings.class));
                 break;
-            default:
-                break;
+            default: break;
         }
         return super.onOptionsItemSelected(item);
     }

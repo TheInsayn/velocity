@@ -63,8 +63,7 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
                 mListWalks.clear();
                 mAdapter.notifyDataSetChanged();
                 break;
-            default:
-                break;
+            default: break;
         }
         return super.onOptionsItemSelected(item);
     }
