@@ -3,9 +3,11 @@ package com.android.mathias.velocity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,9 +18,11 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
+import static android.support.v7.widget.helper.ItemTouchHelper.Callback.makeFlag;
 
 public class FragmentRoutes extends android.support.v4.app.Fragment {
 
@@ -26,6 +30,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
     private final List<Route> mListRoutes = new ArrayList<>();
 
     protected static final int REQUEST_ROUTE_DATA = 200;
+    private Route mTempRoute = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,7 +41,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
         fabCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FragmentRoutes.this.handleFabEvent(fabCreate);
+                FragmentRoutes.this.handleFabEvent();
             }
         });
         List<Route> routes = DBManager.getRoutes(getContext(), null);
@@ -46,18 +51,51 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
         return routesView;
     }
 
-    private void handleFabEvent(FloatingActionButton fab) {
+    private void handleFabEvent() {
         startActivityForResult(new Intent(getActivity(),ActivityCreateRoute.class), REQUEST_ROUTE_DATA);
     }
 
     private void initRecyclerView(View routesView) {
-        RecyclerView rvRoutes = (RecyclerView) routesView.findViewById(R.id.list_routes);
+        final RecyclerView rvRoutes = (RecyclerView) routesView.findViewById(R.id.list_routes);
         mAdapter = new RecyclerAdapterRoutes(mListRoutes);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         rvRoutes.setHasFixedSize(true);
         rvRoutes.setLayoutManager(layoutManager);
         rvRoutes.setItemAnimator(new DefaultItemAnimator());
         rvRoutes.setAdapter(mAdapter);
+        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0,
+                makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.START | ItemTouchHelper.END)
+                | makeFlag(ItemTouchHelper.ACTION_STATE_SWIPE, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT)) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                Collections.swap(mListRoutes, viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                mAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                final int idx = viewHolder.getAdapterPosition();
+                mTempRoute = mListRoutes.get(idx);
+                mListRoutes.remove(idx);
+                mAdapter.notifyItemRemoved(idx);
+                Snackbar.make(rvRoutes, mListRoutes.get(idx).getName() + " deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mTempRoute != null) {
+                            mListRoutes.add(idx, mTempRoute);
+                            mAdapter.notifyItemInserted(idx);
+                            Snackbar.make(rvRoutes, "Restored!", Snackbar.LENGTH_SHORT);
+                        } else {
+                            Snackbar.make(rvRoutes, "Error restoring...", Snackbar.LENGTH_SHORT);
+                        }
+                        mTempRoute = null;
+                    }
+                }).show();
+            }
+        };
+        ItemTouchHelper ith = new ItemTouchHelper(callback);
+        ith.attachToRecyclerView(rvRoutes);
     }
 
     private void addRouteCard(Route route) {

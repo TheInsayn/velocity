@@ -1,30 +1,29 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                tools:context="com.android.mathias.velocity.FragmentRoutes">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 tools:context="com.android.mathias.velocity.FragmentRoutes">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_routes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
+        android:background="@color/colorRouteBackground"
         android:choiceMode="multipleChoice"
         android:longClickable="true"
         android:scrollbars="vertical"
-        android:background="@color/colorRouteBackground"
         android:textFilterEnabled="false"/>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_create_route"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
         app:fabSize="normal"
-        app:srcCompat="@drawable/ic_plus"
-        android:layout_margin="@dimen/fab_margin"
-        android:id="@+id/fab_create_route"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"/>
+        app:srcCompat="@drawable/ic_plus"/>
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

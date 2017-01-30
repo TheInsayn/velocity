@@ -2,15 +2,18 @@ package com.android.mathias.velocity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +21,7 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
 
     private RecyclerAdapterWalks mAdapter;
     private final List<Walk> mListWalks = new ArrayList<>();
+    private Walk mTempWalk = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,13 +36,42 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
     }
 
     private void initRecyclerView(View historyView) {
-        RecyclerView rvHistory = (RecyclerView) historyView.findViewById(R.id.list_walks);
+        final RecyclerView rvHistory = (RecyclerView) historyView.findViewById(R.id.list_walks);
         mAdapter = new RecyclerAdapterWalks(mListWalks);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         rvHistory.setHasFixedSize(true);
         rvHistory.setLayoutManager(layoutManager);
         rvHistory.setItemAnimator(new DefaultItemAnimator());
         rvHistory.setAdapter(mAdapter);
+        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                final int idx = viewHolder.getAdapterPosition();
+                mTempWalk = mListWalks.get(idx);
+                mListWalks.remove(idx);
+                mAdapter.notifyItemRemoved(idx);
+                Snackbar.make(rvHistory, "walk deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mTempWalk != null) {
+                            mListWalks.add(idx, mTempWalk);
+                            mAdapter.notifyItemInserted(idx);
+                            Snackbar.make(rvHistory, "Restored!", Snackbar.LENGTH_SHORT);
+                        } else {
+                            Snackbar.make(rvHistory, "Error restoring...", Snackbar.LENGTH_SHORT);
+                        }
+                        mTempWalk = null;
+                    }
+                }).show();
+            }
+        };
+        ItemTouchHelper ith = new ItemTouchHelper(callback);
+        ith.attachToRecyclerView(rvHistory);
     }
 
     private void addWalkCard(Walk walk) {

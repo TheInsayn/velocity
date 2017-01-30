@@ -1,47 +1,47 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.android.mathias.velocity.FragmentCurrent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.android.mathias.velocity.FragmentCurrent">
 
     <Chronometer
-        android:layout_width="wrap_content"
         android:id="@+id/stopwatch"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/activity_margin"
-        android:textSize="@dimen/stopwatch_text_size"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:textSize="@dimen/stopwatch_text_size"/>
 
     <TextView
+        android:id="@+id/txt_current_route"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_current_route"
         android:layout_below="@id/stopwatch"
         android:layout_centerHorizontal="true"/>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_current_play_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        app:fabSize="normal"
-        app:srcCompat="@android:drawable/ic_media_play"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/fab_margin"
-        android:id="@+id/fab_current_play_pause"/>
+        android:clickable="true"
+        app:fabSize="normal"
+        app:srcCompat="@android:drawable/ic_media_play"/>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_current_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/fab_current_play_pause"
+        android:layout_marginStart="@dimen/activity_margin"
+        android:layout_toEndOf="@id/fab_current_play_pause"
         android:clickable="false"
         android:visibility="invisible"
         app:fabSize="normal"
-        app:srcCompat="@drawable/ic_stop"
-        android:id="@+id/fab_current_stop"
-        android:layout_marginStart="@dimen/activity_margin"
-        android:layout_alignTop="@+id/fab_current_play_pause"
-        android:layout_toEndOf="@id/fab_current_play_pause"/>
+        app:srcCompat="@drawable/ic_stop"/>
 </RelativeLayout>
