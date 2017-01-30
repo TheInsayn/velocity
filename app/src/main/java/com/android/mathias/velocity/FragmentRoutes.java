@@ -67,10 +67,12 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
         final Snackbar.Callback sbCallback = new Snackbar.Callback() {
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
-                DBManager.deleteRoute(getContext(), mTempRoute.getId());
-                mSnackbar = null;
-                mTempRoute = null;
-                super.onDismissed(transientBottomBar, event);
+                if (mSnackbar != null && mTempRoute != null) {
+                    DBManager.deleteRoute(getContext(), mTempRoute.getId());
+                    mSnackbar = null;
+                    mTempRoute = null;
+                    super.onDismissed(transientBottomBar, event);
+                }
             }
         };
         ItemTouchHelper.SimpleCallback ithCallback = new ItemTouchHelper.SimpleCallback(0,
@@ -158,5 +160,14 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
             default: break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDetach() {
+        if (mSnackbar != null) {
+            mSnackbar.dismiss();
+            mSnackbar = null;
+        }
+        super.onDetach();
     }
 }

@@ -47,10 +47,12 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
         final Snackbar.Callback sbCallback = new Snackbar.Callback() {
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
-                DBManager.deleteWalk(getContext(), mTempWalk.getId());
-                mSnackbar.removeCallback(this);
-                mSnackbar = null;
-                mTempWalk = null;
+                if (mSnackbar != null && mTempWalk != null) {
+                    DBManager.deleteWalk(getContext(), mTempWalk.getId());
+                    mSnackbar.removeCallback(this);
+                    mSnackbar = null;
+                    mTempWalk = null;
+                }
                 super.onDismissed(transientBottomBar, event);
             }
         };
@@ -113,5 +115,14 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
             default: break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDetach() {
+        if (mSnackbar != null) {
+            mSnackbar.dismiss();
+            mSnackbar = null;
+        }
+        super.onDetach();
     }
 }
