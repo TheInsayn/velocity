@@ -27,7 +27,7 @@ final class DBManager {
         values.put(WalkEntry.COLUMN_NAME_ROUTE, walk.getRoute().getName());
         values.put(WalkEntry.COLUMN_NAME_DURATION, walk.getDuration());
         values.put(WalkEntry.COLUMN_NAME_DATE, DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG).format(walk.getDate()));
-        long newRowId = db.insert(WalkEntry.TABLE_NAME, null, values);
+        db.insert(WalkEntry.TABLE_NAME, null, values);
     }
 
     static List<Walk> getWalks(Context context, Route route) {
@@ -55,6 +55,7 @@ final class DBManager {
         if (c != null) {
             if (c.moveToFirst()) {
                 do {
+                    long walkId = c.getLong(c.getColumnIndexOrThrow(WalkEntry._ID));
                     Route walkRoute = new Route(c.getString(c.getColumnIndexOrThrow(WalkEntry.COLUMN_NAME_ROUTE)));
                     long walkDuration = c.getLong(c.getColumnIndexOrThrow(WalkEntry.COLUMN_NAME_DURATION));
                     Date walkDate = new Date();
@@ -62,12 +63,20 @@ final class DBManager {
                         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,DateFormat.LONG);
                         walkDate = df.parse(c.getString(c.getColumnIndexOrThrow(WalkEntry.COLUMN_NAME_DATE)));
                     } catch (ParseException e) { e.printStackTrace(); }
-                    walks.add(new Walk(walkDuration, walkDate, walkRoute));
+                    walks.add(new Walk(walkId, walkDuration, walkDate, walkRoute));
                 } while (c.moveToNext());
             }
             c.close();
         }
         return walks;
+    }
+
+    static void deleteWalk(Context context, long id) {
+        DBHelperWalks dbHelper = new DBHelperWalks(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selection = WalkEntry._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(id) };
+        db.delete(WalkEntry.TABLE_NAME, selection, selectionArgs);
     }
 
     static void deleteWalks(Context context, Date date) {
@@ -77,6 +86,7 @@ final class DBManager {
         String[] selectionArgs = { date.toString() };
         db.delete(WalkEntry.TABLE_NAME, selection, selectionArgs);
     }
+
     static void deleteWalks(Context context, Route route) {
         DBHelperWalks dbHelper = new DBHelperWalks(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -102,7 +112,7 @@ final class DBManager {
         values.put(RouteEntry.COLUMN_NAME_END_LNG, route.getEndLoc().longitude);
         values.put(RouteEntry.COLUMN_NAME_START_NAME, route.getStartName());
         values.put(RouteEntry.COLUMN_NAME_END_NAME, route.getEndName());
-        long newRowId = db.insert(RouteEntry.TABLE_NAME, null, values);
+        db.insert(RouteEntry.TABLE_NAME, null, values);
     }
 
     static List<Route> getRoutes (Context context, String name) {
@@ -134,6 +144,7 @@ final class DBManager {
         if (c != null) {
             if (c.moveToFirst()) {
                 do {
+                    long routeId = c.getLong(c.getColumnIndexOrThrow(RouteEntry._ID));
                     String routeName = c.getString(c.getColumnIndexOrThrow(RouteEntry.COLUMN_NAME_NAME));
                     double routeStartLat = c.getDouble(c.getColumnIndexOrThrow(RouteEntry.COLUMN_NAME_START_LAT));
                     double routeStartLng = c.getDouble(c.getColumnIndexOrThrow(RouteEntry.COLUMN_NAME_START_LNG));
@@ -143,12 +154,20 @@ final class DBManager {
                     String routeEndName = c.getString((c.getColumnIndexOrThrow(RouteEntry.COLUMN_NAME_END_NAME)));
                     LatLng startLoc = new LatLng(routeStartLat, routeStartLng);
                     LatLng endLoc = new LatLng(routeEndLat,routeEndLng);
-                    routes.add(new Route(routeName, startLoc, endLoc, routeStartName, routeEndName));
+                    routes.add(new Route(routeId, routeName, startLoc, endLoc, routeStartName, routeEndName));
                 } while (c.moveToNext());
             }
             c.close();
         }
         return routes;
+    }
+
+    static void deleteRoute(Context context, long id) {
+        DBHelperRoutes dbHelper = new DBHelperRoutes(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String selection = RouteEntry._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(id) };
+        db.delete(RouteEntry.TABLE_NAME, selection, selectionArgs);
     }
 
     static void deleteAllRoutes(Context context) {

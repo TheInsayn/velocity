@@ -61,11 +61,17 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
                         if (mTempWalk != null) {
                             mListWalks.add(idx, mTempWalk);
                             mAdapter.notifyItemInserted(idx);
-                            Snackbar.make(rvHistory, "Restored!", Snackbar.LENGTH_SHORT);
+                            Snackbar.make(rvHistory, "restored.", Snackbar.LENGTH_SHORT).show();
                         } else {
-                            Snackbar.make(rvHistory, "Error restoring...", Snackbar.LENGTH_SHORT);
+                            Snackbar.make(rvHistory, "error restoring...", Snackbar.LENGTH_SHORT).show();
                         }
                         mTempWalk = null;
+                    }
+                }).addCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                        DBManager.deleteWalk(getContext(), mTempWalk.getId());
+                        super.onDismissed(transientBottomBar, event);
                     }
                 }).show();
             }

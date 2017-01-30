@@ -28,9 +28,9 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
 
     private RecyclerAdapterRoutes mAdapter;
     private final List<Route> mListRoutes = new ArrayList<>();
+    private Route mTempRoute = null;
 
     protected static final int REQUEST_ROUTE_DATA = 200;
-    private Route mTempRoute = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,17 +79,23 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
                 mTempRoute = mListRoutes.get(idx);
                 mListRoutes.remove(idx);
                 mAdapter.notifyItemRemoved(idx);
-                Snackbar.make(rvRoutes, mListRoutes.get(idx).getName() + " deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                Snackbar.make(rvRoutes, mTempRoute.getName() + " deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (mTempRoute != null) {
                             mListRoutes.add(idx, mTempRoute);
                             mAdapter.notifyItemInserted(idx);
-                            Snackbar.make(rvRoutes, "Restored!", Snackbar.LENGTH_SHORT);
+                            Snackbar.make(rvRoutes, "restored.", Snackbar.LENGTH_SHORT).show();
                         } else {
-                            Snackbar.make(rvRoutes, "Error restoring...", Snackbar.LENGTH_SHORT);
+                            Snackbar.make(rvRoutes, "error restoring...", Snackbar.LENGTH_SHORT).show();
                         }
                         mTempRoute = null;
+                    }
+                }).addCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar transientBottomBar, int event) {
+                        DBManager.deleteRoute(getContext(), mTempRoute.getId());
+                        super.onDismissed(transientBottomBar, event);
                     }
                 }).show();
             }
