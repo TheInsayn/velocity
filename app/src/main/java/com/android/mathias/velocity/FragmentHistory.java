@@ -22,6 +22,7 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
     private RecyclerAdapterWalks mAdapter;
     private final List<Walk> mListWalks = new ArrayList<>();
     private Walk mTempWalk = null;
+    private Snackbar mSnackbar = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,7 +44,17 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
         rvHistory.setLayoutManager(layoutManager);
         rvHistory.setItemAnimator(new DefaultItemAnimator());
         rvHistory.setAdapter(mAdapter);
-        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        final Snackbar.Callback sbCallback = new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                DBManager.deleteWalk(getContext(), mTempWalk.getId());
+                mSnackbar.removeCallback(this);
+                mSnackbar = null;
+                mTempWalk = null;
+                super.onDismissed(transientBottomBar, event);
+            }
+        };
+        ItemTouchHelper.SimpleCallback ithCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -55,28 +66,25 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
                 mTempWalk = mListWalks.get(idx);
                 mListWalks.remove(idx);
                 mAdapter.notifyItemRemoved(idx);
-                Snackbar.make(rvHistory, "walk deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                mSnackbar = Snackbar.make(rvHistory, "walk deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (mTempWalk != null) {
+                            mSnackbar.removeCallback(sbCallback);
                             mListWalks.add(idx, mTempWalk);
                             mAdapter.notifyItemInserted(idx);
                             Snackbar.make(rvHistory, "restored.", Snackbar.LENGTH_SHORT).show();
+                            mSnackbar = null;
+                            mTempWalk = null;
                         } else {
                             Snackbar.make(rvHistory, "error restoring...", Snackbar.LENGTH_SHORT).show();
                         }
-                        mTempWalk = null;
                     }
-                }).addCallback(new Snackbar.Callback() {
-                    @Override
-                    public void onDismissed(Snackbar transientBottomBar, int event) {
-                        DBManager.deleteWalk(getContext(), mTempWalk.getId());
-                        super.onDismissed(transientBottomBar, event);
-                    }
-                }).show();
+                }).addCallback(sbCallback);
+                mSnackbar.show();
             }
         };
-        ItemTouchHelper ith = new ItemTouchHelper(callback);
+        ItemTouchHelper ith = new ItemTouchHelper(ithCallback);
         ith.attachToRecyclerView(rvHistory);
     }
 

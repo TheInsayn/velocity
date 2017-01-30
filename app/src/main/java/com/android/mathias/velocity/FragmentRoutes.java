@@ -29,6 +29,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
     private RecyclerAdapterRoutes mAdapter;
     private final List<Route> mListRoutes = new ArrayList<>();
     private Route mTempRoute = null;
+    private Snackbar mSnackbar = null;
 
     protected static final int REQUEST_ROUTE_DATA = 200;
 
@@ -63,7 +64,16 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
         rvRoutes.setLayoutManager(layoutManager);
         rvRoutes.setItemAnimator(new DefaultItemAnimator());
         rvRoutes.setAdapter(mAdapter);
-        ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0,
+        final Snackbar.Callback sbCallback = new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                DBManager.deleteRoute(getContext(), mTempRoute.getId());
+                mSnackbar = null;
+                mTempRoute = null;
+                super.onDismissed(transientBottomBar, event);
+            }
+        };
+        ItemTouchHelper.SimpleCallback ithCallback = new ItemTouchHelper.SimpleCallback(0,
                 makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.START | ItemTouchHelper.END)
                 | makeFlag(ItemTouchHelper.ACTION_STATE_SWIPE, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT)) {
             @Override
@@ -79,28 +89,25 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
                 mTempRoute = mListRoutes.get(idx);
                 mListRoutes.remove(idx);
                 mAdapter.notifyItemRemoved(idx);
-                Snackbar.make(rvRoutes, mTempRoute.getName() + " deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                mSnackbar = Snackbar.make(rvRoutes, mTempRoute.getName() + " deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (mTempRoute != null) {
+                            mSnackbar.removeCallback(sbCallback);
                             mListRoutes.add(idx, mTempRoute);
                             mAdapter.notifyItemInserted(idx);
                             Snackbar.make(rvRoutes, "restored.", Snackbar.LENGTH_SHORT).show();
+                            mSnackbar = null;
+                            mTempRoute = null;
                         } else {
                             Snackbar.make(rvRoutes, "error restoring...", Snackbar.LENGTH_SHORT).show();
                         }
-                        mTempRoute = null;
                     }
-                }).addCallback(new Snackbar.Callback() {
-                    @Override
-                    public void onDismissed(Snackbar transientBottomBar, int event) {
-                        DBManager.deleteRoute(getContext(), mTempRoute.getId());
-                        super.onDismissed(transientBottomBar, event);
-                    }
-                }).show();
+                }).addCallback(sbCallback);
+                mSnackbar.show();
             }
         };
-        ItemTouchHelper ith = new ItemTouchHelper(callback);
+        ItemTouchHelper ith = new ItemTouchHelper(ithCallback);
         ith.attachToRecyclerView(rvRoutes);
     }
 
