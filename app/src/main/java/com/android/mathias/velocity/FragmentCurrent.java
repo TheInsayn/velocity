@@ -67,7 +67,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                     final ListPopupWindow lpw = new ListPopupWindow(getContext());
                     lpw.setAdapter(adapter);
                     lpw.setAnchorView(fab);
-                    lpw.setContentWidth(300);
+                    lpw.setContentWidth((int) (((View)fab.getParent()).getWidth()/2.5));
                     lpw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
