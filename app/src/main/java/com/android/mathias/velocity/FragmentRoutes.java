@@ -76,8 +76,8 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
             }
         };
         ItemTouchHelper.SimpleCallback ithCallback = new ItemTouchHelper.SimpleCallback(0,
-                makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.START | ItemTouchHelper.END)
-                | makeFlag(ItemTouchHelper.ACTION_STATE_SWIPE, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT)) {
+                makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.UP | ItemTouchHelper.DOWN)
+                | makeFlag(ItemTouchHelper.ACTION_STATE_SWIPE, ItemTouchHelper.START | ItemTouchHelper.END)) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 Collections.swap(mListRoutes, viewHolder.getAdapterPosition(), target.getAdapterPosition());
