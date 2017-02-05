@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
-import static android.support.v7.widget.helper.ItemTouchHelper.Callback.makeFlag;
 
 public class FragmentRoutes extends android.support.v4.app.Fragment {
 
@@ -75,9 +74,8 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
                 }
             }
         };
-        ItemTouchHelper.SimpleCallback ithCallback = new ItemTouchHelper.SimpleCallback(0,
-                makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.UP | ItemTouchHelper.DOWN)
-                | makeFlag(ItemTouchHelper.ACTION_STATE_SWIPE, ItemTouchHelper.START | ItemTouchHelper.END)) {
+        ItemTouchHelper.SimpleCallback ithCallback = new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.START | ItemTouchHelper.END){
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 Collections.swap(mListRoutes, viewHolder.getAdapterPosition(), target.getAdapterPosition());
