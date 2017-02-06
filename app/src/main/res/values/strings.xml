@@ -22,7 +22,7 @@
     <!-- General -->
     <string name="pref_header_general">General</string>
     <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">Mathias Wöß</string>
+    <string name="pref_default_display_name">Walker</string>
 
     <!-- Default Route -->
     <string name="pref_header_default_route">Default route</string>
