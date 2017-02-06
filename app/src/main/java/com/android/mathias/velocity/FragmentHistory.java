@@ -46,14 +46,14 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
         rvHistory.setAdapter(mAdapter);
         final Snackbar.Callback sbCallback = new Snackbar.Callback() {
             @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
+            public void onDismissed(Snackbar sb, int event) {
                 if (mSnackbar != null && mTempWalk != null) {
                     DBManager.deleteWalk(getContext(), mTempWalk.getId());
                     mSnackbar.removeCallback(this);
                     mSnackbar = null;
                     mTempWalk = null;
                 }
-                super.onDismissed(transientBottomBar, event);
+                super.onDismissed(sb, event);
             }
         };
         ItemTouchHelper.SimpleCallback ithCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -64,22 +64,28 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                if (mSnackbar != null && mTempWalk != null) {
+                    DBManager.deleteWalk(getContext(), mTempWalk.getId());
+                    mSnackbar.removeCallback(sbCallback);
+                    mSnackbar = null;
+                    mTempWalk = null;
+                }
                 final int idx = viewHolder.getAdapterPosition();
                 mTempWalk = mListWalks.get(idx);
                 mListWalks.remove(idx);
                 mAdapter.notifyItemRemoved(idx);
-                mSnackbar = Snackbar.make(rvHistory, "walk deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                mSnackbar = Snackbar.make(rvHistory, "Walk deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (mTempWalk != null) {
                             mSnackbar.removeCallback(sbCallback);
                             mListWalks.add(idx, mTempWalk);
                             mAdapter.notifyItemInserted(idx);
-                            Snackbar.make(rvHistory, "restored.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(rvHistory, "Restored.", Snackbar.LENGTH_SHORT).show();
                             mSnackbar = null;
                             mTempWalk = null;
                         } else {
-                            Snackbar.make(rvHistory, "error restoring...", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(rvHistory, "Error restoring...", Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 }).addCallback(sbCallback);

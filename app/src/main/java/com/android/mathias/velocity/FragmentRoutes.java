@@ -65,13 +65,14 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
         rvRoutes.setAdapter(mAdapter);
         final Snackbar.Callback sbCallback = new Snackbar.Callback() {
             @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
+            public void onDismissed(Snackbar sb, int event) {
                 if (mSnackbar != null && mTempRoute != null) {
                     DBManager.deleteRoute(getContext(), mTempRoute.getId());
+                    mSnackbar.removeCallback(this);
                     mSnackbar = null;
                     mTempRoute = null;
-                    super.onDismissed(transientBottomBar, event);
                 }
+                super.onDismissed(sb, event);
             }
         };
         ItemTouchHelper.SimpleCallback ithCallback = new ItemTouchHelper.SimpleCallback(
@@ -85,22 +86,28 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                if (mSnackbar != null && mTempRoute != null) {
+                    DBManager.deleteRoute(getContext(), mTempRoute.getId());
+                    mSnackbar.removeCallback(sbCallback);
+                    mSnackbar = null;
+                    mTempRoute = null;
+                }
                 final int idx = viewHolder.getAdapterPosition();
                 mTempRoute = mListRoutes.get(idx);
                 mListRoutes.remove(idx);
                 mAdapter.notifyItemRemoved(idx);
-                mSnackbar = Snackbar.make(rvRoutes, mTempRoute.getName() + " deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+                mSnackbar = Snackbar.make(rvRoutes, "\"" + mTempRoute.getName() + "\" deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (mTempRoute != null) {
                             mSnackbar.removeCallback(sbCallback);
                             mListRoutes.add(idx, mTempRoute);
                             mAdapter.notifyItemInserted(idx);
-                            Snackbar.make(rvRoutes, "restored.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(rvRoutes, "Restored.", Snackbar.LENGTH_SHORT).show();
                             mSnackbar = null;
                             mTempRoute = null;
                         } else {
-                            Snackbar.make(rvRoutes, "error restoring...", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(rvRoutes, "Error restoring...", Snackbar.LENGTH_SHORT).show();
                         }
                     }
                 }).addCallback(sbCallback);
