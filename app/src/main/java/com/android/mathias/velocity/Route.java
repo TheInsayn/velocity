@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 class Route {
     private long mId;
+    private int mPos;
     private String mName;
     private LatLng mStartLoc;
     private LatLng mEndLoc;
@@ -32,8 +33,9 @@ class Route {
         mEndName = endName;
     }
 
-    public Route(long id, String name, LatLng startLoc, LatLng endLoc, String startName, String endName) {
+    public Route(long id, int pos, String name, LatLng startLoc, LatLng endLoc, String startName, String endName) {
         mId = id;
+        mPos = pos;
         mName = name;
         mStartLoc = startLoc;
         mEndLoc = endLoc;
@@ -46,6 +48,13 @@ class Route {
     }
     void setId(long id) {
         mId = id;
+    }
+
+    public int getPos() {
+        return mPos;
+    }
+    public void setPos(int mPos) {
+        this.mPos = mPos;
     }
 
     public String getName() {

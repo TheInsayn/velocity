@@ -106,6 +106,7 @@ final class DBManager {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(RouteEntry.COLUMN_NAME_NAME, route.getName());
+        values.put(RouteEntry.COLUMN_NAME_POS, route.getPos());
         values.put(RouteEntry.COLUMN_NAME_START_LAT, route.getStartLoc().latitude);
         values.put(RouteEntry.COLUMN_NAME_START_LNG, route.getStartLoc().longitude);
         values.put(RouteEntry.COLUMN_NAME_END_LAT, route.getEndLoc().latitude);
@@ -120,6 +121,7 @@ final class DBManager {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] projection = {
             RouteEntry._ID,
+            RouteEntry.COLUMN_NAME_POS,
             RouteEntry.COLUMN_NAME_NAME,
             RouteEntry.COLUMN_NAME_START_LAT,
             RouteEntry.COLUMN_NAME_START_LNG,
@@ -130,7 +132,7 @@ final class DBManager {
         };
         String selection = RouteEntry.COLUMN_NAME_NAME + " LIKE ?";
         String[] selectionArgs = { name != null ? name : "%" };
-        String sortOrder = RouteEntry.COLUMN_NAME_NAME + " DESC";
+        String sortOrder = RouteEntry.COLUMN_NAME_POS + " ASC";
         Cursor c = db.query(
             RouteEntry.TABLE_NAME,   // The table to query
             projection,              // The columns to return
@@ -145,6 +147,7 @@ final class DBManager {
             if (c.moveToFirst()) {
                 do {
                     long routeId = c.getLong(c.getColumnIndexOrThrow(RouteEntry._ID));
+                    int routePos = c.getInt(c.getColumnIndexOrThrow(RouteEntry.COLUMN_NAME_POS));
                     String routeName = c.getString(c.getColumnIndexOrThrow(RouteEntry.COLUMN_NAME_NAME));
                     double routeStartLat = c.getDouble(c.getColumnIndexOrThrow(RouteEntry.COLUMN_NAME_START_LAT));
                     double routeStartLng = c.getDouble(c.getColumnIndexOrThrow(RouteEntry.COLUMN_NAME_START_LNG));
@@ -152,9 +155,9 @@ final class DBManager {
                     double routeEndLng = c.getDouble(c.getColumnIndexOrThrow(RouteEntry.COLUMN_NAME_END_LNG));
                     String routeStartName = c.getString((c.getColumnIndexOrThrow(RouteEntry.COLUMN_NAME_START_NAME)));
                     String routeEndName = c.getString((c.getColumnIndexOrThrow(RouteEntry.COLUMN_NAME_END_NAME)));
-                    LatLng startLoc = new LatLng(routeStartLat, routeStartLng);
-                    LatLng endLoc = new LatLng(routeEndLat,routeEndLng);
-                    routes.add(new Route(routeId, routeName, startLoc, endLoc, routeStartName, routeEndName));
+                    LatLng routeStartLoc = new LatLng(routeStartLat, routeStartLng);
+                    LatLng routeEndLoc = new LatLng(routeEndLat, routeEndLng);
+                    routes.add(new Route(routeId, routePos, routeName, routeStartLoc, routeEndLoc, routeStartName, routeEndName));
                 } while (c.moveToNext());
             }
             c.close();
@@ -174,6 +177,15 @@ final class DBManager {
         DBHelperRoutes dbHelper = new DBHelperRoutes(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete(RouteEntry.TABLE_NAME, null, null);
+    }
+
+    static void setRoutePos(Context context, long id, int pos) {
+        DBHelperRoutes dbHelper = new DBHelperRoutes(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String query = "UPDATE " + RouteEntry.TABLE_NAME +
+                " SET " + RouteEntry.COLUMN_NAME_POS + " = " + pos +
+                " WHERE " + RouteEntry._ID + " = " + id;
+        db.execSQL(query);
     }
 
     private static final class DBHelperWalks extends SQLiteOpenHelper {
@@ -232,12 +244,13 @@ final class DBManager {
         private static final String SQL_CREATE_ENTRIES =
                 "CREATE TABLE " + RouteEntry.TABLE_NAME + " (" +
                         RouteEntry._ID + " INTEGER PRIMARY KEY," +
+                        RouteEntry.COLUMN_NAME_POS + REAL_TYPE + COMMA_SEP +
                         RouteEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
-                        RouteEntry.COLUMN_NAME_START_LAT + REAL_TYPE +COMMA_SEP +
-                        RouteEntry.COLUMN_NAME_START_LNG + REAL_TYPE +COMMA_SEP +
-                        RouteEntry.COLUMN_NAME_END_LAT + REAL_TYPE +COMMA_SEP +
-                        RouteEntry.COLUMN_NAME_END_LNG + REAL_TYPE +COMMA_SEP +
-                        RouteEntry.COLUMN_NAME_START_NAME + TEXT_TYPE +COMMA_SEP +
+                        RouteEntry.COLUMN_NAME_START_LAT + REAL_TYPE + COMMA_SEP +
+                        RouteEntry.COLUMN_NAME_START_LNG + REAL_TYPE + COMMA_SEP +
+                        RouteEntry.COLUMN_NAME_END_LAT + REAL_TYPE + COMMA_SEP +
+                        RouteEntry.COLUMN_NAME_END_LNG + REAL_TYPE + COMMA_SEP +
+                        RouteEntry.COLUMN_NAME_START_NAME + TEXT_TYPE + COMMA_SEP +
                         RouteEntry.COLUMN_NAME_END_NAME + TEXT_TYPE + " )";
 
         DBHelperRoutes(Context context) {
@@ -263,6 +276,7 @@ final class DBManager {
 
     private static class RouteEntry implements BaseColumns {
         private static final String TABLE_NAME = "routes";
+        private static final String COLUMN_NAME_POS = "pos";
         private static final String COLUMN_NAME_NAME = "name";
         private static final String COLUMN_NAME_START_LAT = "start_lat";
         private static final String COLUMN_NAME_START_LNG = "start_lng";

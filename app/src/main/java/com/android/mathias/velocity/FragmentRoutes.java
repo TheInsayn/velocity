@@ -76,10 +76,17 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
             }
         };
         ItemTouchHelper.SimpleCallback ithCallback = new ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.START | ItemTouchHelper.END){
+                ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.START | ItemTouchHelper.END) {
+            @Override
+            public void onMoved(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int fromPos, RecyclerView.ViewHolder target, int toPos, int x, int y) {
+                DBManager.setRoutePos(getContext(), mListRoutes.get(fromPos).getId(), toPos);
+                DBManager.setRoutePos(getContext(), mListRoutes.get(toPos).getId(), fromPos);
+                Collections.swap(mListRoutes, fromPos, toPos);
+                super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
+            }
+
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                Collections.swap(mListRoutes, viewHolder.getAdapterPosition(), target.getAdapterPosition());
                 mAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
                 return true;
             }
@@ -137,6 +144,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
                     newRoute.setEndLoc(new LatLng(end[0], end[1]));
                     newRoute.setStartName(result.getString(ActivityCreateRoute.START_LOC_NAME));
                     newRoute.setEndName(result.getString(ActivityCreateRoute.END_LOC_NAME));
+                    newRoute.setPos(mListRoutes.size()+1);
                     DBManager.saveRoute(getContext(), newRoute);
                     addRouteCard(newRoute);
                 }
