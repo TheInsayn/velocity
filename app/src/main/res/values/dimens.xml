@@ -6,7 +6,10 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="nav_icon_layout_size">72dp</dimen>
 
-    <dimen name="stopwatch_text_size">86sp</dimen>
+    <dimen name="chronometer_text_size">86sp</dimen>
+    <dimen name="chronometer_margin_top">116dp</dimen>
+    <dimen name="progress_circular_size">350dp</dimen>
+    <dimen name="progress_circular_thickness">16dp</dimen>
 
     <dimen name="walk_card_padding">12dp</dimen>
     <dimen name="walk_card_elevation">8dp</dimen>

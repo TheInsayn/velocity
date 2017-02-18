@@ -3,17 +3,27 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/colorCurrentBackground"
                 tools:context="com.android.mathias.velocity.FragmentCurrent">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/progress_circular_size"
+        android:layout_centerHorizontal="true"
+        android:max="600"
+        android:progress="0"
+        android:progressDrawable="@drawable/circular"/>
 
     <Chronometer
         android:id="@+id/stopwatch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/activity_margin"
-        android:textSize="@dimen/stopwatch_text_size"/>
+        android:layout_marginTop="@dimen/chronometer_margin_top"
+        android:textSize="@dimen/chronometer_text_size"/>
 
     <TextView
         android:id="@+id/txt_current_route"
