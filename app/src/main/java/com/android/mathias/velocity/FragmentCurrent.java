@@ -2,6 +2,10 @@ package com.android.mathias.velocity;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -28,6 +32,8 @@ import java.util.List;
 
 public class FragmentCurrent extends android.support.v4.app.Fragment {
 
+    private static int NOTIFICATION_ID = 1;
+    NotificationManager mNotificationManager;
     Chronometer mChronometer;
     ChronometerState mChronometerState;
     long mLastStopTime;
@@ -59,6 +65,13 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mAnimator.setDuration(120000);
         mAnimator.setInterpolator(new LinearInterpolator());
         mAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        mChronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            @Override
+            public void onChronometerTick(Chronometer chronometer) {
+                buildNotification();
+            }
+        });
         return currentView;
     }
 
@@ -113,6 +126,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         fabStop.setVisibility(View.VISIBLE);
         ((TextView)currentView.findViewById(R.id.txt_current_route)).setText(mCurrentWalkRoute.getName());
         mAnimator.start();
+        buildNotification();
     }
 
     private void pauseStopwatch(FloatingActionButton fab) {
@@ -121,6 +135,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         fab.setImageResource(android.R.drawable.ic_media_play);
         mChronometerState = ChronometerState.PAUSED;
         mAnimator.pause();
+        buildNotification();
     }
 
     private void resumeStopwatch(FloatingActionButton fab) {
@@ -129,6 +144,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         fab.setImageResource(android.R.drawable.ic_media_pause);
         mChronometerState = ChronometerState.RUNNING;
         mAnimator.resume();
+        buildNotification();
     }
 
     private void stopWalk(View currentView, FloatingActionButton fab) {
@@ -145,6 +161,23 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mCurrentWalkRoute = null;
         ((TextView)currentView.findViewById(R.id.txt_current_route)).setText("");
         mAnimator.cancel();
+        mNotificationManager.cancel(NOTIFICATION_ID);
+    }
+
+    private void buildNotification() {
+        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), NOTIFICATION_ID, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
+        Notification.Builder builder = new Notification.Builder(getActivity().getApplicationContext());
+        builder.setContentIntent(pendingIntent);
+        builder.setContentTitle(mChronometerState == ChronometerState.RUNNING ? "Ongoing walk" : "Walk paused");
+        builder.setSubText(mCurrentWalkRoute.getName());
+        builder.setSmallIcon(R.drawable.ic_current);
+        builder.setPriority(Notification.PRIORITY_DEFAULT);
+        builder.setOngoing(true);
+        //builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app));
+        //builder.setAutoCancel(true);
+        builder.setContentText(android.text.format.DateFormat.format("mm:ss", new Date((SystemClock.elapsedRealtime()-mChronometer.getBase()))));
+        Notification notification = builder.build();
+        mNotificationManager.notify(NOTIFICATION_ID, notification);
     }
 
     @Override
