@@ -2,15 +2,16 @@ package com.android.mathias.velocity;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -165,19 +166,22 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     }
 
     private void buildNotification() {
-        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), NOTIFICATION_ID, new Intent(), PendingIntent.FLAG_CANCEL_CURRENT);
-        Notification.Builder builder = new Notification.Builder(getActivity().getApplicationContext());
-        builder.setContentIntent(pendingIntent);
-        builder.setContentTitle(mChronometerState == ChronometerState.RUNNING ? "Ongoing walk" : "Walk paused");
-        builder.setSubText(mCurrentWalkRoute.getName());
-        builder.setSmallIcon(R.drawable.ic_current);
-        builder.setPriority(Notification.PRIORITY_DEFAULT);
-        builder.setOngoing(true);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity())
+                .setSmallIcon(R.drawable.ic_current)
+                .setContentTitle(mChronometerState == ChronometerState.RUNNING ? "Ongoing walk" : "Walk paused")
+                .setSubText(mCurrentWalkRoute.getName())
+                .setContentText(android.text.format.DateFormat.format("mm:ss", new Date((SystemClock.elapsedRealtime()-mChronometer.getBase()))))
+                //.setProgress(600, (int) mAnimator.getAnimatedValue(), false)
+                .setOngoing(true);
         //builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app));
         //builder.setAutoCancel(true);
-        builder.setContentText(android.text.format.DateFormat.format("mm:ss", new Date((SystemClock.elapsedRealtime()-mChronometer.getBase()))));
-        Notification notification = builder.build();
-        mNotificationManager.notify(NOTIFICATION_ID, notification);
+        Intent resultIntent = new Intent(getActivity(), ActivityMain.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
+        stackBuilder.addParentStack(ActivityMain.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(resultPendingIntent);
+        mNotificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     @Override
