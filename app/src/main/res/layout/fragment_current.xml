@@ -40,18 +40,20 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/fab_margin"
         android:clickable="true"
+        android:focusable="true"
         app:fabSize="normal"
         app:srcCompat="@android:drawable/ic_media_play"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <Button
         android:id="@+id/fab_current_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/fab_current_play_pause"
-        android:layout_marginStart="@dimen/activity_margin"
+        android:layout_marginStart="56dp"
         android:layout_toEndOf="@id/fab_current_play_pause"
         android:clickable="false"
         android:visibility="invisible"
-        app:fabSize="normal"
-        app:srcCompat="@drawable/ic_stop"/>
+        android:text="STOP"
+        android:textSize="18sp"
+        android:background="@android:color/transparent"/>
 </RelativeLayout>
