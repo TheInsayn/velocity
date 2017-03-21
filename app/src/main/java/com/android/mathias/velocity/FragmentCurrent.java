@@ -43,7 +43,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     NotificationManager mNotificationManager;
 
     FloatingActionButton mFab;
-    Button rBtn;
+    Button mBtnR;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,8 +64,8 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 toggleStopwatch();
             }
         });
-        rBtn = (Button) view.findViewById(R.id.fab_current_stop);
-        rBtn.setOnClickListener(new View.OnClickListener() {
+        mBtnR = (Button) view.findViewById(R.id.fab_current_stop);
+        mBtnR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 stopWalk();
@@ -126,8 +126,8 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mChronometer.start();
         mFab.setImageResource(android.R.drawable.ic_media_pause);
         mChronometerState = ChronometerState.RUNNING;
-        rBtn.setClickable(true);
-        rBtn.setVisibility(View.VISIBLE);
+        mBtnR.setClickable(true);
+        mBtnR.setVisibility(View.VISIBLE);
         ((TextView)getActivity().findViewById(R.id.txt_current_route)).setText(mCurrentWalkRoute.getName());
         mAnimator.start();
         buildNotification();
@@ -159,8 +159,8 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mLastStopTime = 0;
         mFab.setImageResource(android.R.drawable.ic_media_play);
         mChronometerState = ChronometerState.STOPPED;
-        rBtn.setClickable(false);
-        rBtn.setVisibility(View.INVISIBLE);
+        mBtnR.setClickable(false);
+        mBtnR.setVisibility(View.INVISIBLE);
         mCurrentWalkRoute = null;
         ((TextView)getActivity().findViewById(R.id.txt_current_route)).setText("");
         mAnimator.cancel();
