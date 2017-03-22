@@ -202,6 +202,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     @Override
     public void onDestroy() {
         if (mHandler != null) mHandler.removeCallbacks(mRunnable);
+        mNotificationManager.cancel(NOTIFICATION_ID);
         super.onDestroy();
     }
 
