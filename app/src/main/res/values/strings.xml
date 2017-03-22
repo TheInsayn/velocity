@@ -88,4 +88,8 @@
     <!-- Dialog route -->
     <string name="dialog_route_used_hint">Name already used!</string>
     <string name="dialog_route_title">Route name</string>
+
+    <!-- Current Fragment -->
+    <string name="timer_default_value">00:00</string>
+    <string name="current_rbtn_text">STOP</string>
 </resources>
