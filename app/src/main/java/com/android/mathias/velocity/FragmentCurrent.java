@@ -2,6 +2,7 @@ package com.android.mathias.velocity;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -32,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 public class FragmentCurrent extends android.support.v4.app.Fragment {
 
     private static int NOTIFICATION_ID = 1;
@@ -43,10 +43,11 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     Route mCurrentWalkRoute;
     ObjectAnimator mAnimator;
     NotificationManager mNotificationManager;
+    Activity mActivity;
 
     FloatingActionButton mFab;
     Button mBtnR;
-    private Handler mHandler;
+    Handler mHandler;
     ProgressBar mProgressBar;
 
     @Override
@@ -75,6 +76,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mAnimator.setInterpolator(new LinearInterpolator());
         mAnimator.setRepeatCount(ValueAnimator.INFINITE);
         mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        mActivity = getActivity();
         return view;
     }
 
@@ -125,7 +127,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mTimeState = TimeState.RUNNING;
         mBtnR.setClickable(true);
         mBtnR.setVisibility(View.VISIBLE);
-        ((TextView)getActivity().findViewById(R.id.txt_current_route)).setText(mCurrentWalkRoute.getName());
+        ((TextView)mActivity.findViewById(R.id.txt_current_route)).setText(mCurrentWalkRoute.getName());
         mAnimator.start();
         mHandler = new Handler();
         mHandler.post(mRunnable);
@@ -157,14 +159,14 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mBtnR.setClickable(false);
         mBtnR.setVisibility(View.INVISIBLE);
         mCurrentWalkRoute = null;
-        ((TextView)getActivity().findViewById(R.id.txt_current_route)).setText("");
+        ((TextView)mActivity.findViewById(R.id.txt_current_route)).setText("");
         mAnimator.cancel();
         mNotificationManager.cancel(NOTIFICATION_ID);
         mHandler.removeCallbacks(mRunnable);
     }
 
     private void buildNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity())
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mActivity)
                 .setSmallIcon(R.drawable.ic_current)
                 .setContentTitle(mTimeState == TimeState.RUNNING ? "Ongoing walk" : "Walk paused")
                 .setSubText(mCurrentWalkRoute.getName())
@@ -173,8 +175,8 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 .setOngoing(true);
         //builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app));
         //builder.setAutoCancel(true);
-        Intent resultIntent = new Intent(getActivity(), ActivityMain.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
+        Intent resultIntent = new Intent(mActivity, ActivityMain.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(mActivity);
         stackBuilder.addParentStack(ActivityMain.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -192,7 +194,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                startActivity(new Intent(getActivity(), ActivitySettings.class));
+                startActivity(new Intent(mActivity, ActivitySettings.class));
                 break;
             default: break;
         }
@@ -201,8 +203,8 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
 
     @Override
     public void onDestroy() {
-        if (mHandler != null) mHandler.removeCallbacks(mRunnable);
-        mNotificationManager.cancel(NOTIFICATION_ID);
+        //if (mHandler != null) mHandler.removeCallbacks(mRunnable);
+        //mNotificationManager.cancel(NOTIFICATION_ID);
         super.onDestroy();
     }
 
@@ -214,7 +216,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         @Override
         public void run() {
             long time = (SystemClock.elapsedRealtime() - mStartTime);
-            mTimeView.setText(DateFormat.format("mm:ss", new Date(time)));
+            if (mTimeView != null) mTimeView.setText(DateFormat.format("mm:ss", new Date(time)));
             buildNotification();
             mHandler.postDelayed(this, 1000);
         }
