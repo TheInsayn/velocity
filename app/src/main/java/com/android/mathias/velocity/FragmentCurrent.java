@@ -55,6 +55,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         final View view = inflater.inflate(R.layout.fragment_current, container, false);
         setHasOptionsMenu(true);
         mTimeView = (TextView) view.findViewById(R.id.timer);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mFab = (FloatingActionButton) view.findViewById(R.id.fab_current_toggle);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,11 +73,6 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         if (mTimeState == null) mTimeState = TimeState.STOPPED;
         if (mNotificationManager == null) mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
         if (mActivity == null) mActivity = getActivity();
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        mAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", 0, 600);
-        mAnimator.setDuration(120000);
-        mAnimator.setInterpolator(new LinearInterpolator());
-        mAnimator.setRepeatCount(ValueAnimator.INFINITE);
         return view;
     }
 
@@ -161,6 +157,8 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 mBtnR.setVisibility(View.INVISIBLE);
                 ((TextView)mActivity.findViewById(R.id.txt_current_route)).setText("");
                 mAnimator.cancel();
+                mProgressBar.setProgress(0);
+                mAnimator.setIntValues(0);
                 mNotificationManager.cancel(NOTIFICATION_ID);
                 mHandler.removeCallbacks(mRunnable);
                 break;
@@ -169,11 +167,17 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 mBtnR.setClickable(true);
                 mBtnR.setVisibility(View.VISIBLE);
                 ((TextView)mActivity.findViewById(R.id.txt_current_route)).setText(mCurrentWalkRoute.getName());
-                if(mAnimator.isPaused()) {
+                if(mAnimator != null && mAnimator.isPaused()) {
                     mAnimator.resume();
                 } else {
+                    mAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", 0, 600);
+                    mAnimator.setDuration(120000);
+                    mAnimator.setInterpolator(new LinearInterpolator());
+                    mAnimator.setRepeatCount(ValueAnimator.INFINITE);
                     mAnimator.start();
                 }
+                //mProgressBar.setProgress(300);
+                //mAnimator.setIntValues(300,600);
                 break;
             case PAUSED:
                 mFab.setImageResource(android.R.drawable.ic_media_play);
@@ -224,6 +228,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         super.onResume();
         if (mTimeState == TimeState.RUNNING) {
             mHandler.post(mRunnable);
+            updateUI();
         }
     }
 
