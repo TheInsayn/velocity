@@ -55,7 +55,6 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         final View view = inflater.inflate(R.layout.fragment_current, container, false);
         setHasOptionsMenu(true);
         mTimeView = (TextView) view.findViewById(R.id.timer);
-        mTimeState = TimeState.STOPPED;
         mFab = (FloatingActionButton) view.findViewById(R.id.fab_current_toggle);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,13 +69,14 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 stopWalk();
             }
         });
+        if (mTimeState == null) mTimeState = TimeState.STOPPED;
+        if (mNotificationManager == null) mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        if (mActivity == null) mActivity = getActivity();
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", 0, 600);
         mAnimator.setDuration(120000);
         mAnimator.setInterpolator(new LinearInterpolator());
         mAnimator.setRepeatCount(ValueAnimator.INFINITE);
-        mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-        mActivity = getActivity();
         return view;
     }
 
@@ -123,46 +123,64 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
 
     private void startStopwatch() {
         mStartTime = SystemClock.elapsedRealtime();
-        mFab.setImageResource(android.R.drawable.ic_media_pause);
         mTimeState = TimeState.RUNNING;
-        mBtnR.setClickable(true);
-        mBtnR.setVisibility(View.VISIBLE);
-        ((TextView)mActivity.findViewById(R.id.txt_current_route)).setText(mCurrentWalkRoute.getName());
-        mAnimator.start();
+        updateUI();
         mHandler = new Handler();
         mHandler.post(mRunnable);
     }
 
     private void pauseStopwatch() {
         mLastStopTime = SystemClock.elapsedRealtime();
-        mFab.setImageResource(android.R.drawable.ic_media_play);
         mTimeState = TimeState.PAUSED;
-        mAnimator.pause();
+        updateUI();
         mHandler.removeCallbacks(mRunnable);
     }
 
     private void resumeStopwatch() {
         mStartTime = mStartTime + (SystemClock.elapsedRealtime() - mLastStopTime);
-        mFab.setImageResource(android.R.drawable.ic_media_pause);
         mTimeState = TimeState.RUNNING;
-        mAnimator.resume();
+        updateUI();
         mHandler.post(mRunnable);
     }
 
     private void stopWalk() {
         long walkTime = SystemClock.elapsedRealtime() - mStartTime;
         Walk walk = new Walk(walkTime, new Date(), mCurrentWalkRoute);
-        DBManager.saveWalk(getContext(), walk);
         mLastStopTime = 0;
-        mFab.setImageResource(android.R.drawable.ic_media_play);
-        mTimeState = TimeState.STOPPED;
-        mBtnR.setClickable(false);
-        mBtnR.setVisibility(View.INVISIBLE);
         mCurrentWalkRoute = null;
-        ((TextView)mActivity.findViewById(R.id.txt_current_route)).setText("");
-        mAnimator.cancel();
-        mNotificationManager.cancel(NOTIFICATION_ID);
-        mHandler.removeCallbacks(mRunnable);
+        mTimeState = TimeState.STOPPED;
+        updateUI();
+        DBManager.saveWalk(getContext(), walk);
+    }
+
+    private void updateUI() {
+        switch (mTimeState) {
+            case STOPPED:
+                mFab.setImageResource(android.R.drawable.ic_media_play);
+                mBtnR.setClickable(false);
+                mBtnR.setVisibility(View.INVISIBLE);
+                ((TextView)mActivity.findViewById(R.id.txt_current_route)).setText("");
+                mAnimator.cancel();
+                mNotificationManager.cancel(NOTIFICATION_ID);
+                mHandler.removeCallbacks(mRunnable);
+                break;
+            case RUNNING:
+                mFab.setImageResource(android.R.drawable.ic_media_pause);
+                mBtnR.setClickable(true);
+                mBtnR.setVisibility(View.VISIBLE);
+                ((TextView)mActivity.findViewById(R.id.txt_current_route)).setText(mCurrentWalkRoute.getName());
+                if(mAnimator.isPaused()) {
+                    mAnimator.resume();
+                } else {
+                    mAnimator.start();
+                }
+                break;
+            case PAUSED:
+                mFab.setImageResource(android.R.drawable.ic_media_play);
+                mAnimator.pause();
+                break;
+            default: break;
+        }
     }
 
     private void buildNotification() {
@@ -202,10 +220,11 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        //if (mHandler != null) mHandler.removeCallbacks(mRunnable);
-        //mNotificationManager.cancel(NOTIFICATION_ID);
-        super.onDestroy();
+    public void onResume() {
+        super.onResume();
+        if (mTimeState == TimeState.RUNNING) {
+            mHandler.post(mRunnable);
+        }
     }
 
     private enum TimeState {

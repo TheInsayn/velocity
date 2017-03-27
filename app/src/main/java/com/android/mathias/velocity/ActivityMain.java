@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -28,9 +29,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(this);
-
-        Fragment fragmentCurrent = new FragmentCurrent();
-        getSupportFragmentManager().beginTransaction().add(R.id.frame_content, fragmentCurrent).commit();
+        showFragment(FragmentCurrent.class);
     }
 
     @Override
@@ -45,16 +44,16 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Fragment fragment = null;
+        Class fragment = null;
         switch (item.getItemId()) {
             case R.id.nav_current:
-                fragment = new FragmentCurrent();
+                fragment = FragmentCurrent.class;
                 break;
             case R.id.nav_history:
-                fragment = new FragmentHistory();
+                fragment = FragmentHistory.class;
                 break;
             case R.id.nav_routes:
-                fragment = new FragmentRoutes();
+                fragment = FragmentRoutes.class;
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, ActivitySettings.class));
@@ -62,13 +61,28 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
             default: break;
         }
         if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frame_content, fragment).commit();
+            showFragment(fragment);
             item.setChecked(true);
             setTitle(item.getTitle());
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.layout_main);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showFragment(Class fragmentClass) {
+        FragmentManager manager = getSupportFragmentManager();
+        String backStateName = fragmentClass.getName();
+        boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
+        if (!fragmentPopped){
+            FragmentTransaction ft = manager.beginTransaction();
+            try {
+                ft.replace(R.id.frame_content, (Fragment) fragmentClass.newInstance());
+                ft.addToBackStack(backStateName);
+                ft.commit();
+            } catch(InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
