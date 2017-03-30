@@ -130,6 +130,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mTimeState = TimeState.PAUSED;
         updateUI();
         mHandler.removeCallbacks(mRunnable);
+        buildNotification();
     }
 
     private void resumeStopwatch() {
@@ -155,7 +156,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 mFab.setImageResource(android.R.drawable.ic_media_play);
                 mBtnR.setClickable(false);
                 mBtnR.setVisibility(View.INVISIBLE);
-                ((TextView)mActivity.findViewById(R.id.txt_current_route)).setText("");
+                ((TextView) mActivity.findViewById(R.id.txt_current_route)).setText("");
                 mAnimator.cancel();
                 mProgressBar.setProgress(0);
                 mAnimator.setIntValues(0);
@@ -166,18 +167,17 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 mFab.setImageResource(android.R.drawable.ic_media_pause);
                 mBtnR.setClickable(true);
                 mBtnR.setVisibility(View.VISIBLE);
-                ((TextView)mActivity.findViewById(R.id.txt_current_route)).setText(mCurrentWalkRoute.getName());
-                if(mAnimator != null && mAnimator.isPaused()) {
+                ((TextView) mActivity.findViewById(R.id.txt_current_route)).setText(mCurrentWalkRoute.getName());
+                if (mAnimator != null && mAnimator.isPaused()) {
                     mAnimator.resume();
                 } else {
-                    mAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", 0, 600);
+                    mAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", 6000);
                     mAnimator.setDuration(120000);
                     mAnimator.setInterpolator(new LinearInterpolator());
                     mAnimator.setRepeatCount(ValueAnimator.INFINITE);
                     mAnimator.start();
                 }
                 //mProgressBar.setProgress(300);
-                //mAnimator.setIntValues(300,600);
                 break;
             case PAUSED:
                 mFab.setImageResource(android.R.drawable.ic_media_play);
@@ -194,7 +194,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 .setSubText(mCurrentWalkRoute.getName())
                 .setContentText(DateFormat.format("mm:ss", new Date((SystemClock.elapsedRealtime()-mStartTime))))
                 //.setProgress(600, (int) mAnimator.getAnimatedValue(), false)
-                .setOngoing(true);
+                .setOngoing(mTimeState == TimeState.RUNNING);
         //builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app));
         //builder.setAutoCancel(true);
         Intent resultIntent = new Intent(mActivity, ActivityMain.class);

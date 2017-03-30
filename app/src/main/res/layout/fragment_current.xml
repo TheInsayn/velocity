@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/progress_circular_size"
         android:layout_centerHorizontal="true"
-        android:max="600"
+        android:max="6000"
         android:progress="0"
         android:progressDrawable="@drawable/circular"/>
 
