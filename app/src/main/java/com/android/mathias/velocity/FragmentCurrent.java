@@ -171,6 +171,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 if (mAnimator != null && mAnimator.isPaused()) {
                     mAnimator.resume();
                 } else {
+                    if (mAnimator != null) mAnimator.cancel();
                     mAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", 6000);
                     mAnimator.setDuration(120000);
                     mAnimator.setInterpolator(new LinearInterpolator());
