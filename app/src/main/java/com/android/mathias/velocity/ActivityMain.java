@@ -38,7 +38,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            this.moveTaskToBack(true);
         }
     }
 
@@ -73,14 +73,14 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     private void showFragment(Class fragmentClass) {
         FragmentManager manager = getSupportFragmentManager();
         String backStateName = fragmentClass.getName();
-        boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
-        if (!fragmentPopped){
+        boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
+        if (!fragmentPopped) {
             FragmentTransaction ft = manager.beginTransaction();
             try {
                 ft.replace(R.id.frame_content, (Fragment) fragmentClass.newInstance());
                 ft.addToBackStack(backStateName);
                 ft.commit();
-            } catch(InstantiationException | IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
