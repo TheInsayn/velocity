@@ -21,7 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -32,6 +32,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class FragmentCurrent extends android.support.v4.app.Fragment {
 
@@ -168,17 +169,13 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 mBtnR.setClickable(true);
                 mBtnR.setVisibility(View.VISIBLE);
                 ((TextView) mActivity.findViewById(R.id.txt_current_route)).setText(mCurrentWalkRoute.getName());
-                if (mAnimator != null && mAnimator.isPaused()) {
-                    mAnimator.resume();
-                } else {
-                    if (mAnimator != null) mAnimator.cancel();
-                    mAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", 6000);
-                    mAnimator.setDuration(120000);
-                    mAnimator.setInterpolator(new LinearInterpolator());
-                    mAnimator.setRepeatCount(ValueAnimator.INFINITE);
-                    mAnimator.start();
+                if (mAnimator != null) {
+                    if (mAnimator.isPaused()) {
+                        mAnimator.resume();
+                    } else {
+                       mAnimator.cancel();
+                    }
                 }
-                //mProgressBar.setProgress(300);
                 break;
             case PAUSED:
                 mFab.setImageResource(android.R.drawable.ic_media_play);
@@ -194,7 +191,6 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 .setContentTitle(mTimeState == TimeState.RUNNING ? "Ongoing walk" : "Walk paused")
                 .setSubText(mCurrentWalkRoute.getName())
                 .setContentText(DateFormat.format("mm:ss", new Date((SystemClock.elapsedRealtime()-mStartTime))))
-                //.setProgress(600, (int) mAnimator.getAnimatedValue(), false)
                 .setOngoing(mTimeState == TimeState.RUNNING);
         //builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app));
         //builder.setAutoCancel(true);
@@ -205,6 +201,13 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(resultPendingIntent);
         mNotificationManager.notify(NOTIFICATION_ID, builder.build());
+    }
+
+    private void setProgressSeconds(int seconds) {
+        mAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", seconds*100);
+        mAnimator.setDuration(1500);
+        mAnimator.setInterpolator(new DecelerateInterpolator());
+        mAnimator.start();
     }
 
     @Override
@@ -241,8 +244,10 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         @Override
         public void run() {
             long time = (SystemClock.elapsedRealtime() - mStartTime);
+            int sec = (int) (TimeUnit.MILLISECONDS.toSeconds(time)) % 60;
             if (mTimeView != null) mTimeView.setText(DateFormat.format("mm:ss", new Date(time)));
             buildNotification();
+            setProgressSeconds(sec);
             mHandler.postDelayed(this, 1000);
         }
     };

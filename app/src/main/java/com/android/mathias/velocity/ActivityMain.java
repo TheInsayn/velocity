@@ -60,7 +60,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 break;
             default: break;
         }
-        if (fragment != null) {
+        if (fragment != null && !item.isChecked()) {
             showFragment(fragment);
             item.setChecked(true);
             setTitle(item.getTitle());
