@@ -1,7 +1,6 @@
 package com.android.mathias.velocity;
 
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -38,6 +37,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
 
     private static int NOTIFICATION_ID = 1;
     TextView mTimeView;
+    TextView mRouteView;
     TimeState mTimeState;
     long mStartTime;
     long mLastStopTime;
@@ -55,25 +55,6 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_current, container, false);
         setHasOptionsMenu(true);
-        mTimeView = (TextView) view.findViewById(R.id.timer);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        mFab = (FloatingActionButton) view.findViewById(R.id.fab_current_toggle);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleStopwatch();
-            }
-        });
-        mBtnR = (Button) view.findViewById(R.id.fab_current_stop);
-        mBtnR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopWalk();
-            }
-        });
-        if (mTimeState == null) mTimeState = TimeState.STOPPED;
-        if (mNotificationManager == null) mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-        if (mActivity == null) mActivity = getActivity();
         return view;
     }
 
@@ -157,18 +138,20 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 mFab.setImageResource(android.R.drawable.ic_media_play);
                 mBtnR.setClickable(false);
                 mBtnR.setVisibility(View.INVISIBLE);
-                ((TextView) mActivity.findViewById(R.id.txt_current_route)).setText("");
-                mAnimator.cancel();
+                mRouteView.setText("");
+                if (mAnimator != null) {
+                    mAnimator.cancel();
+                    mAnimator.setIntValues(0);
+                }
                 mProgressBar.setProgress(0);
-                mAnimator.setIntValues(0);
                 mNotificationManager.cancel(NOTIFICATION_ID);
-                mHandler.removeCallbacks(mRunnable);
+                if (mHandler != null) mHandler.removeCallbacks(mRunnable);
                 break;
             case RUNNING:
                 mFab.setImageResource(android.R.drawable.ic_media_pause);
                 mBtnR.setClickable(true);
                 mBtnR.setVisibility(View.VISIBLE);
-                ((TextView) mActivity.findViewById(R.id.txt_current_route)).setText(mCurrentWalkRoute.getName());
+                mRouteView.setText(mCurrentWalkRoute.getName());
                 if (mAnimator != null) {
                     if (mAnimator.isPaused()) {
                         mAnimator.resume();
@@ -179,6 +162,10 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 break;
             case PAUSED:
                 mFab.setImageResource(android.R.drawable.ic_media_play);
+                mBtnR.setClickable(true);
+                mBtnR.setVisibility(View.VISIBLE);
+                mTimeView.setText(DateFormat.format("mm:ss", new Date(mLastStopTime-mStartTime)));
+                mRouteView.setText(mCurrentWalkRoute.getName());
                 mAnimator.pause();
                 break;
             default: break;
@@ -190,7 +177,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 .setSmallIcon(R.drawable.ic_current)
                 .setContentTitle(mTimeState == TimeState.RUNNING ? "Ongoing walk" : "Walk paused")
                 .setSubText(mCurrentWalkRoute.getName())
-                .setContentText(DateFormat.format("mm:ss", new Date((SystemClock.elapsedRealtime()-mStartTime))))
+                .setContentText(DateFormat.format("mm:ss", new Date(SystemClock.elapsedRealtime()-mStartTime)))
                 .setOngoing(mTimeState == TimeState.RUNNING);
         //builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app));
         //builder.setAutoCancel(true);
@@ -230,10 +217,32 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        //initializations
+        if (mActivity == null) mActivity = getActivity();
+        mTimeView = (TextView) mActivity.findViewById(R.id.timer);
+        mRouteView = (TextView) mActivity.findViewById(R.id.txt_current_route);
+        mProgressBar = (ProgressBar) mActivity.findViewById(R.id.progressBar);
+        mFab = (FloatingActionButton) mActivity.findViewById(R.id.fab_current_toggle);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleStopwatch();
+            }
+        });
+        mBtnR = (Button) mActivity.findViewById(R.id.fab_current_stop);
+        mBtnR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopWalk();
+            }
+        });
+        if (mTimeState == null) mTimeState = TimeState.STOPPED;
+        if (mNotificationManager == null) mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        //custom actions
         if (mTimeState == TimeState.RUNNING) {
             mHandler.post(mRunnable);
-            updateUI();
         }
+        updateUI();
     }
 
     private enum TimeState {
@@ -245,7 +254,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         public void run() {
             long time = (SystemClock.elapsedRealtime() - mStartTime);
             int sec = (int) (TimeUnit.MILLISECONDS.toSeconds(time)) % 60;
-            if (mTimeView != null) mTimeView.setText(DateFormat.format("mm:ss", new Date(time)));
+            mTimeView.setText(DateFormat.format("mm:ss", new Date(time)));
             buildNotification();
             setProgressSeconds(sec);
             mHandler.postDelayed(this, 1000);
