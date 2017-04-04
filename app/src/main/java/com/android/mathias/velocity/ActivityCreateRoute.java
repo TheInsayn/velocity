@@ -3,7 +3,6 @@ package com.android.mathias.velocity;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -69,12 +68,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
         }
         mapFragment.getMapAsync(this);
         Button btnSave = (Button) findViewById(R.id.btn_save_route);
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                promptForNameAndReturn();
-            }
-        });
+        btnSave.setOnClickListener(view -> promptForNameAndReturn());
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -90,20 +84,12 @@ public class ActivityCreateRoute extends AppCompatActivity implements
         final List<Route> routes = DBManager.getRoutes(this, null);
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setView(R.layout.dialog_route)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String routeName = ((EditText) ((Dialog) dialogInterface).findViewById(R.id.txt_dialog_route_name)).getText().toString();
-                        finish(routeName);
-                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                    }
+                .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
+                    String routeName = ((EditText) ((Dialog) dialogInterface).findViewById(R.id.txt_dialog_route_name)).getText().toString();
+                    finish(routeName);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                 })
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-                    }
-                }).show();
+                .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)).show();
         ((EditText) dialog.findViewById(R.id.txt_dialog_route_name)).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -154,12 +140,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                ActivityCreateRoute.this.handleMapClick(mMap, latLng);
-            }
-        });
+        mMap.setOnMapClickListener(latLng -> ActivityCreateRoute.this.handleMapClick(mMap, latLng));
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) { }

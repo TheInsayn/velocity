@@ -50,10 +50,10 @@ class Route {
         mId = id;
     }
 
-    public int getPos() {
+    int getPos() {
         return mPos;
     }
-    public void setPos(int mPos) {
+    void setPos(int mPos) {
         this.mPos = mPos;
     }
 

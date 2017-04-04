@@ -74,19 +74,16 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
                 mTempWalk = mListWalks.get(idx);
                 mListWalks.remove(idx);
                 mAdapter.notifyItemRemoved(idx);
-                mSnackbar = Snackbar.make(rvHistory, "Walk deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (mTempWalk != null) {
-                            mSnackbar.removeCallback(sbCallback);
-                            mListWalks.add(idx, mTempWalk);
-                            mAdapter.notifyItemInserted(idx);
-                            Snackbar.make(rvHistory, "Restored.", Snackbar.LENGTH_SHORT).show();
-                            mSnackbar = null;
-                            mTempWalk = null;
-                        } else {
-                            Snackbar.make(rvHistory, "Error restoring...", Snackbar.LENGTH_SHORT).show();
-                        }
+                mSnackbar = Snackbar.make(rvHistory, "Walk deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", view -> {
+                    if (mTempWalk != null) {
+                        mSnackbar.removeCallback(sbCallback);
+                        mListWalks.add(idx, mTempWalk);
+                        mAdapter.notifyItemInserted(idx);
+                        Snackbar.make(rvHistory, "Restored.", Snackbar.LENGTH_SHORT).show();
+                        mSnackbar = null;
+                        mTempWalk = null;
+                    } else {
+                        Snackbar.make(rvHistory, "Error restoring...", Snackbar.LENGTH_SHORT).show();
                     }
                 }).addCallback(sbCallback);
                 mSnackbar.show();

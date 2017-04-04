@@ -21,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListPopupWindow;
@@ -81,17 +80,14 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
             lpw.setAdapter(adapter);
             lpw.setAnchorView(mFab);
             lpw.setContentWidth((int) (((View)mFab.getParent()).getWidth()/2.5));
-            lpw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    if (adapterView.getItemAtPosition(i).toString().equals("None")) {
-                        mCurrentWalkRoute = new Route("No route set");
-                    } else {
-                        mCurrentWalkRoute = DBManager.getRoutes(getContext(), adapterView.getItemAtPosition(i).toString()).get(0);
-                    }
-                    startStopwatch();
-                    lpw.dismiss();
+            lpw.setOnItemClickListener((adapterView, view, i, l) -> {
+                if (adapterView.getItemAtPosition(i).toString().equals("None")) {
+                    mCurrentWalkRoute = new Route("No route set");
+                } else {
+                    mCurrentWalkRoute = DBManager.getRoutes(getContext(), adapterView.getItemAtPosition(i).toString()).get(0);
                 }
+                startStopwatch();
+                lpw.dismiss();
             });
             lpw.show();
         } else {
@@ -223,19 +219,9 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mRouteView = (TextView) mActivity.findViewById(R.id.txt_current_route);
         mProgressBar = (ProgressBar) mActivity.findViewById(R.id.progressBar);
         mFab = (FloatingActionButton) mActivity.findViewById(R.id.fab_current_toggle);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleStopwatch();
-            }
-        });
+        mFab.setOnClickListener(view -> toggleStopwatch());
         mBtnR = (Button) mActivity.findViewById(R.id.fab_current_stop);
-        mBtnR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopWalk();
-            }
-        });
+        mBtnR.setOnClickListener(view -> stopWalk());
         if (mTimeState == null) mTimeState = TimeState.STOPPED;
         if (mNotificationManager == null) mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
         //custom actions

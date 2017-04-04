@@ -10,15 +10,16 @@ android {
         versionCode 1
         versionName "v0.4rc1"
         setProperty("archivesBaseName", "velocity_$versionName")
-        //jackOptions {
-        //    enabled true
-        //}
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
