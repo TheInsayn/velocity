@@ -135,10 +135,6 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 mBtnR.setClickable(false);
                 mBtnR.setVisibility(View.INVISIBLE);
                 mRouteView.setText("");
-                if (mAnimator != null) {
-                    mAnimator.cancel();
-                    mAnimator.setIntValues(0);
-                }
                 mProgressBar.setProgress(0);
                 mNotificationManager.cancel(NOTIFICATION_ID);
                 if (mHandler != null) mHandler.removeCallbacks(mRunnable);
@@ -148,13 +144,6 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 mBtnR.setClickable(true);
                 mBtnR.setVisibility(View.VISIBLE);
                 mRouteView.setText(mCurrentWalkRoute.getName());
-                if (mAnimator != null) {
-                    if (mAnimator.isPaused()) {
-                        mAnimator.resume();
-                    } else {
-                       mAnimator.cancel();
-                    }
-                }
                 break;
             case PAUSED:
                 mFab.setImageResource(android.R.drawable.ic_media_play);
@@ -162,7 +151,6 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 mBtnR.setVisibility(View.VISIBLE);
                 mTimeView.setText(DateFormat.format("mm:ss", new Date(mLastStopTime-mStartTime)));
                 mRouteView.setText(mCurrentWalkRoute.getName());
-                mAnimator.pause();
                 break;
             default: break;
         }
@@ -187,6 +175,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     }
 
     private void setProgressSeconds(int seconds) {
+        if (mAnimator != null && mAnimator.isRunning()) mAnimator.cancel();
         mAnimator = ObjectAnimator.ofInt(mProgressBar, "progress", seconds*100);
         mAnimator.setDuration(1500);
         mAnimator.setInterpolator(new DecelerateInterpolator());
