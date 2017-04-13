@@ -8,7 +8,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 25
         versionCode 1
-        versionName "v0.4r"
+        versionName "v0.5a"
         setProperty("archivesBaseName", "velocity_$versionName")
     }
     buildTypes {

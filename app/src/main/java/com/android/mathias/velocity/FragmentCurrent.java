@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -43,6 +44,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     Route mCurrentWalkRoute;
     ObjectAnimator mAnimator;
     NotificationManager mNotificationManager;
+    SharedPreferences mSharedPref;
     Activity mActivity;
 
     FloatingActionButton mFab;
@@ -69,7 +71,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     private void startWalk() {
         final List<String> routeNames = new ArrayList<>();
         for (Route r : DBManager.getRoutes(getContext(), null)) { routeNames.add(r.getName()); }
-        String defaultRouteName = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("default_route", "None");
+        String defaultRouteName = mSharedPref.getString("default_route", "None");
         if (defaultRouteName.equals("None")) { mCurrentWalkRoute = new Route("No route set"); }
         else { mCurrentWalkRoute = DBManager.getRoutes(getContext(), defaultRouteName).get(0); }
         if (routeNames.size() > 1 && defaultRouteName.equals("None")) {
@@ -136,7 +138,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
                 mBtnR.setVisibility(View.INVISIBLE);
                 mRouteView.setText("");
                 mProgressBar.setProgress(0);
-                mNotificationManager.cancel(NOTIFICATION_ID);
+                if (mNotificationManager.getActiveNotifications() != null) mNotificationManager.cancel(NOTIFICATION_ID);
                 if (mHandler != null) mHandler.removeCallbacks(mRunnable);
                 break;
             case RUNNING:
@@ -213,6 +215,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mBtnR.setOnClickListener(view -> stopWalk());
         if (mTimeState == null) mTimeState = TimeState.STOPPED;
         if (mNotificationManager == null) mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        mSharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         //custom actions
         if (mTimeState == TimeState.RUNNING) {
             mHandler.post(mRunnable);
@@ -230,7 +233,11 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
             long time = (SystemClock.elapsedRealtime() - mStartTime);
             int sec = (int) (TimeUnit.MILLISECONDS.toSeconds(time)) % 60;
             mTimeView.setText(DateFormat.format("mm:ss", new Date(time)));
-            buildNotification();
+            if (mSharedPref.getBoolean("enable_notifications", false))  {
+                buildNotification();
+            } else if (mNotificationManager.getActiveNotifications() != null) {
+                mNotificationManager.cancel(NOTIFICATION_ID);
+            }
             setProgressSeconds(sec);
             mHandler.postDelayed(this, 1000);
         }
