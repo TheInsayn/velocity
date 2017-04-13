@@ -7,7 +7,6 @@
     <dimen name="nav_icon_layout_size">72dp</dimen>
 
     <dimen name="timer_text_size">86sp</dimen>
-    <dimen name="timer_margin_top">116dp</dimen>
     <dimen name="progress_circular_size">350dp</dimen>
     <dimen name="progress_circular_thickness">16dp</dimen>
 
@@ -29,6 +28,5 @@
     <dimen name="dialog_route_padding">22dp</dimen>
     <dimen name="dialog_route_title_size">18sp</dimen>
 
-    <dimen name="current_rbtn_margin">56dp</dimen>
-    <dimen name="current_rbtn_text_size">18sp</dimen>
+    <dimen name="current_rbtn_text_size">24sp</dimen>
 </resources>
