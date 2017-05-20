@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -62,12 +61,12 @@ public class ActivityCreateRoute extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_route);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        setSupportActionBar(findViewById(R.id.toolbar));
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         mapFragment.getMapAsync(this);
-        Button btnSave = (Button) findViewById(R.id.btn_save_route);
+        Button btnSave = findViewById(R.id.btn_save_route);
         btnSave.setOnClickListener(view -> promptForNameAndReturn());
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -189,7 +188,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                         .draggable(true));
                 mStartLoc = latLng;
                 marker.showInfoWindow();
-                TextView txtStartAddress = (TextView) findViewById(R.id.txt_start_address);
+                TextView txtStartAddress = findViewById(R.id.txt_start_address);
                 txtStartAddress.setText(String.format(getString(R.string.route_start_prefix), address));
                 txtStartAddress.setVisibility(View.VISIBLE);
             } else if (mEndLoc == null) {
@@ -202,7 +201,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                 mEndLoc = latLng;
                 marker.showInfoWindow();
                 findViewById(R.id.btn_save_route).setVisibility(View.VISIBLE);
-                TextView txtEndAddress = (TextView) findViewById(R.id.txt_end_address);
+                TextView txtEndAddress = findViewById(R.id.txt_end_address);
                 txtEndAddress.setText(String.format(getString(R.string.route_end_prefix), address));
                 txtEndAddress.setVisibility(View.VISIBLE);
             } else {

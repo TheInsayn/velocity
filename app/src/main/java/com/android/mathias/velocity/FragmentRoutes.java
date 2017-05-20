@@ -37,7 +37,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
         View routesView = inflater.inflate(R.layout.fragment_routes, container, false);
         initRecyclerView(routesView);
         setHasOptionsMenu(true);
-        final FloatingActionButton fabCreate = (FloatingActionButton) routesView.findViewById(R.id.fab_create_route);
+        final FloatingActionButton fabCreate = routesView.findViewById(R.id.fab_create_route);
         fabCreate.setOnClickListener(view -> FragmentRoutes.this.handleFabEvent());
         List<Route> routes = DBManager.getRoutes(getContext(), null);
         for (Route r : routes) {
@@ -51,7 +51,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
     }
 
     private void initRecyclerView(View routesView) {
-        final RecyclerView rvRoutes = (RecyclerView) routesView.findViewById(R.id.list_routes);
+        final RecyclerView rvRoutes = routesView.findViewById(R.id.list_routes);
         mAdapter = new RecyclerAdapterRoutes(mListRoutes);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         rvRoutes.setHasFixedSize(true);

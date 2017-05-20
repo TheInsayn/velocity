@@ -20,10 +20,10 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
 
         WalkCardHolder(View view) {
             super(view);
-            mWalkRoute = (TextView) view.findViewById(R.id.txt_walk_route);
-            mWalkDuration = (TextView) view.findViewById(R.id.txt_walk_duration);
-            mWalkDate = (TextView) view.findViewById(R.id.txt_walk_date);
-            mWalkWeekday = (TextView) view.findViewById(R.id.txt_walk_weekday);
+            mWalkRoute = view.findViewById(R.id.txt_walk_route);
+            mWalkDuration = view.findViewById(R.id.txt_walk_duration);
+            mWalkDate = view.findViewById(R.id.txt_walk_date);
+            mWalkWeekday = view.findViewById(R.id.txt_walk_weekday);
         }
     }
 

@@ -74,7 +74,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         String defaultRouteName = mSharedPref.getString("default_route", "None");
         if (defaultRouteName.equals("None")) { mCurrentWalkRoute = new Route("No route set"); }
         else { mCurrentWalkRoute = DBManager.getRoutes(getContext(), defaultRouteName).get(0); }
-        if (routeNames.size() > 1 && defaultRouteName.equals("None")) {
+        if (routeNames.size() > 0 && defaultRouteName.equals("None")) {
             final ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item);
             adapter.addAll(routeNames);
             adapter.add("None");
@@ -206,12 +206,12 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         super.onResume();
         //initializations
         if (mActivity == null) mActivity = getActivity();
-        mTimeView = (TextView) mActivity.findViewById(R.id.timer);
-        mRouteView = (TextView) mActivity.findViewById(R.id.txt_current_route);
-        mProgressBar = (ProgressBar) mActivity.findViewById(R.id.progressBar);
-        mFab = (FloatingActionButton) mActivity.findViewById(R.id.fab_current_toggle);
+        mTimeView = mActivity.findViewById(R.id.timer);
+        mRouteView = mActivity.findViewById(R.id.txt_current_route);
+        mProgressBar = mActivity.findViewById(R.id.progressBar);
+        mFab = mActivity.findViewById(R.id.fab_current_toggle);
         mFab.setOnClickListener(view -> toggleStopwatch());
-        mBtnR = (Button) mActivity.findViewById(R.id.fab_current_stop);
+        mBtnR = mActivity.findViewById(R.id.fab_current_stop);
         mBtnR.setOnClickListener(view -> stopWalk());
         if (mTimeState == null) mTimeState = TimeState.STOPPED;
         if (mNotificationManager == null) mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);

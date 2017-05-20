@@ -19,10 +19,10 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
 
         RouteCardHolder(View view) {
             super(view);
-            mRouteName = (TextView) view.findViewById(R.id.txt_route_name);
-            mRouteStartPoint = (TextView) view.findViewById(R.id.txt_route_start_point);
-            mRouteEndPoint = (TextView) view.findViewById(R.id.txt_route_end_point);
-            mRouteDistance = (TextView) view.findViewById(R.id.txt_route_distance);
+            mRouteName = view.findViewById(R.id.txt_route_name);
+            mRouteStartPoint = view.findViewById(R.id.txt_route_start_point);
+            mRouteEndPoint = view.findViewById(R.id.txt_route_end_point);
+            mRouteDistance = view.findViewById(R.id.txt_route_distance);
         }
     }
 
