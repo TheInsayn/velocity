@@ -2,12 +2,14 @@ package com.android.mathias.velocity;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -36,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 public class FragmentCurrent extends android.support.v4.app.Fragment {
 
     private static int NOTIFICATION_ID = 1;
+    private static String CHANNEL_ID = "channel_walk";
     TextView mTimeView;
     TextView mRouteView;
     TimeState mTimeState;
@@ -45,6 +48,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     ObjectAnimator mAnimator;
     NotificationManager mNotificationManager;
     SharedPreferences mSharedPref;
+    NotificationChannel mChannel;
     Activity mActivity;
 
     FloatingActionButton mFab;
@@ -159,20 +163,17 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     }
 
     private void buildNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mActivity)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mActivity, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_current)
                 .setContentTitle(mTimeState == TimeState.RUNNING ? "Ongoing walk" : "Walk paused")
                 .setSubText(mCurrentWalkRoute.getName())
                 .setContentText(DateFormat.format("mm:ss", new Date(SystemClock.elapsedRealtime()-mStartTime)))
-                .setOngoing(mTimeState == TimeState.RUNNING);
-        //builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app));
-        //builder.setAutoCancel(true);
-        Intent resultIntent = new Intent(mActivity, ActivityMain.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(mActivity);
-        stackBuilder.addParentStack(ActivityMain.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(resultPendingIntent);
+                .setOngoing(mTimeState == TimeState.RUNNING)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_app))
+                .setAutoCancel(true);
+        Intent notificationIntent = new Intent(getActivity(), ActivityMain.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        builder.setContentIntent(PendingIntent.getActivity(getActivity(), 0, notificationIntent, 0));
         mNotificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
@@ -217,10 +218,19 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         if (mNotificationManager == null) mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         //custom actions
-        if (mTimeState == TimeState.RUNNING) {
-            mHandler.post(mRunnable);
-        }
+        if (mTimeState == TimeState.RUNNING) mHandler.post(mRunnable);
+        if (mChannel == null) createNotificationChannel();
         updateUI();
+    }
+
+    private void createNotificationChannel() {
+        mChannel = new NotificationChannel(CHANNEL_ID, getString(R.string.channel_name), NotificationManager.IMPORTANCE_LOW);
+        mChannel.setDescription(getString(R.string.channel_description));
+        mChannel.enableLights(mSharedPref.getBoolean("notifications_led", false));
+        mChannel.setLightColor(Color.GREEN);
+        mChannel.enableVibration(mSharedPref.getBoolean("notifications_vibrate", false));
+        mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+        mNotificationManager.createNotificationChannel(mChannel);
     }
 
     private enum TimeState {
