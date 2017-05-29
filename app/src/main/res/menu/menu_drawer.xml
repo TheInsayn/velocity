@@ -18,17 +18,4 @@
             android:title="@string/nav_item_routes"/>
     </group>
 
-    <group
-        android:id="@+id/drawer_group_misc"
-        android:checkableBehavior="none">
-        <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_settings"
-            android:title="@string/nav_item_settings"/>
-        <item
-            android:id="@+id/nav_info"
-            android:icon="@drawable/ic_info"
-            android:title="@string/nav_item_info"/>
-    </group>
-
 </menu>

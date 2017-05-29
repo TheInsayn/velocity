@@ -1,10 +1,6 @@
 <resources>
     <dimen name="activity_margin">16dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-
-    <dimen name="nav_header_vertical_spacing">16dp</dimen>
-    <dimen name="nav_header_height">160dp</dimen>
-    <dimen name="nav_icon_layout_size">72dp</dimen>
+    <dimen name="fab_margin">24dp</dimen>
 
     <dimen name="timer_text_size">86sp</dimen>
     <dimen name="progress_circular_size">350dp</dimen>

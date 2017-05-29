@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_delete_walks"
         android:orderInCategory="100"
         android:title="@string/menu_clear_history"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:icon="@drawable/ic_settings"
+        android:orderInCategory="900"
         android:title="@string/menu_main_settings"
-        app:showAsAction="never"/>
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="999"
+        android:title="@string/menu_main_info"
+        app:showAsAction="never" />
 </menu>
