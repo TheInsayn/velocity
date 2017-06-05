@@ -27,7 +27,6 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
 
         WalkCardHolder(View view) {
             super(view);
-            view.setClickable(true);
             mWalkRoute = view.findViewById(R.id.txt_walk_route);
             mWalkDuration = view.findViewById(R.id.txt_walk_duration);
             mWalkDate = view.findViewById(R.id.txt_walk_date);
@@ -55,7 +54,7 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
         holder.mWalkDuration.setText(android.text.format.DateFormat.format("mm:ss", new Date(walk.getDuration())));
         holder.mWalkDate.setText(android.text.format.DateFormat.format("dd.MM.yyyy", walk.getDate()));
         holder.mWalkWeekday.setText(android.text.format.DateFormat.format("EEEE", walk.getDate()));
-
+        //handle expansion in list
         final boolean isExpanded = position == mExpandedPosition;
         holder.mExpansion.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.itemView.setActivated(isExpanded);

@@ -80,7 +80,6 @@
                     android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
             </RelativeLayout>
 
-
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

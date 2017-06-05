@@ -52,7 +52,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
 
     private void initRecyclerView(View routesView) {
         final RecyclerView rvRoutes = routesView.findViewById(R.id.list_routes);
-        mAdapter = new RecyclerAdapterRoutes(mListRoutes);
+        mAdapter = new RecyclerAdapterRoutes(mListRoutes, rvRoutes);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         rvRoutes.setHasFixedSize(true);
         rvRoutes.setLayoutManager(layoutManager);
