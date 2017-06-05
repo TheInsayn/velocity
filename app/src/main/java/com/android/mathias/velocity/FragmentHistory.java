@@ -38,7 +38,7 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
 
     private void initRecyclerView(View historyView) {
         final RecyclerView rvHistory = historyView.findViewById(R.id.list_walks);
-        mAdapter = new RecyclerAdapterWalks(mListWalks);
+        mAdapter = new RecyclerAdapterWalks(mListWalks, rvHistory);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         rvHistory.setHasFixedSize(true);
         rvHistory.setLayoutManager(layoutManager);
