@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Locale;
 
 class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.RouteCardHolder> {
     private List<Route> mRouteList;
@@ -49,7 +50,7 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
         holder.mRouteName.setText(route.getName());
         holder.mRouteStartPoint.setText(route.getStartName());
         holder.mRouteEndPoint.setText(route.getEndName());
-        holder.mRouteDistance.setText(String.format("Distance: %.1fm", route.getApproximateDistance()));
+        holder.mRouteDistance.setText(String.format(Locale.getDefault(), "Distance: %.1fm", route.getApproximateDistance()));
         //handle expansion in list
         final boolean isExpanded = position == mExpandedPosition;
         holder.mExpansion.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
