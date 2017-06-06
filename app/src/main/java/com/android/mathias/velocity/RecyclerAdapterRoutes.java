@@ -55,10 +55,10 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
         holder.mRouteDistance.setText(String.format("Distance: %.1fm", route.getApproximateDistance()));
         //handle expansion in list
         final boolean isExpanded = position == mExpandedPosition;
-        holder.mExpansion.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-        holder.itemView.setActivated(isExpanded);
+        holder.mExpansion.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        holder.mCard.setActivated(isExpanded);
         holder.mCard.setOnClickListener(v -> {
-            mExpandedPosition = isExpanded ? -1:position;
+            mExpandedPosition = isExpanded ? -1 : position;
             TransitionManager.beginDelayedTransition(mRecyclerView);
             notifyDataSetChanged();
         });

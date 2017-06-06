@@ -56,10 +56,10 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
         holder.mWalkWeekday.setText(android.text.format.DateFormat.format("EEEE", walk.getDate()));
         //handle expansion in list
         final boolean isExpanded = position == mExpandedPosition;
-        holder.mExpansion.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-        holder.itemView.setActivated(isExpanded);
+        holder.mExpansion.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        holder.mCard.setActivated(isExpanded);
         holder.mCard.setOnClickListener(v -> {
-            mExpandedPosition = isExpanded ? -1:position;
+            mExpandedPosition = isExpanded ? -1 : position;
             TransitionManager.beginDelayedTransition(mRecyclerView);
             notifyDataSetChanged();
         });

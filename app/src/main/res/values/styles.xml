@@ -14,8 +14,8 @@
 
     <style name="BottomNavigation">
         <item name="android:background">@android:color/white</item>
-        <item name="itemIconTint">@drawable/sel_navigation</item>
-        <item name="itemTextColor">@drawable/sel_navigation</item>
+        <item name="itemIconTint">@animator/anim_navigation</item>
+        <item name="itemTextColor">@animator/anim_navigation</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

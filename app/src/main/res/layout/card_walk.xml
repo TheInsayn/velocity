@@ -11,9 +11,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:animateLayoutChanges="true"
+        android:background="@drawable/bg_walk_card"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:stateListAnimator="@animator/anim_walk_card"
         app:cardElevation="@dimen/walk_card_elevation">
 
         <LinearLayout

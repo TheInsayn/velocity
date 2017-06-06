@@ -16,9 +16,11 @@
     <color name="colorCurrentBackground">#E0E0E0</color>
 
     <color name="colorWalkCard">#FFFFFF</color>
+    <color name="colorWalkCardExpanded">#DDDDDD</color>
     <color name="colorWalkBackground">#E0E0E0</color>
 
     <color name="colorRouteCard">#FFFFFF</color>
+    <color name="colorRouteCardExpanded">#DDDDDD</color>
     <color name="colorRouteBackground">#E0E0E0</color>
     <color name="colorRouteIcons">#888888</color>
 
