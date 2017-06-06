@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:id="@+id/route_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="?android:colorBackground"
         android:animateLayoutChanges="true"
+        android:background="?android:colorBackground"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
@@ -33,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/default_route_name"
-                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"/>
+                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
 
                 <TextView
                     android:id="@+id/txt_route_distance"
@@ -44,7 +44,7 @@
                     android:layout_marginTop="@dimen/walk_card_margin_middle"
                     android:text="@string/default_route_distance"
                     android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-                    android:textStyle="italic"/>
+                    android:textStyle="italic" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/default_route_start_point"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
                     <ImageView
                         android:id="@+id/route_start_icon"
@@ -67,7 +67,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="6dp"
                         android:layout_marginTop="1sp"
-                        android:src="@drawable/ic_pin"/>
+                        android:src="@drawable/ic_pin" />
                 </LinearLayout>
 
 
@@ -83,7 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/default_route_end_point"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
 
                     <ImageView
                         android:id="@+id/route_end_icon"
@@ -92,7 +92,7 @@
                         android:layout_gravity="center"
                         android:layout_marginStart="6dp"
                         android:layout_marginTop="1sp"
-                        android:src="@drawable/ic_walk"/>
+                        android:src="@drawable/ic_walk" />
                 </LinearLayout>
 
             </RelativeLayout>
@@ -100,7 +100,8 @@
             <RelativeLayout
                 android:id="@+id/route_card_expansion"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="@dimen/route_card_padding">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -116,6 +117,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/colorDivider"/>
+        android:background="@color/colorDivider" />
 
 </LinearLayout>
