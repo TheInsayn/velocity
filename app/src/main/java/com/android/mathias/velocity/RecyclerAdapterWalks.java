@@ -1,7 +1,6 @@
 package com.android.mathias.velocity;
 
 import android.support.transition.TransitionManager;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
         TextView mWalkDuration;
         TextView mWalkDate;
         TextView mWalkWeekday;
-        CardView mCard;
         RelativeLayout mExpansion;
 
         WalkCardHolder(View view) {
@@ -31,7 +29,6 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
             mWalkDuration = view.findViewById(R.id.txt_walk_duration);
             mWalkDate = view.findViewById(R.id.txt_walk_date);
             mWalkWeekday = view.findViewById(R.id.txt_walk_weekday);
-            mCard = view.findViewById(R.id.walk_card_view);
             mExpansion = view.findViewById(R.id.walk_card_expansion);
         }
     }
@@ -57,8 +54,8 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
         //handle expansion in list
         final boolean isExpanded = position == mExpandedPosition;
         holder.mExpansion.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-        holder.mCard.setActivated(isExpanded);
-        holder.mCard.setOnClickListener(v -> {
+        holder.itemView.setActivated(isExpanded);
+        holder.itemView.setOnClickListener(v -> {
             mExpandedPosition = isExpanded ? -1 : position;
             TransitionManager.beginDelayedTransition(mRecyclerView);
             notifyDataSetChanged();

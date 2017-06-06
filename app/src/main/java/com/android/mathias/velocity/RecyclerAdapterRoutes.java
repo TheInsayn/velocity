@@ -1,7 +1,6 @@
 package com.android.mathias.velocity;
 
 import android.support.transition.TransitionManager;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
         TextView mRouteStartPoint;
         TextView mRouteEndPoint;
         TextView mRouteDistance;
-        CardView mCard;
         RelativeLayout mExpansion;
 
         RouteCardHolder(View view) {
@@ -30,7 +28,6 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
             mRouteStartPoint = view.findViewById(R.id.txt_route_start_point);
             mRouteEndPoint = view.findViewById(R.id.txt_route_end_point);
             mRouteDistance = view.findViewById(R.id.txt_route_distance);
-            mCard = view.findViewById(R.id.route_card_view);
             mExpansion = view.findViewById(R.id.route_card_expansion);
         }
     }
@@ -56,8 +53,8 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
         //handle expansion in list
         final boolean isExpanded = position == mExpandedPosition;
         holder.mExpansion.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-        holder.mCard.setActivated(isExpanded);
-        holder.mCard.setOnClickListener(v -> {
+        holder.itemView.setActivated(isExpanded);
+        holder.itemView.setOnClickListener(v -> {
             mExpandedPosition = isExpanded ? -1 : position;
             TransitionManager.beginDelayedTransition(mRecyclerView);
             notifyDataSetChanged();
