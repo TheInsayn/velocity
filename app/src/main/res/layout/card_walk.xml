@@ -71,10 +71,11 @@
             android:padding="@dimen/walk_card_padding">
 
             <TextView
+                android:id="@+id/txt_walk_average"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="some\nadditional\ntext"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium" />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:text="@string/timer_default_value" />
         </RelativeLayout>
 
         <View

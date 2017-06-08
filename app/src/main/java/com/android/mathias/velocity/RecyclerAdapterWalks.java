@@ -22,6 +22,7 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
         TextView mWalkDate;
         TextView mWalkWeekday;
         RelativeLayout mExpansion;
+        TextView mAverageTime;
 
         WalkCardHolder(View view) {
             super(view);
@@ -30,6 +31,7 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
             mWalkDate = view.findViewById(R.id.txt_walk_date);
             mWalkWeekday = view.findViewById(R.id.txt_walk_weekday);
             mExpansion = view.findViewById(R.id.walk_card_expansion);
+            mAverageTime = view.findViewById(R.id.txt_walk_average);
         }
     }
 
@@ -60,6 +62,15 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
             TransitionManager.beginDelayedTransition(mRecyclerView);
             notifyDataSetChanged();
         });
+        if (isExpanded) {
+            Date avg = new Date(walk.getAverageTimeForRoute(mRecyclerView.getContext(), walk.getRoute()));
+            String timeStr = "average duration for " + walk.getRoute().getName() + ": ";
+            timeStr += android.text.format.DateFormat.format("mm", avg);
+            timeStr += " minutes and ";
+            timeStr += android.text.format.DateFormat.format("ss", avg);
+            timeStr += " seconds";
+            holder.mAverageTime.setText(timeStr);
+        }
     }
 
     @Override
