@@ -1,8 +1,11 @@
 package com.android.mathias.velocity;
 
+import android.content.Context;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.List;
 
 class Route {
     private long mId;
@@ -100,5 +103,17 @@ class Route {
         endLoc.setLatitude(mEndLoc.latitude);
         endLoc.setLongitude(mEndLoc.longitude);
         return startLoc.distanceTo(endLoc);
+    }
+
+    long getAverageWalkTime(Context context) {
+        long time = 0;
+        List<Walk> walks = DBManager.getWalks(context, this);
+        if (walks.size() > 0) {
+            for (Walk w : walks) {
+                time += w.getDuration();
+            }
+            time /= walks.size();
+        }
+        return time;
     }
 }

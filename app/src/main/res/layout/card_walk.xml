@@ -74,7 +74,7 @@
                 android:id="@+id/txt_walk_average"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
                 android:text="@string/timer_default_value" />
         </RelativeLayout>
 

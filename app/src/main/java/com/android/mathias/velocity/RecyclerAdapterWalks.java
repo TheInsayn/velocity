@@ -1,7 +1,12 @@
 package com.android.mathias.velocity;
 
+import android.graphics.Typeface;
 import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.format.DateFormat;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,9 +55,9 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
     public void onBindViewHolder(WalkCardHolder holder, int position) {
         Walk walk = mWalkList.get(position);
         holder.mWalkRoute.setText(walk.getRoute().getName());
-        holder.mWalkDuration.setText(android.text.format.DateFormat.format("mm:ss", new Date(walk.getDuration())));
-        holder.mWalkDate.setText(android.text.format.DateFormat.format("dd.MM.yyyy", walk.getDate()));
-        holder.mWalkWeekday.setText(android.text.format.DateFormat.format("EEEE", walk.getDate()));
+        holder.mWalkDuration.setText(DateFormat.format("mm:ss", new Date(walk.getDuration())));
+        holder.mWalkDate.setText(DateFormat.format("dd.MM.yyyy", walk.getDate()));
+        holder.mWalkWeekday.setText(DateFormat.format("EEEE", walk.getDate()));
         //handle expansion in list
         final boolean isExpanded = position == mExpandedPosition;
         holder.mExpansion.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
@@ -63,13 +68,17 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
             notifyDataSetChanged();
         });
         if (isExpanded) {
-            Date avg = new Date(walk.getAverageTimeForRoute(mRecyclerView.getContext(), walk.getRoute()));
-            String timeStr = "average duration for " + walk.getRoute().getName() + ": ";
-            timeStr += android.text.format.DateFormat.format("mm", avg);
-            timeStr += " minutes and ";
-            timeStr += android.text.format.DateFormat.format("ss", avg);
-            timeStr += " seconds";
-            holder.mAverageTime.setText(timeStr);
+            Date avg = new Date(walk.getRoute().getAverageWalkTime(mRecyclerView.getContext()));
+            CharSequence min = DateFormat.format("m", avg);
+            CharSequence sec = DateFormat.format("s", avg);
+            String boldText = walk.getRoute().getName();
+            String timeStr = "average walk duration for " + boldText + ": ";
+            if (!min.equals("0")) timeStr += min + "m and ";
+            timeStr += sec + "s";
+            int idx = timeStr.indexOf(boldText);
+            SpannableString str = new SpannableString(timeStr);
+            str.setSpan(new StyleSpan(Typeface.BOLD), idx, idx + boldText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.mAverageTime.setText(str);
         }
     }
 

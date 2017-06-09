@@ -1,9 +1,6 @@
 package com.android.mathias.velocity;
 
-import android.content.Context;
-
 import java.util.Date;
-import java.util.List;
 
 class Walk {
     private long mId;
@@ -56,15 +53,5 @@ class Walk {
     }
     void setDate(Date date) {
         mDate = date;
-    }
-
-    long getAverageTimeForRoute(Context context, Route route) {
-        long time = 0;
-        List<Walk> walks = DBManager.getWalks(context, route);
-        for (Walk w : walks) {
-            time += w.getDuration();
-        }
-        time /= walks.size();
-        return time;
     }
 }

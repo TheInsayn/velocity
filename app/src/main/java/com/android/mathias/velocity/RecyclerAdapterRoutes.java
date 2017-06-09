@@ -2,12 +2,14 @@ package com.android.mathias.velocity;
 
 import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,6 +24,7 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
         TextView mRouteEndPoint;
         TextView mRouteDistance;
         RelativeLayout mExpansion;
+        TextView mAverageTime;
 
         RouteCardHolder(View view) {
             super(view);
@@ -30,6 +33,7 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
             mRouteEndPoint = view.findViewById(R.id.txt_route_end_point);
             mRouteDistance = view.findViewById(R.id.txt_route_distance);
             mExpansion = view.findViewById(R.id.route_card_expansion);
+            mAverageTime = view.findViewById(R.id.txt_route_average);
         }
     }
 
@@ -60,6 +64,21 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
             TransitionManager.beginDelayedTransition(mRecyclerView);
             notifyDataSetChanged();
         });
+        if (isExpanded) {
+            String timeStr;
+            long time = route.getAverageWalkTime(mRecyclerView.getContext());
+            if (time == 0) {
+                timeStr = "no walk data yet, not able to calculate average.";
+            } else {
+                Date avg = new Date(time);
+                CharSequence min = DateFormat.format("m", avg);
+                CharSequence sec = DateFormat.format("s", avg);
+                timeStr = "average walk duration: ";
+                if (!min.equals("0")) timeStr += min + "m and ";
+                timeStr += sec + "s";
+            }
+            holder.mAverageTime.setText(timeStr);
+        }
     }
 
     @Override
