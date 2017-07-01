@@ -109,7 +109,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mHandler.post(mRunnable);
     }
 
-    private void pauseStopwatch() {
+    protected void pauseStopwatch() {
         mLastStopTime = SystemClock.elapsedRealtime();
         mTimeState = TimeState.PAUSED;
         updateUI();
@@ -117,7 +117,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         buildNotification();
     }
 
-    private void resumeStopwatch() {
+    protected void resumeStopwatch() {
         mStartTime = mStartTime + (SystemClock.elapsedRealtime() - mLastStopTime);
         mTimeState = TimeState.RUNNING;
         updateUI();
@@ -174,7 +174,31 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         Intent notificationIntent = new Intent(getActivity(), ActivityMain.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         builder.setContentIntent(PendingIntent.getActivity(getActivity(), 0, notificationIntent, 0));
+        addNotificationActions(builder);
         mNotificationManager.notify(NOTIFICATION_ID, builder.build());
+    }
+
+    private void addNotificationActions(NotificationCompat.Builder builder) {
+        switch (mTimeState) {
+            case RUNNING:
+                Intent pauseIntent = new Intent(getActivity(), ActivityMain.class);
+                //pauseIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                pauseIntent.setAction(getString(R.string.notification_action_pause));
+                PendingIntent pausePendingIntent = PendingIntent.getActivity(getActivity(), 0, pauseIntent, 0);
+                NotificationCompat.Action pauseAction = new NotificationCompat.Action.Builder(
+                        R.drawable.ic_walk, getString(R.string.notification_action_pause), pausePendingIntent).build();
+                builder.addAction(pauseAction);
+                break;
+            case PAUSED:
+                Intent resumeIntent = new Intent(getActivity(), ActivityMain.class);
+                //resumeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                resumeIntent.setAction(getString(R.string.notification_action_resume));
+                PendingIntent resumePendingIntent = PendingIntent.getActivity(getActivity(), 0, resumeIntent, 0);
+                NotificationCompat.Action resumeAction = new NotificationCompat.Action.Builder(
+                        R.drawable.ic_walk, getString(R.string.notification_action_resume), resumePendingIntent).build();
+                builder.addAction(resumeAction);
+            default: break;
+        }
     }
 
     private void setProgressSeconds(int seconds) {

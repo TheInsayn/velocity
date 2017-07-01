@@ -1,5 +1,6 @@
 package com.android.mathias.velocity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -12,6 +13,8 @@ import android.view.MenuItem;
 
 public class ActivityMain extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
+    Fragment mFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +24,7 @@ public class ActivityMain extends AppCompatActivity implements BottomNavigationV
         setSupportActionBar(toolbar);
         BottomNavigationView navigationView = findViewById(R.id.navigation);
         navigationView.setOnNavigationItemSelectedListener(this);
-        showFragment(FragmentCurrent.class);
+        mFragment = showFragment(FragmentCurrent.class);
     }
 
     @Override
@@ -52,18 +55,34 @@ public class ActivityMain extends AppCompatActivity implements BottomNavigationV
         return true;
     }
 
-    private void showFragment(Class fragmentClass) {
+    private Fragment showFragment(Class fragmentClass) {
         FragmentManager manager = getSupportFragmentManager();
         String backStateName = fragmentClass.getName();
+        Fragment fragment = null;
         boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
         if (!fragmentPopped) {
             FragmentTransaction ft = manager.beginTransaction();
             try {
-                ft.replace(R.id.frame_content, (Fragment) fragmentClass.newInstance());
+                fragment = (Fragment) fragmentClass.newInstance();
+                ft.replace(R.id.frame_content, fragment);
                 ft.addToBackStack(backStateName);
                 ft.commit();
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
+            }
+        }
+        return fragment;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (mFragment != null && mFragment instanceof FragmentCurrent) {
+            FragmentCurrent fragment = (FragmentCurrent) mFragment;
+            if (intent.getAction().equals(getString(R.string.notification_action_pause))) {
+                fragment.pauseStopwatch();
+            } else if (intent.getAction().equals(getString(R.string.notification_action_resume))) {
+                fragment.resumeStopwatch();
             }
         }
     }
