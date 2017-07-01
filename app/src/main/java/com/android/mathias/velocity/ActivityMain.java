@@ -81,8 +81,12 @@ public class ActivityMain extends AppCompatActivity implements BottomNavigationV
             FragmentCurrent fragment = (FragmentCurrent) mFragment;
             if (intent.getAction().equals(getString(R.string.notification_action_pause))) {
                 fragment.pauseStopwatch();
-            } else if (intent.getAction().equals(getString(R.string.notification_action_resume))) {
+            }
+            else if (intent.getAction().equals(getString(R.string.notification_action_resume))) {
                 fragment.resumeStopwatch();
+            }
+            else if (intent.getAction().equals(getString(R.string.notification_action_stop))) {
+                fragment.stopWalk();
             }
         }
     }

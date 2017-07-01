@@ -65,6 +65,7 @@
     <string name="channel_description">Channel for ongoing walks</string>
     <string name="notification_action_pause">PAUSE</string>
     <string name="notification_action_resume">RESUME</string>
+    <string name="notification_action_stop">STOP</string>
 
     <!-- ACTIVITIES AND CONTROLS -->
     <!-- ActivityCreateRoute -->
