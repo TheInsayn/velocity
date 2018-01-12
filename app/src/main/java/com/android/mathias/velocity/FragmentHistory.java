@@ -2,8 +2,9 @@ package com.android.mathias.velocity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -15,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class FragmentHistory extends android.support.v4.app.Fragment {
 
@@ -25,7 +28,7 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
     private Snackbar mSnackbar = null;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View historyView = inflater.inflate(R.layout.fragment_history, container, false);
         initRecyclerView(historyView);
         setHasOptionsMenu(true);
@@ -40,10 +43,9 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
         final RecyclerView rvHistory = historyView.findViewById(R.id.list_walks);
         mListWalks.clear();
         mAdapter = new RecyclerAdapterWalks(mListWalks, rvHistory);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        rvHistory.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Objects.requireNonNull(getActivity()).getApplicationContext());
+        layoutManager.setItemPrefetchEnabled(true);
         rvHistory.setLayoutManager(layoutManager);
-        rvHistory.setItemAnimator(new DefaultItemAnimator());
         rvHistory.setAdapter(mAdapter);
         final Snackbar.Callback sbCallback = new Snackbar.Callback() {
             @Override
@@ -116,6 +118,9 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
                 mListWalks.clear();
                 mAdapter.notifyDataSetChanged();
                 break;
+            case R.id.action_about:
+                createHistoryDemoData();
+                break;
             default: break;
         }
         return super.onOptionsItemSelected(item);
@@ -128,5 +133,13 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
             mSnackbar = null;
         }
         super.onDetach();
+    }
+
+    public void createHistoryDemoData() {
+        for (int i = 0; i < 5; i++) {
+            Walk walk = new Walk(i*5000, new Date(SystemClock.currentThreadTimeMillis()),new Route("Route " + i));
+            DBManager.saveWalk(getContext(), walk);
+            addWalkCard(walk);
+        }
     }
 }

@@ -2,9 +2,9 @@ package com.android.mathias.velocity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -33,7 +34,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
     protected static final int REQUEST_ROUTE_DATA = 200;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View routesView = inflater.inflate(R.layout.fragment_routes, container, false);
         initRecyclerView(routesView);
         setHasOptionsMenu(true);
@@ -54,10 +55,8 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
         final RecyclerView rvRoutes = routesView.findViewById(R.id.list_routes);
         mListRoutes.clear();
         mAdapter = new RecyclerAdapterRoutes(mListRoutes, rvRoutes);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        rvRoutes.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Objects.requireNonNull(getActivity()).getApplicationContext());
         rvRoutes.setLayoutManager(layoutManager);
-        rvRoutes.setItemAnimator(new DefaultItemAnimator());
         rvRoutes.setAdapter(mAdapter);
         final Snackbar.Callback sbCallback = new Snackbar.Callback() {
             @Override
@@ -163,6 +162,9 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
                 mListRoutes.clear();
                 mAdapter.notifyDataSetChanged();
                 break;
+            case R.id.action_about:
+                createRoutesDemoData();
+                break;
             default: break;
         }
         return super.onOptionsItemSelected(item);
@@ -175,5 +177,16 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
             mSnackbar = null;
         }
         super.onDetach();
+    }
+
+
+    public void createRoutesDemoData() {
+        for (int i = 1; i <= 5; i++) {
+            LatLng startLoc = new LatLng((i+0.001) * Math.PI, (i+0.001)*Math.PI);
+            LatLng endLoc = new LatLng(i * Math.PI, i*Math.PI);
+            Route route = new Route("to location " + i, startLoc, endLoc, "Somewhere " + i, "Nowhere " + i);
+            DBManager.saveRoute(getContext(), route);
+            addRouteCard(route);
+        }
     }
 }

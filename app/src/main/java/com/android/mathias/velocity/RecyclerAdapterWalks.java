@@ -17,8 +17,8 @@ import java.util.Date;
 import java.util.List;
 
 class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.WalkCardHolder> {
-    private List<Walk> mWalkList;
-    private RecyclerView mRecyclerView;
+    private final List<Walk> mWalkList;
+    private final RecyclerView mRecyclerView;
     private int mExpandedPosition = -1;
 
     class WalkCardHolder extends RecyclerView.ViewHolder {
@@ -43,6 +43,7 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
     RecyclerAdapterWalks(List<Walk> routes, RecyclerView rv) {
         mWalkList = routes;
         mRecyclerView = rv;
+        setHasStableIds(true);
     }
 
     @Override
@@ -63,7 +64,7 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
         holder.mExpansion.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
         holder.itemView.setActivated(isExpanded);
         holder.itemView.setOnClickListener(v -> {
-            mExpandedPosition = isExpanded ? -1 : position;
+            mExpandedPosition = isExpanded ? -1 : holder.getAdapterPosition();
             TransitionManager.beginDelayedTransition(mRecyclerView);
             notifyDataSetChanged();
         });
@@ -85,5 +86,11 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
     @Override
     public int getItemCount() {
         return mWalkList.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        Walk w = mWalkList.get(position);
+        return w.getId();
     }
 }

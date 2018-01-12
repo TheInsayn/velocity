@@ -40,6 +40,7 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
     RecyclerAdapterRoutes(List<Route> routes, RecyclerView rv) {
         mRouteList = routes;
         mRecyclerView = rv;
+        setHasStableIds(true);
     }
 
     @Override
@@ -60,7 +61,7 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
         holder.mExpansion.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
         holder.itemView.setActivated(isExpanded);
         holder.itemView.setOnClickListener(v -> {
-            mExpandedPosition = isExpanded ? -1 : position;
+            mExpandedPosition = isExpanded ? -1 : holder.getAdapterPosition();
             TransitionManager.beginDelayedTransition(mRecyclerView);
             notifyDataSetChanged();
         });
@@ -84,5 +85,11 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
     @Override
     public int getItemCount() {
         return mRouteList.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        Route r = mRouteList.get(position);
+        return r.getId();
     }
 }

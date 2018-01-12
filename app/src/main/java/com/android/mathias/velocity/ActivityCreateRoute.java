@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class ActivityCreateRoute extends AppCompatActivity implements
         OnMapReadyCallback,
@@ -89,7 +90,7 @@ public class ActivityCreateRoute extends AppCompatActivity implements
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                 })
                 .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)).show();
-        ((EditText) dialog.findViewById(R.id.txt_dialog_route_name)).addTextChangedListener(new TextWatcher() {
+        ((EditText) Objects.requireNonNull(dialog.findViewById(R.id.txt_dialog_route_name))).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }

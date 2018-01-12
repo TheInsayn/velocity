@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.text.format.DateFormat;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class FragmentCurrent extends android.support.v4.app.Fragment {
@@ -57,7 +59,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
     ProgressBar mProgressBar;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_current, container, false);
         setHasOptionsMenu(true);
         return view;
@@ -79,7 +81,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         if (defaultRouteName.equals("None")) { mCurrentWalkRoute = new Route("No route set"); }
         else { mCurrentWalkRoute = DBManager.getRoutes(getContext(), defaultRouteName).get(0); }
         if (routeNames.size() > 0 && defaultRouteName.equals("None")) {
-            final ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item);
+            final ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), R.layout.support_simple_spinner_dropdown_item);
             adapter.addAll(routeNames);
             adapter.add("None");
             final ListPopupWindow lpw = new ListPopupWindow(getContext());
@@ -236,7 +238,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         super.onResume();
         //initializations
         if (mActivity == null) mActivity = getActivity();
-        mTimeView = mActivity.findViewById(R.id.timer);
+        mTimeView = Objects.requireNonNull(mActivity).findViewById(R.id.timer);
         mRouteView = mActivity.findViewById(R.id.txt_current_route);
         mProgressBar = mActivity.findViewById(R.id.progressBar);
         mFab = mActivity.findViewById(R.id.fab_current_toggle);
@@ -244,7 +246,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mBtnR = mActivity.findViewById(R.id.fab_current_stop);
         mBtnR.setOnClickListener(view -> stopWalk());
         if (mTimeState == null) mTimeState = TimeState.STOPPED;
-        if (mNotificationManager == null) mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        if (mNotificationManager == null) mNotificationManager = (NotificationManager) Objects.requireNonNull(getActivity()).getSystemService(Context.NOTIFICATION_SERVICE);
         mSharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         //custom actions
         if (mTimeState == TimeState.RUNNING) mHandler.post(mRunnable);
