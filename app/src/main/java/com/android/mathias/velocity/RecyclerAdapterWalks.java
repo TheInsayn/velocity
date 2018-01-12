@@ -1,7 +1,6 @@
 package com.android.mathias.velocity;
 
 import android.graphics.Typeface;
-import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -65,7 +64,6 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
         holder.itemView.setActivated(isExpanded);
         holder.itemView.setOnClickListener(v -> {
             mExpandedPosition = isExpanded ? -1 : holder.getAdapterPosition();
-            TransitionManager.beginDelayedTransition(mRecyclerView);
             notifyDataSetChanged();
         });
         if (isExpanded) {
@@ -86,11 +84,5 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
     @Override
     public int getItemCount() {
         return mWalkList.size();
-    }
-
-    @Override
-    public long getItemId(int position) {
-        Walk w = mWalkList.get(position);
-        return w.getId();
     }
 }

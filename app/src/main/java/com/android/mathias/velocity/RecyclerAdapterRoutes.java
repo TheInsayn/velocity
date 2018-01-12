@@ -1,6 +1,5 @@
 package com.android.mathias.velocity;
 
-import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -14,8 +13,8 @@ import java.util.List;
 import java.util.Locale;
 
 class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.RouteCardHolder> {
-    private List<Route> mRouteList;
-    private RecyclerView mRecyclerView;
+    private final List<Route> mRouteList;
+    private final RecyclerView mRecyclerView;
     private int mExpandedPosition = -1;
 
     class RouteCardHolder extends RecyclerView.ViewHolder {
@@ -62,7 +61,6 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
         holder.itemView.setActivated(isExpanded);
         holder.itemView.setOnClickListener(v -> {
             mExpandedPosition = isExpanded ? -1 : holder.getAdapterPosition();
-            TransitionManager.beginDelayedTransition(mRecyclerView);
             notifyDataSetChanged();
         });
         if (isExpanded) {
@@ -85,11 +83,5 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
     @Override
     public int getItemCount() {
         return mRouteList.size();
-    }
-
-    @Override
-    public long getItemId(int position) {
-        Route r = mRouteList.get(position);
-        return r.getId();
     }
 }
