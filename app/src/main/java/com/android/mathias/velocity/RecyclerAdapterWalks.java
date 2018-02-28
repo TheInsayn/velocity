@@ -19,6 +19,7 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
     private final List<Walk> mWalkList;
     private final RecyclerView mRecyclerView;
     private int mExpandedPosition = -1;
+    private int mPreviousExpandedPosition = -1;
 
     class WalkCardHolder extends RecyclerView.ViewHolder {
         TextView mWalkRoute;
@@ -42,7 +43,6 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
     RecyclerAdapterWalks(List<Walk> routes, RecyclerView rv) {
         mWalkList = routes;
         mRecyclerView = rv;
-        setHasStableIds(true);
     }
 
     @Override
@@ -62,9 +62,11 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
         final boolean isExpanded = position == mExpandedPosition;
         holder.mExpansion.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
         holder.itemView.setActivated(isExpanded);
+        if (isExpanded) mPreviousExpandedPosition = holder.getAdapterPosition();
         holder.itemView.setOnClickListener(v -> {
             mExpandedPosition = isExpanded ? -1 : holder.getAdapterPosition();
-            notifyDataSetChanged();
+            notifyItemChanged(mPreviousExpandedPosition);
+            notifyItemChanged(holder.getAdapterPosition());
         });
         if (isExpanded) {
             Date avg = new Date(walk.getRoute().getAverageWalkTime(mRecyclerView.getContext()));

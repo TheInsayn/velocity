@@ -16,6 +16,7 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
     private final List<Route> mRouteList;
     private final RecyclerView mRecyclerView;
     private int mExpandedPosition = -1;
+    private int mPreviousExpandedPosition = -1;
 
     class RouteCardHolder extends RecyclerView.ViewHolder {
         TextView mRouteName;
@@ -39,7 +40,6 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
     RecyclerAdapterRoutes(List<Route> routes, RecyclerView rv) {
         mRouteList = routes;
         mRecyclerView = rv;
-        setHasStableIds(true);
     }
 
     @Override
@@ -59,9 +59,11 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
         final boolean isExpanded = position == mExpandedPosition;
         holder.mExpansion.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
         holder.itemView.setActivated(isExpanded);
+        if (isExpanded) mPreviousExpandedPosition = holder.getAdapterPosition();
         holder.itemView.setOnClickListener(v -> {
             mExpandedPosition = isExpanded ? -1 : holder.getAdapterPosition();
-            notifyDataSetChanged();
+            notifyItemChanged(mPreviousExpandedPosition);
+            notifyItemChanged(holder.getAdapterPosition());
         });
         if (isExpanded) {
             String timeStr;
