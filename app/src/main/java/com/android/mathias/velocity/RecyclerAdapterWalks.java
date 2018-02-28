@@ -22,12 +22,12 @@ class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.Wal
     private int mPreviousExpandedPosition = -1;
 
     class WalkCardHolder extends RecyclerView.ViewHolder {
-        TextView mWalkRoute;
-        TextView mWalkDuration;
-        TextView mWalkDate;
-        TextView mWalkWeekday;
-        RelativeLayout mExpansion;
-        TextView mAverageTime;
+        final TextView mWalkRoute;
+        final TextView mWalkDuration;
+        final TextView mWalkDate;
+        final TextView mWalkWeekday;
+        final RelativeLayout mExpansion;
+        final TextView mAverageTime;
 
         WalkCardHolder(View view) {
             super(view);

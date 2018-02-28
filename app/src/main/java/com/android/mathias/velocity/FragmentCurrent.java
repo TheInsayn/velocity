@@ -39,24 +39,24 @@ import java.util.concurrent.TimeUnit;
 
 public class FragmentCurrent extends android.support.v4.app.Fragment {
 
-    private static int NOTIFICATION_ID = 1;
-    private static String CHANNEL_ID = "channel_walk";
-    TextView mTimeView;
-    TextView mRouteView;
-    TimeState mTimeState;
-    long mStartTime;
-    long mLastStopTime;
-    Route mCurrentWalkRoute;
-    ObjectAnimator mAnimator;
-    NotificationManager mNotificationManager;
-    SharedPreferences mSharedPref;
-    NotificationChannel mChannel;
-    Activity mActivity;
+    final private static int NOTIFICATION_ID = 1;
+    final private static String CHANNEL_ID = "channel_walk";
+    private TextView mTimeView;
+    private TextView mRouteView;
+    private TimeState mTimeState;
+    private long mStartTime;
+    private long mLastStopTime;
+    private Route mCurrentWalkRoute;
+    private ObjectAnimator mAnimator;
+    private NotificationManager mNotificationManager;
+    private SharedPreferences mSharedPref;
+    private NotificationChannel mChannel;
+    private Activity mActivity;
 
-    FloatingActionButton mFab;
-    Button mBtnR;
-    Handler mHandler;
-    ProgressBar mProgressBar;
+    private FloatingActionButton mFab;
+    private Button mBtnR;
+    private Handler mHandler;
+    private ProgressBar mProgressBar;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -111,7 +111,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         mHandler.post(mRunnable);
     }
 
-    protected void pauseStopwatch() {
+    void pauseStopwatch() {
         mLastStopTime = SystemClock.elapsedRealtime();
         mTimeState = TimeState.PAUSED;
         updateUI();
@@ -119,14 +119,14 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         buildNotification();
     }
 
-    protected void resumeStopwatch() {
+    void resumeStopwatch() {
         mStartTime = mStartTime + (SystemClock.elapsedRealtime() - mLastStopTime);
         mTimeState = TimeState.RUNNING;
         updateUI();
         mHandler.post(mRunnable);
     }
 
-    protected void stopWalk() {
+    void stopWalk() {
         long walkTime = SystemClock.elapsedRealtime() - mStartTime;
         Walk walk = new Walk(walkTime, new Date(), mCurrentWalkRoute);
         mLastStopTime = 0;
@@ -268,7 +268,7 @@ public class FragmentCurrent extends android.support.v4.app.Fragment {
         RUNNING, PAUSED, STOPPED
     }
 
-    private Runnable mRunnable = new Runnable() {
+    final private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             long time = (SystemClock.elapsedRealtime() - mStartTime);

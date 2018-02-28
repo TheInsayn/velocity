@@ -31,7 +31,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
     private Route mTempRoute = null;
     private Snackbar mSnackbar = null;
 
-    protected static final int REQUEST_ROUTE_DATA = 200;
+    private static final int REQUEST_ROUTE_DATA = 200;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -180,7 +180,7 @@ public class FragmentRoutes extends android.support.v4.app.Fragment {
     }
 
 
-    public void createRoutesDemoData() {
+    private void createRoutesDemoData() {
         for (int i = 1; i <= 5; i++) {
             LatLng startLoc = new LatLng((i+0.001) * Math.PI, (i+0.001)*Math.PI);
             LatLng endLoc = new LatLng(i * Math.PI, i*Math.PI);

@@ -19,12 +19,12 @@ class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.R
     private int mPreviousExpandedPosition = -1;
 
     class RouteCardHolder extends RecyclerView.ViewHolder {
-        TextView mRouteName;
-        TextView mRouteStartPoint;
-        TextView mRouteEndPoint;
-        TextView mRouteDistance;
-        RelativeLayout mExpansion;
-        TextView mAverageTime;
+        final TextView mRouteName;
+        final TextView mRouteStartPoint;
+        final TextView mRouteEndPoint;
+        final TextView mRouteDistance;
+        final RelativeLayout mExpansion;
+        final TextView mAverageTime;
 
         RouteCardHolder(View view) {
             super(view);

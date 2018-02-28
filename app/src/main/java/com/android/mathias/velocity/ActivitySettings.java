@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActivitySettings extends AppCompatActivity {
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = (preference, value) -> {
+    final private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = (preference, value) -> {
         String stringValue = value.toString();
         if (preference instanceof ListPreference) {
             ListPreference listPreference = (ListPreference) preference;

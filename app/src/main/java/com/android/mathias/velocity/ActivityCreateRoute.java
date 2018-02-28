@@ -44,12 +44,12 @@ public class ActivityCreateRoute extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 100;
-    protected static final String ROUTE_NAME = "ROUTE_NAME";
-    protected static final String START_LOC = "START_LOC";
-    protected static final String END_LOC = "END_LOC";
-    protected static final String START_LOC_NAME = "START_LOC_NAME";
-    protected static final String END_LOC_NAME = "END_LOC_NAME";
-    protected static final String RESULT_BUNDLE = "RESULT_BUNDLE";
+    static final String ROUTE_NAME = "ROUTE_NAME";
+    static final String START_LOC = "START_LOC";
+    static final String END_LOC = "END_LOC";
+    static final String START_LOC_NAME = "START_LOC_NAME";
+    static final String END_LOC_NAME = "END_LOC_NAME";
+    static final String RESULT_BUNDLE = "RESULT_BUNDLE";
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;

@@ -135,7 +135,7 @@ public class FragmentHistory extends android.support.v4.app.Fragment {
         super.onDetach();
     }
 
-    public void createHistoryDemoData() {
+    private void createHistoryDemoData() {
         for (int i = 0; i < 5; i++) {
             Walk walk = new Walk(i*5000, new Date(SystemClock.currentThreadTimeMillis()),new Route("Route " + i));
             DBManager.saveWalk(getContext(), walk);
