@@ -3,6 +3,7 @@ package com.android.mathias.velocity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,10 +31,14 @@ public class FragmentRoutes extends android.support.v4.app.Fragment implements I
     private RecyclerAdapterRoutes mAdapter;
     private List<Route> mListRoutes = new ArrayList<>();
     private List<Route> mListRoutesBackup = null;
+    private FloatingActionButton fabCreate = null;
+
     private Route mTempRoute = null;
     private Snackbar mSnackbar = null;
     private boolean mMoveMode = false;
+
     private Toolbar mToolbar = null;
+    private BottomNavigationView mNavBar = null;
 
     private static final int REQUEST_ROUTE_DATA = 200;
 
@@ -43,7 +48,8 @@ public class FragmentRoutes extends android.support.v4.app.Fragment implements I
         initRecyclerView(routesView);
         setHasOptionsMenu(true);
         mToolbar = Objects.requireNonNull(getActivity()).findViewById(R.id.toolbar);
-        final FloatingActionButton fabCreate = routesView.findViewById(R.id.fab_create_route);
+        mNavBar = Objects.requireNonNull(getActivity()).findViewById(R.id.navigation);
+        fabCreate = routesView.findViewById(R.id.fab_create_route);
         fabCreate.setOnClickListener(v -> FragmentRoutes.this.handleFabEvent());
         List<Route> routes = DBManager.getRoutes(getContext(), null);
         for (Route r : routes) {
@@ -121,11 +127,13 @@ public class FragmentRoutes extends android.support.v4.app.Fragment implements I
         mMoveMode = !mMoveMode;
         mToolbar.getMenu().clear();
         int menu = mMoveMode ? R.menu.menu_apply_changes : R.menu.menu_routes;
-        int color = getResources().getColor(mMoveMode ? R.color.colorAccent : R.color.colorPrimary, getActivity().getTheme());
+        int color = getResources().getColor(mMoveMode ? R.color.colorAccent : R.color.colorPrimary, Objects.requireNonNull(getActivity()).getTheme());
         int title = mMoveMode ? R.string.title_rearrange : R.string.nav_item_routes;
         mToolbar.inflateMenu(menu);
         mToolbar.setBackgroundColor(color);
         mToolbar.setTitle(title);
+        fabCreate.setVisibility(mMoveMode ? View.GONE : View.VISIBLE);
+        mNavBar.setVisibility(mMoveMode ? View.GONE : View.VISIBLE);
         mAdapter.setRearrangeMode(mMoveMode);
     }
 
