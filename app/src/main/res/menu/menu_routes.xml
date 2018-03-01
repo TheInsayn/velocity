@@ -7,6 +7,12 @@
         android:title="@string/menu_delete_all_routes"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_rearrange"
+        android:icon="@drawable/ic_sort"
+        android:orderInCategory="200"
+        android:title="@string/menu_rearrange_routes"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings"
         android:orderInCategory="900"

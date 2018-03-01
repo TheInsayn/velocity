@@ -13,6 +13,9 @@
     <string name="menu_main_info">About</string>
     <string name="menu_clear_history">Clear history</string>
     <string name="menu_delete_all_routes">Delete all routes</string>
+    <string name="menu_rearrange_routes">Rearrange routes</string>
+    <string name="menu_apply_changes_apply">Apply</string>
+    <string name="menu_apply_changes_cancel">Cancel</string>
 
     <!-- SETTINGS -->
     <string name="activity_title_settings">Settings</string>
@@ -94,4 +97,5 @@
     <!-- Current Fragment -->
     <string name="timer_default_value">00:00</string>
     <string name="current_rbtn_text">STOP</string>
+    <string name="title_rearrange">Rearrange</string>
 </resources>

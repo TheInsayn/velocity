@@ -45,7 +45,8 @@ public class ActivityMain extends AppCompatActivity implements BottomNavigationV
             case R.id.nav_routes:
                 fragment = FragmentRoutes.class;
                 break;
-            default: break;
+            default:
+                break;
         }
         if (fragment != null && !item.isChecked()) {
             showFragment(fragment);
