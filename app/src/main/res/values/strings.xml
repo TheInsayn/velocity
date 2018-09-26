@@ -98,4 +98,5 @@
     <string name="timer_default_value">00:00</string>
     <string name="current_rbtn_text">STOP</string>
     <string name="title_rearrange">Rearrange</string>
+    <string name="btn_edit_route">EDIT</string>
 </resources>

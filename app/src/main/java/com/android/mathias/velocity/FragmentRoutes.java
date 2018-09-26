@@ -164,14 +164,16 @@ public class FragmentRoutes extends Fragment implements IClickInterface {
 
     @Override
     public void itemLongClick(View v, int position) {
-        if (!mMoveMode)
-            showBottomSheet();
+        if (!mMoveMode) {
+            showBottomSheet(mListRoutes.get(position));
+        }
     }
 
-    public void showBottomSheet() {
-        BottomSheetModal bottomSheetDialogFragment = new BottomSheetModal();
-        bottomSheetDialogFragment.show(Objects.requireNonNull(getActivity())
-                .getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
+    public void showBottomSheet(Route route) {
+        Bundle bundle = new Bundle();
+        BottomSheetRoutes sheet = new BottomSheetRoutes();
+        sheet.setArguments(bundle);
+        sheet.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "Bottom Sheet Dialog Fragment");
     }
 
     private void addRouteCard(Route route) {
