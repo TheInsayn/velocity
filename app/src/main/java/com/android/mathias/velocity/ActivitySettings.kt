@@ -56,7 +56,7 @@ class ActivitySettings : AppCompatActivity() {
     }
 
     companion object {
-        private val sBindPreferenceSummaryToValueListener = { preference:Preference, value:Any ->
+        private val sBindPreferenceSummaryToValueListener = Preference.OnPreferenceChangeListener { preference: Preference, value: Any ->
             val stringValue = value.toString()
             if (preference is ListPreference) {
                 val index = preference.findIndexOfValue(stringValue)
@@ -78,7 +78,7 @@ class ActivitySettings : AppCompatActivity() {
             }
             //bindPreferenceSummaryToValue(preference);
             true
-        } as Preference.OnPreferenceChangeListener
+        }
 
         private fun bindPreferenceSummaryToValue(preference: Preference) {
             preference.onPreferenceChangeListener = sBindPreferenceSummaryToValueListener
