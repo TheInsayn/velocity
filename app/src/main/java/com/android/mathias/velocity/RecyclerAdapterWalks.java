@@ -1,7 +1,6 @@
 package com.android.mathias.velocity;
 
 import android.graphics.Typeface;
-import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.format.DateFormat;
@@ -14,6 +13,8 @@ import android.widget.TextView;
 
 import java.util.Date;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 class RecyclerAdapterWalks extends RecyclerView.Adapter<RecyclerAdapterWalks.WalkCardHolder> {
     private final List<Walk> mWalkList;

@@ -14,9 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.NotificationCompat;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,13 +28,19 @@ import android.widget.ListPopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-public class FragmentCurrent extends android.support.v4.app.Fragment {
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.Fragment;
+
+public class FragmentCurrent extends Fragment {
 
     final private static int NOTIFICATION_ID = 1;
     final private static String CHANNEL_ID = "channel_walk";

@@ -1,6 +1,5 @@
 package com.android.mathias.velocity;
 
-import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,8 @@ import android.widget.TextView;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 class RecyclerAdapterRoutes extends RecyclerView.Adapter<RecyclerAdapterRoutes.RouteCardHolder> {
     private final List<Route> mRouteList;
