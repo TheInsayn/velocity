@@ -72,12 +72,10 @@ class ActivityMain : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             val fragment = mFragment as FragmentCurrent?
             val action = intent.action
             if (action != null && action != "") {
-                if (action == getString(R.string.notification_action_pause)) {
-                    fragment!!.pauseStopwatch()
-                } else if (action == getString(R.string.notification_action_resume)) {
-                    fragment!!.resumeStopwatch()
-                } else if (action == getString(R.string.notification_action_stop)) {
-                    fragment!!.stopWalk()
+                when (action) {
+                    getString(R.string.notification_action_pause) -> fragment!!.pauseStopwatch()
+                    getString(R.string.notification_action_resume) -> fragment!!.resumeStopwatch()
+                    getString(R.string.notification_action_stop) -> fragment!!.stopWalk()
                 }
             }
         }

@@ -26,7 +26,7 @@ class BottomSheetRoutes : BottomSheetDialogFragment() {
     override fun setupDialog(dialog: Dialog, style: Int) {
         super.setupDialog(dialog, style)
         //Get the content View
-        val contentView = View.inflate(context, R.layout.bottom_sheet_routes, null)
+        val contentView = View.inflate(context, R.layout.sheet_route_info, null)
         dialog.setContentView(contentView)
 
         //Set the coordinator layout behavior
