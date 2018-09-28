@@ -20,8 +20,7 @@ class BottomSheetCreateRoutes : BottomSheetDialogFragment() {
     private lateinit var mBtnSave: Button
 
     private var mDuplicateName: Boolean = false
-
-    var mClickListener: IBottomSheetListener? = null
+    private var mClickListener: IBottomSheetListener? = null
 
     fun newInstance(): BottomSheetCreateRoutes {
         return BottomSheetCreateRoutes()
@@ -65,7 +64,6 @@ class BottomSheetCreateRoutes : BottomSheetDialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
         try {
             mClickListener = context as IBottomSheetListener
         } catch (e: ClassCastException) {

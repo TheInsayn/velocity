@@ -25,7 +25,8 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import java.io.IOException
 
-class ActivityCreateRoute : AppCompatActivity(), OnMapReadyCallback, BottomSheetCreateRoutes.IBottomSheetListener {
+class ActivityCreateRoute : AppCompatActivity(),
+        OnMapReadyCallback, BottomSheetCreateRoutes.IBottomSheetListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -40,19 +41,18 @@ class ActivityCreateRoute : AppCompatActivity(), OnMapReadyCallback, BottomSheet
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_route)
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        mapFragment!!.getMapAsync(this)
-        val btnSave = findViewById<Button>(R.id.btn_save_route)
-        btnSave.setOnClickListener { promptForNameAndReturn() }
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         mGeocoder = Geocoder(this)
         mTxtStart = findViewById(R.id.txt_start_address)
         mTxtEnd = findViewById(R.id.txt_end_address)
         mBtnSave = findViewById(R.id.btn_save_route)
+        mBtnSave.setOnClickListener { promptForNameAndReturn() }
         mTxtStart.setOnClickListener { loadPlacePicker(REQUEST_PICK_START) }
         mTxtEnd.setOnClickListener { loadPlacePicker(REQUEST_PICK_END) }
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        mapFragment!!.getMapAsync(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -70,16 +70,18 @@ class ActivityCreateRoute : AppCompatActivity(), OnMapReadyCallback, BottomSheet
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
-
                 if (address != null) {
                     marker.position = marker.position
                     marker.snippet = address
-                    if (marker.title == getString(R.string.end_address_title)) {
-                        mEndMarker!!.position = LatLng(marker.position.latitude, marker.position.longitude)
-                        mTxtEnd.text = String.format(getString(R.string.route_end_prefix), address)
-                    } else {
-                        mStartMarker!!.position = LatLng(marker.position.latitude, marker.position.longitude)
-                        mTxtStart.text = String.format(getString(R.string.route_start_prefix), address)
+                    when (marker) {
+                        mEndMarker -> {
+                            mEndMarker!!.position = LatLng(marker.position.latitude, marker.position.longitude)
+                            mTxtEnd.text = address
+                        }
+                        mStartMarker -> {
+                            mStartMarker!!.position = LatLng(marker.position.latitude, marker.position.longitude)
+                            mTxtStart.text = address
+                        }
                     }
                     marker.showInfoWindow()
                 }
@@ -91,9 +93,7 @@ class ActivityCreateRoute : AppCompatActivity(), OnMapReadyCallback, BottomSheet
     private fun handleMapClick(gMap: GoogleMap?, latLng: LatLng) {
         try {
             val addresses = mGeocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-            if (addresses.size == 0) {
-                return
-            }
+            if (addresses.size == 0) return
             val address = addresses[0].getAddressLine(0)
             when {
                 mStartMarker == null -> {
@@ -104,7 +104,7 @@ class ActivityCreateRoute : AppCompatActivity(), OnMapReadyCallback, BottomSheet
                             .flat(true)
                             .draggable(true))
                     mStartMarker!!.showInfoWindow()
-                    mTxtStart.text = String.format(getString(R.string.route_start_prefix), address)
+                    mTxtStart.text = address
                     mTxtStart.visibility = View.VISIBLE
                 }
                 mEndMarker == null -> {
@@ -115,9 +115,9 @@ class ActivityCreateRoute : AppCompatActivity(), OnMapReadyCallback, BottomSheet
                             .flat(true)
                             .draggable(true))
                     mEndMarker!!.showInfoWindow()
-                    mBtnSave.visibility = View.VISIBLE
-                    mTxtEnd.text = String.format(getString(R.string.route_end_prefix), address)
+                    mTxtEnd.text = address
                     mTxtEnd.visibility = View.VISIBLE
+                    mBtnSave.visibility = View.VISIBLE
                 }
                 else -> {
                     mStartMarker = null
@@ -165,8 +165,7 @@ class ActivityCreateRoute : AppCompatActivity(), OnMapReadyCallback, BottomSheet
         if (requestCode == REQUEST_PICK_START || requestCode == REQUEST_PICK_END) {
             if (resultCode == RESULT_OK) {
                 val place = PlacePicker.getPlace(this, data)
-                val addressText = //place.name.toString()
-                //addressText += "\n" +
+                val address = //place.name.toString() + "\n" +
                         place.address.toString()
                 val marker: Marker
                 val txtView: TextView
@@ -181,8 +180,8 @@ class ActivityCreateRoute : AppCompatActivity(), OnMapReadyCallback, BottomSheet
                     }
                 }
                 marker.position = place.latLng
-                marker.snippet = addressText
-                txtView.text = addressText
+                marker.snippet = address
+                txtView.text = address
             }
         }
     }

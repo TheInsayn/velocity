@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -15,9 +14,7 @@ class ActivityMain : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(findViewById(R.id.toolbar))
         val navigationView = findViewById<BottomNavigationView>(R.id.navigation)
         navigationView.setOnNavigationItemSelectedListener(this)
         mFragment = showFragment(FragmentCurrent::class.java)
@@ -33,8 +30,7 @@ class ActivityMain : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             R.id.nav_current -> fragment = FragmentCurrent::class.java
             R.id.nav_history -> fragment = FragmentHistory::class.java
             R.id.nav_routes -> fragment = FragmentRoutes::class.java
-            else -> {
-            }
+            else -> {}
         }
         if (fragment != null && !item.isChecked) {
             showFragment(fragment)
