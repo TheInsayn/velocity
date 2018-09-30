@@ -1,4 +1,4 @@
-package com.android.mathias.velocity
+package com.android.mathias.velocity.model
 
 import java.util.*
 

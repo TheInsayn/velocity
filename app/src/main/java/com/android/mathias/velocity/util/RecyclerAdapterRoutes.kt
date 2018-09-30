@@ -1,4 +1,4 @@
-package com.android.mathias.velocity
+package com.android.mathias.velocity.util
 
 import android.text.format.DateFormat
 import android.view.LayoutInflater
@@ -8,6 +8,9 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.android.mathias.velocity.IClickInterface
+import com.android.mathias.velocity.R
+import com.android.mathias.velocity.model.Route
 import java.util.*
 
 internal class RecyclerAdapterRoutes(

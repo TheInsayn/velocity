@@ -1,9 +1,10 @@
-package com.android.mathias.velocity
+package com.android.mathias.velocity.util
 
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.android.mathias.velocity.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 

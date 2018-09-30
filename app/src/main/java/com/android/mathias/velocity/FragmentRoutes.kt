@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.mathias.velocity.db.DBManager
+import com.android.mathias.velocity.model.Route
+import com.android.mathias.velocity.util.BottomSheetRoutes
+import com.android.mathias.velocity.util.RecyclerAdapterRoutes
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -110,7 +113,7 @@ class FragmentRoutes : Fragment(), IClickInterface {
         mMoveMode = !mMoveMode
         mToolbar!!.menu.clear()
         val menu = if (mMoveMode) R.menu.menu_apply_changes else R.menu.menu_routes
-        val color = resources.getColor(if (mMoveMode) R.color.colorAccent else R.color.colorPrimary, Objects.requireNonNull<FragmentActivity>(activity).getTheme())
+        val color = resources.getColor(if (mMoveMode) R.color.colorAccent else R.color.colorPrimary, Objects.requireNonNull<FragmentActivity>(activity).theme)
         val title = if (mMoveMode) R.string.title_rearrange else R.string.nav_item_routes
         mToolbar!!.inflateMenu(menu)
         mToolbar!!.setBackgroundColor(color)

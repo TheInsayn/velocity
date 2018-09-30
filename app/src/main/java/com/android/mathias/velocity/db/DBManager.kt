@@ -4,8 +4,8 @@ package com.android.mathias.velocity.db
 import android.content.ContentValues
 import android.content.Context
 import android.provider.BaseColumns
-import com.android.mathias.velocity.Route
-import com.android.mathias.velocity.Walk
+import com.android.mathias.velocity.model.Route
+import com.android.mathias.velocity.model.Walk
 import com.android.mathias.velocity.db.DBHelper.*
 import com.google.android.gms.maps.model.LatLng
 import java.text.DateFormat

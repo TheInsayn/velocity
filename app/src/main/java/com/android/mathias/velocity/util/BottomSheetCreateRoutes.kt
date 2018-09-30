@@ -1,4 +1,4 @@
-package com.android.mathias.velocity
+package com.android.mathias.velocity.util
 
 import android.content.Context
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.android.mathias.velocity.R
 import com.android.mathias.velocity.db.DBManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 

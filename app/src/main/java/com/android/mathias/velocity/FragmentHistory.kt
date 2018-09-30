@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.mathias.velocity.db.DBManager
+import com.android.mathias.velocity.model.Route
+import com.android.mathias.velocity.model.Walk
+import com.android.mathias.velocity.util.RecyclerAdapterWalks
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 

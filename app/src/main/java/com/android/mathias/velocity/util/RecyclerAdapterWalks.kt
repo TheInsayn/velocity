@@ -1,4 +1,4 @@
-package com.android.mathias.velocity
+package com.android.mathias.velocity.util
 
 import android.graphics.Typeface
 import android.text.Spannable
@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.android.mathias.velocity.R
+import com.android.mathias.velocity.model.Walk
 import java.util.*
 
 internal class RecyclerAdapterWalks(
