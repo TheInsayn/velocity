@@ -17,6 +17,7 @@ import java.util.*
 
 class FragmentHistory : Fragment() {
 
+    private lateinit var mRvHistory: RecyclerView
     private lateinit var mAdapter: RecyclerAdapterWalks
     private val mListWalks = ArrayList<Walk>()
     private var mTempWalk: Walk? = null
@@ -34,57 +35,14 @@ class FragmentHistory : Fragment() {
     }
 
     private fun initRecyclerView(historyView: View) {
-        val rvHistory = historyView.findViewById<RecyclerView>(R.id.list_walks)
+        mRvHistory = historyView.findViewById(R.id.list_walks)
         mListWalks.clear()
-        mAdapter = RecyclerAdapterWalks(mListWalks, rvHistory)
+        mAdapter = RecyclerAdapterWalks(mListWalks, mRvHistory)
         val layoutManager = LinearLayoutManager(context)
         layoutManager.isItemPrefetchEnabled = true
-        rvHistory.layoutManager = layoutManager
-        rvHistory.adapter = mAdapter
-        val sbCallback = object : Snackbar.Callback() {
-            override fun onDismissed(sb: Snackbar?, event: Int) {
-                if (mSnackbar != null && mTempWalk != null) {
-                    DBManager.deleteWalk(context!!, mTempWalk!!.id)
-                    mSnackbar!!.removeCallback(this)
-                    mSnackbar = null
-                    mTempWalk = null
-                }
-                super.onDismissed(sb, event)
-            }
-        }
-        val ithCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                if (mSnackbar != null && mTempWalk != null) {
-                    DBManager.deleteWalk(context!!, mTempWalk!!.id)
-                    mSnackbar!!.removeCallback(sbCallback)
-                    mSnackbar = null
-                    mTempWalk = null
-                }
-                val idx = viewHolder.adapterPosition
-                mTempWalk = mListWalks[idx]
-                mListWalks.removeAt(idx)
-                mAdapter.notifyItemRemoved(idx)
-                mSnackbar = Snackbar.make(rvHistory, "Walk deleted.", Snackbar.LENGTH_LONG).setAction("UNDO") {
-                    if (mTempWalk != null) {
-                        mSnackbar!!.removeCallback(sbCallback)
-                        mListWalks.add(idx, mTempWalk!!)
-                        mAdapter.notifyItemInserted(idx)
-                        Snackbar.make(rvHistory, "Restored.", Snackbar.LENGTH_SHORT).show()
-                        mSnackbar = null
-                        mTempWalk = null
-                    } else {
-                        Snackbar.make(rvHistory, "Error restoring...", Snackbar.LENGTH_SHORT).show()
-                    }
-                }.addCallback(sbCallback)
-                mSnackbar!!.show()
-            }
-        }
-        val ith = ItemTouchHelper(ithCallback)
-        ith.attachToRecyclerView(rvHistory)
+        mRvHistory.layoutManager = layoutManager
+        mRvHistory.adapter = mAdapter
+        itemTouchHelper.attachToRecyclerView(mRvHistory)
     }
 
     private fun addWalkCard(walk: Walk) {
@@ -125,4 +83,47 @@ class FragmentHistory : Fragment() {
             addWalkCard(walk)
         }
     }
+
+    private val sbCallback = object : Snackbar.Callback() {
+        override fun onDismissed(sb: Snackbar?, event: Int) {
+            if (mSnackbar != null && mTempWalk != null) {
+                DBManager.deleteWalk(context!!, mTempWalk!!.id)
+                mSnackbar!!.removeCallback(this)
+                mSnackbar = null
+                mTempWalk = null
+            }
+            super.onDismissed(sb, event)
+        }
+    }
+    private val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            if (mSnackbar != null && mTempWalk != null) {
+                DBManager.deleteWalk(context!!, mTempWalk!!.id)
+                mSnackbar!!.removeCallback(sbCallback)
+                mSnackbar = null
+                mTempWalk = null
+            }
+            val idx = viewHolder.adapterPosition
+            mTempWalk = mListWalks[idx]
+            mListWalks.removeAt(idx)
+            mAdapter.notifyItemRemoved(idx)
+            mSnackbar = Snackbar.make(mRvHistory, "Walk deleted.", Snackbar.LENGTH_LONG).setAction("UNDO") {
+                if (mTempWalk != null) {
+                    mSnackbar!!.removeCallback(sbCallback)
+                    mListWalks.add(idx, mTempWalk!!)
+                    mAdapter.notifyItemInserted(idx)
+                    Snackbar.make(mRvHistory, "Restored.", Snackbar.LENGTH_SHORT).show()
+                    mSnackbar = null
+                    mTempWalk = null
+                } else {
+                    Snackbar.make(mRvHistory, "Error restoring...", Snackbar.LENGTH_SHORT).show()
+                }
+            }.addCallback(sbCallback)
+            mSnackbar!!.show()
+        }
+    })
 }

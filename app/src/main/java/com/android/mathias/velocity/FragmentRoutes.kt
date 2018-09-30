@@ -21,6 +21,7 @@ import java.util.*
 
 class FragmentRoutes : Fragment(), IClickInterface {
 
+    private lateinit var mRvRoutes : RecyclerView
     private lateinit var fabCreate: FloatingActionButton
     private lateinit var mAdapter: RecyclerAdapterRoutes
     private lateinit var mToolbar: Toolbar
@@ -49,85 +50,13 @@ class FragmentRoutes : Fragment(), IClickInterface {
     }
 
     private fun initRecyclerView(routesView: View) {
-        val rvRoutes = routesView.findViewById<RecyclerView>(R.id.list_routes)
+        mRvRoutes = routesView.findViewById(R.id.list_routes)
         mListRoutes.clear()
-        mAdapter = RecyclerAdapterRoutes(mListRoutes, rvRoutes, this)
+        mAdapter = RecyclerAdapterRoutes(mListRoutes, mRvRoutes, this)
         val layoutManager = LinearLayoutManager(activity!!.applicationContext)
-        rvRoutes.layoutManager = layoutManager
-        rvRoutes.adapter = mAdapter
-        val sbCallback = object : Snackbar.Callback() {
-            override fun onDismissed(sb: Snackbar?, event: Int) {
-                if (mSnackbar != null && mTempRoute != null) {
-                    DBManager.deleteRoute(context!!, mTempRoute!!.id)
-                    mSnackbar!!.removeCallback(this)
-                    for (i: Int in mTempRoute!!.pos until mListRoutes.size) {
-                        mListRoutes[i].pos--
-                        DBManager.setRoutePos(context!!, mListRoutes[i].id, mListRoutes[i].pos)
-                    }
-                    mSnackbar = null
-                    mTempRoute = null
-                }
-                super.onDismissed(sb, event)
-            }
-        }
-        val ithCallback = object : ItemTouchHelper.SimpleCallback(0, 0) {
-            override fun onMoved(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                                 fromPos: Int, target: RecyclerView.ViewHolder, toPos: Int, x: Int, y: Int) {
-                Collections.swap(mListRoutes, fromPos, toPos)
-                super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y)
-            }
-
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                mAdapter.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
-                return true
-            }
-
-            override fun getDragDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-                return if (mMoveMode)
-                    ItemTouchHelper.UP or ItemTouchHelper.DOWN
-                else
-                    super.getDragDirs(recyclerView, viewHolder)
-            }
-
-            override fun getSwipeDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-                return if (!mMoveMode)
-                    ItemTouchHelper.START or ItemTouchHelper.END
-                else
-                    super.getSwipeDirs(recyclerView, viewHolder)
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                if (mSnackbar != null && mTempRoute != null) {
-                    DBManager.deleteRoute(context!!, mTempRoute!!.id)
-                    mSnackbar!!.removeCallback(sbCallback)
-                    for (i: Int in mTempRoute!!.pos until mListRoutes.size) {
-                        mListRoutes[i].pos--
-                        DBManager.setRoutePos(context!!, mListRoutes[i].id, mListRoutes[i].pos)
-                    }
-                    mSnackbar = null
-                    mTempRoute = null
-                }
-                val idx = viewHolder.adapterPosition
-                mTempRoute = mListRoutes[idx]
-                mListRoutes.removeAt(idx)
-                mAdapter.notifyItemRemoved(idx)
-                mSnackbar = Snackbar.make(rvRoutes, "\"${mTempRoute!!.name}\" deleted.", Snackbar.LENGTH_LONG).setAction("UNDO") {
-                    if (mTempRoute != null) {
-                        mSnackbar!!.removeCallback(sbCallback)
-                        mListRoutes.add(idx, mTempRoute!!)
-                        mAdapter.notifyItemInserted(idx)
-                        Snackbar.make(rvRoutes, "Restored.", Snackbar.LENGTH_SHORT).show()
-                        mSnackbar = null
-                        mTempRoute = null
-                    } else {
-                        Snackbar.make(rvRoutes, "Error restoring...", Snackbar.LENGTH_SHORT).show()
-                    }
-                }.addCallback(sbCallback)
-                mSnackbar!!.show()
-            }
-        }
-        val ith = ItemTouchHelper(ithCallback)
-        ith.attachToRecyclerView(rvRoutes)
+        mRvRoutes.layoutManager = layoutManager
+        mRvRoutes.adapter = mAdapter
+        itemTouchHelper.attachToRecyclerView(mRvRoutes)
     }
 
     private fun handleFabEvent() {
@@ -251,6 +180,79 @@ class FragmentRoutes : Fragment(), IClickInterface {
             addRouteCard(route)
         }
     }
+
+    private val sbCallback = object : Snackbar.Callback() {
+        override fun onDismissed(sb: Snackbar?, event: Int) {
+            if (mSnackbar != null && mTempRoute != null) {
+                DBManager.deleteRoute(context!!, mTempRoute!!.id)
+                mSnackbar!!.removeCallback(this)
+                for (i: Int in mTempRoute!!.pos until mListRoutes.size) {
+                    mListRoutes[i].pos--
+                    DBManager.setRoutePos(context!!, mListRoutes[i].id, mListRoutes[i].pos)
+                }
+                mSnackbar = null
+                mTempRoute = null
+            }
+            super.onDismissed(sb, event)
+        }
+    }
+
+    private val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, 0) {
+        override fun onMoved(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                             fromPos: Int, target: RecyclerView.ViewHolder, toPos: Int, x: Int, y: Int) {
+            Collections.swap(mListRoutes, fromPos, toPos)
+            super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y)
+        }
+
+        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            mAdapter.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
+            return true
+        }
+
+        override fun getDragDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+            return if (mMoveMode)
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN
+            else
+                super.getDragDirs(recyclerView, viewHolder)
+        }
+
+        override fun getSwipeDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+            return if (!mMoveMode)
+                ItemTouchHelper.START or ItemTouchHelper.END
+            else
+                super.getSwipeDirs(recyclerView, viewHolder)
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            if (mSnackbar != null && mTempRoute != null) {
+                DBManager.deleteRoute(context!!, mTempRoute!!.id)
+                mSnackbar!!.removeCallback(sbCallback)
+                for (i: Int in mTempRoute!!.pos until mListRoutes.size) {
+                    mListRoutes[i].pos--
+                    DBManager.setRoutePos(context!!, mListRoutes[i].id, mListRoutes[i].pos)
+                }
+                mSnackbar = null
+                mTempRoute = null
+            }
+            val idx = viewHolder.adapterPosition
+            mTempRoute = mListRoutes[idx]
+            mListRoutes.removeAt(idx)
+            mAdapter.notifyItemRemoved(idx)
+            mSnackbar = Snackbar.make(mRvRoutes, "\"${mTempRoute!!.name}\" deleted.", Snackbar.LENGTH_LONG).setAction("UNDO") {
+                if (mTempRoute != null) {
+                    mSnackbar!!.removeCallback(sbCallback)
+                    mListRoutes.add(idx, mTempRoute!!)
+                    mAdapter.notifyItemInserted(idx)
+                    Snackbar.make(mRvRoutes, "Restored.", Snackbar.LENGTH_SHORT).show()
+                    mSnackbar = null
+                    mTempRoute = null
+                } else {
+                    Snackbar.make(mRvRoutes, "Error restoring...", Snackbar.LENGTH_SHORT).show()
+                }
+            }.addCallback(sbCallback)
+            mSnackbar!!.show()
+        }
+    })
 
     companion object {
         private const val REQUEST_ROUTE_DATA = 200
