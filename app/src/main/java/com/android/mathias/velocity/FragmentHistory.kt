@@ -17,15 +17,15 @@ import java.util.*
 
 class FragmentHistory : Fragment() {
 
-    private var mAdapter: RecyclerAdapterWalks? = null
+    private lateinit var mAdapter: RecyclerAdapterWalks
     private val mListWalks = ArrayList<Walk>()
     private var mTempWalk: Walk? = null
     private var mSnackbar: Snackbar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val historyView = inflater.inflate(R.layout.fragment_history, container, false)
-        initRecyclerView(historyView)
         setHasOptionsMenu(true)
+        initRecyclerView(historyView)
         val walks = DBManager.getWalks(context!!, null)
         for (w in walks) {
             addWalkCard(w)
@@ -67,12 +67,12 @@ class FragmentHistory : Fragment() {
                 val idx = viewHolder.adapterPosition
                 mTempWalk = mListWalks[idx]
                 mListWalks.removeAt(idx)
-                mAdapter!!.notifyItemRemoved(idx)
+                mAdapter.notifyItemRemoved(idx)
                 mSnackbar = Snackbar.make(rvHistory, "Walk deleted.", Snackbar.LENGTH_LONG).setAction("UNDO") {
                     if (mTempWalk != null) {
                         mSnackbar!!.removeCallback(sbCallback)
                         mListWalks.add(idx, mTempWalk!!)
-                        mAdapter!!.notifyItemInserted(idx)
+                        mAdapter.notifyItemInserted(idx)
                         Snackbar.make(rvHistory, "Restored.", Snackbar.LENGTH_SHORT).show()
                         mSnackbar = null
                         mTempWalk = null
@@ -89,7 +89,7 @@ class FragmentHistory : Fragment() {
 
     private fun addWalkCard(walk: Walk) {
         mListWalks.add(walk)
-        mAdapter!!.notifyItemInserted(mListWalks.size - 1)
+        mAdapter.notifyItemInserted(mListWalks.size - 1)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -101,13 +101,11 @@ class FragmentHistory : Fragment() {
         when (item!!.itemId) {
             R.id.action_settings -> startActivity(Intent(activity, ActivitySettings::class.java))
             R.id.action_delete_walks -> {
-                DBManager.deleteAllWalks(activity!!)
+                DBManager.deleteAllWalks(context!!)
                 mListWalks.clear()
-                mAdapter!!.notifyDataSetChanged()
+                mAdapter.notifyDataSetChanged()
             }
             R.id.action_about -> createHistoryDemoData()
-            else -> {
-            }
         }
         return super.onOptionsItemSelected(item)
     }
