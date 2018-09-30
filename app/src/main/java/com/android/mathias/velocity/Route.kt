@@ -2,6 +2,7 @@ package com.android.mathias.velocity
 
 import android.content.Context
 import android.location.Location
+import com.android.mathias.velocity.db.DBManager
 
 import com.google.android.gms.maps.model.LatLng
 
@@ -17,11 +18,11 @@ internal class Route {
     val approximateDistance: Float
         get() {
             val startLoc = Location("start")
-            startLoc.latitude = this.startLoc!!.latitude
-            startLoc.longitude = this.startLoc!!.longitude
+            startLoc.latitude = startLoc.latitude
+            startLoc.longitude = startLoc.longitude
             val endLoc = Location("end")
-            endLoc.latitude = this.endLoc!!.latitude
-            endLoc.longitude = this.endLoc!!.longitude
+            endLoc.latitude = endLoc.latitude
+            endLoc.longitude = endLoc.longitude
             return startLoc.distanceTo(endLoc)
         }
 
@@ -29,12 +30,6 @@ internal class Route {
 
     constructor(name: String) {
         this.name = name
-    }
-
-    constructor(name: String, startLoc: LatLng, endLoc: LatLng) {
-        this.name = name
-        this.startLoc = startLoc
-        this.endLoc = endLoc
     }
 
     constructor(name: String, startLoc: LatLng, endLoc: LatLng, startName: String, endName: String) {

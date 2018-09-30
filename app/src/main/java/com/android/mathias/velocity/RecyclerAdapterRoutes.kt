@@ -10,7 +10,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-internal class RecyclerAdapterRoutes(private val mRouteList: List<Route>, private val mRecyclerView: RecyclerView, private val mClickInterface: IClickInterface) : RecyclerView.Adapter<RecyclerAdapterRoutes.RouteCardHolder>() {
+internal class RecyclerAdapterRoutes(
+        private val mRouteList: List<Route>,
+        private val mRecyclerView: RecyclerView,
+        private val mClickInterface: IClickInterface)
+    : RecyclerView.Adapter<RecyclerAdapterRoutes.RouteCardHolder>() {
+
     private var mExpandedPosition = -1
     private var mPreviousExpandedPosition = -1
     private var mRearrangeMode = false

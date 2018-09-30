@@ -13,7 +13,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
-internal class RecyclerAdapterWalks(private val mWalkList: List<Walk>, private val mRecyclerView: RecyclerView) : RecyclerView.Adapter<RecyclerAdapterWalks.WalkCardHolder>() {
+internal class RecyclerAdapterWalks(
+        private val mWalkList: List<Walk>,
+        private val mRecyclerView: RecyclerView)
+    : RecyclerView.Adapter<RecyclerAdapterWalks.WalkCardHolder>() {
+
     private var mExpandedPosition = -1
     private var mPreviousExpandedPosition = -1
 

@@ -15,27 +15,15 @@ import android.os.Handler
 import android.os.SystemClock
 import android.preference.PreferenceManager
 import android.text.format.DateFormat
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.DecelerateInterpolator
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ListPopupWindow
-import android.widget.ProgressBar
-import android.widget.TextView
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-
-import java.util.ArrayList
-import java.util.Date
-import java.util.Objects
-import java.util.concurrent.TimeUnit
+import android.widget.*
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
+import com.android.mathias.velocity.db.DBManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class FragmentCurrent : Fragment() {
     private var mTimeView: TextView? = null
