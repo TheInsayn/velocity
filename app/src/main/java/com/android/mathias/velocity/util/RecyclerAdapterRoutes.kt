@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.android.mathias.velocity.IClickInterface
+import com.android.mathias.velocity.ext.IRvClickListener
 import com.android.mathias.velocity.R
 import com.android.mathias.velocity.model.Route
 import java.util.*
@@ -16,7 +16,7 @@ import java.util.*
 internal class RecyclerAdapterRoutes(
         private val mRouteList: List<Route>,
         private val mRecyclerView: RecyclerView,
-        private val mClickInterface: IClickInterface)
+        private val mRvClickListener: IRvClickListener)
     : RecyclerView.Adapter<RecyclerAdapterRoutes.RouteCardHolder>() {
 
     private var mExpandedPosition = -1
@@ -80,7 +80,7 @@ internal class RecyclerAdapterRoutes(
             holder.mAverageTime.text = timeStr
         }
         holder.itemView.setOnLongClickListener { v ->
-            mClickInterface.itemLongClick(v, position)
+            mRvClickListener.itemLongClick(v, position)
             true
         }
     }

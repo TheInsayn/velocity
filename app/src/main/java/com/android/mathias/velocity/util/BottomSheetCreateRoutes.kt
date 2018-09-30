@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.TextView
 import com.android.mathias.velocity.R
 import com.android.mathias.velocity.db.DBManager
+import com.android.mathias.velocity.ext.IBottomSheetListener
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
@@ -58,10 +59,6 @@ class BottomSheetCreateRoutes : BottomSheetDialogFragment() {
             }
         })
         return view
-    }
-
-    interface IBottomSheetListener {
-        fun onRouteNameSaved(text: String)
     }
 
     override fun onAttach(context: Context) {

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.mathias.velocity.db.DBManager
+import com.android.mathias.velocity.ext.IRvClickListener
 import com.android.mathias.velocity.model.Route
 import com.android.mathias.velocity.util.BottomSheetRoutes
 import com.android.mathias.velocity.util.RecyclerAdapterRoutes
@@ -19,7 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
-class FragmentRoutes : Fragment(), IClickInterface {
+class FragmentRoutes : Fragment(), IRvClickListener {
 
     private lateinit var mRvRoutes : RecyclerView
     private lateinit var fabCreate: FloatingActionButton
@@ -259,6 +260,3 @@ class FragmentRoutes : Fragment(), IClickInterface {
     }
 }
 
-internal interface IClickInterface {
-    fun itemLongClick(v: View, position: Int)
-}
