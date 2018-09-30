@@ -146,7 +146,7 @@ class FragmentCurrent : Fragment() {
         mCurrentWalkRoute = null
         mTimeState = STOPPED
         updateUI()
-        DBManager.saveWalk(context!!, walk)
+        walk.id = DBManager.saveWalk(context!!, walk)
     }
 
     private fun updateUI() {

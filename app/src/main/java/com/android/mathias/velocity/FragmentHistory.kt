@@ -121,7 +121,7 @@ class FragmentHistory : Fragment() {
     private fun createHistoryDemoData() {
         for (i in 0..4) {
             val walk = Walk((i * 5000).toLong(), Date(SystemClock.currentThreadTimeMillis()), Route("Route $i"))
-            DBManager.saveWalk(context!!, walk)
+            walk.id = DBManager.saveWalk(context!!, walk)
             addWalkCard(walk)
         }
     }

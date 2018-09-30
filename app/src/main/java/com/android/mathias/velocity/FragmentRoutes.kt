@@ -60,6 +60,10 @@ class FragmentRoutes : Fragment(), IClickInterface {
                 if (mSnackbar != null && mTempRoute != null) {
                     DBManager.deleteRoute(context!!, mTempRoute!!.id)
                     mSnackbar!!.removeCallback(this)
+                    for (i: Int in mTempRoute!!.pos until mListRoutes.size) {
+                        mListRoutes[i].pos--
+                        DBManager.setRoutePos(context!!, mListRoutes[i].id, mListRoutes[i].pos)
+                    }
                     mSnackbar = null
                     mTempRoute = null
                 }
@@ -96,6 +100,10 @@ class FragmentRoutes : Fragment(), IClickInterface {
                 if (mSnackbar != null && mTempRoute != null) {
                     DBManager.deleteRoute(context!!, mTempRoute!!.id)
                     mSnackbar!!.removeCallback(sbCallback)
+                    for (i: Int in mTempRoute!!.pos until mListRoutes.size) {
+                        mListRoutes[i].pos--
+                        DBManager.setRoutePos(context!!, mListRoutes[i].id, mListRoutes[i].pos)
+                    }
                     mSnackbar = null
                     mTempRoute = null
                 }
@@ -140,7 +148,8 @@ class FragmentRoutes : Fragment(), IClickInterface {
                     newRoute.startName = result.getString(ActivityCreateRoute.START_LOC_NAME)
                     newRoute.endName = result.getString(ActivityCreateRoute.END_LOC_NAME)
                     newRoute.pos = mListRoutes.size + 1
-                    DBManager.saveRoute(context!!, newRoute)
+                    newRoute.id = DBManager.saveRoute(context!!, newRoute)
+                    newRoute.pos = mListRoutes.size
                     addRouteCard(newRoute)
                 }
             }
@@ -229,7 +238,7 @@ class FragmentRoutes : Fragment(), IClickInterface {
 
     private fun addRouteCard(route: Route) {
         mListRoutes.add(route)
-        mAdapter.notifyItemInserted(mListRoutes.size - 1)
+        mAdapter.notifyItemInserted(mListRoutes.lastIndex)
     }
 
     private fun createRoutesDemoData() {
@@ -237,7 +246,8 @@ class FragmentRoutes : Fragment(), IClickInterface {
             val startLoc = LatLng((i + 0.002) * Math.PI, (i + 0.001) * Math.PI)
             val endLoc = LatLng(i * Math.PI, i * Math.PI)
             val route = Route("To location $i", startLoc, endLoc, "Somewhere $i", "Nowhere $i")
-            DBManager.saveRoute(context!!, route)
+            route.pos = mListRoutes.size
+            route.id = DBManager.saveRoute(context!!, route)
             addRouteCard(route)
         }
     }

@@ -4,9 +4,9 @@ package com.android.mathias.velocity.db
 import android.content.ContentValues
 import android.content.Context
 import android.provider.BaseColumns
+import com.android.mathias.velocity.db.DBHelper.*
 import com.android.mathias.velocity.model.Route
 import com.android.mathias.velocity.model.Walk
-import com.android.mathias.velocity.db.DBHelper.*
 import com.google.android.gms.maps.model.LatLng
 import java.text.DateFormat
 import java.text.ParseException
@@ -14,7 +14,7 @@ import java.util.*
 
 internal object DBManager {
 
-    fun saveWalk(context: Context, walk: Walk) {
+    fun saveWalk(context: Context, walk: Walk): Long {
         val dbHelper = DBHelper(context, HelperType.WALKS)
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
@@ -22,7 +22,7 @@ internal object DBManager {
             put(WalkEntry.COL_DURATION, walk.duration)
             put(WalkEntry.COL_DATE, DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(walk.date))
         }
-        db.insert(WalkEntry.TABLE_NAME, null, values)
+        return db.insert(WalkEntry.TABLE_NAME, null, values)
     }
 
     fun getWalks(context: Context, route: Route?): List<Walk> {
@@ -90,7 +90,7 @@ internal object DBManager {
         db.delete(WalkEntry.TABLE_NAME, null, null)
     }
 
-    fun saveRoute(context: Context, route: Route) {
+    fun saveRoute(context: Context, route: Route): Long {
         val dbHelper = DBHelper(context, HelperType.ROUTES)
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
@@ -103,7 +103,7 @@ internal object DBManager {
             put(RouteEntry.COL_START_NAME, route.startName)
             put(RouteEntry.COL_END_NAME, route.endName)
         }
-        db.insert(RouteEntry.TABLE_NAME, null, values)
+        return db.insert(RouteEntry.TABLE_NAME, null, values)
     }
 
     fun getRoutes(context: Context, name: String?): List<Route> {
