@@ -10,7 +10,7 @@ android {
         minSdkVersion 27
         targetSdkVersion 28
         versionCode 7
-        versionName "v0.7a"
+        versionName "v0.7b"
         setProperty("archivesBaseName", "velocity_$versionName")
         vectorDrawables.useSupportLibrary = true
     }
