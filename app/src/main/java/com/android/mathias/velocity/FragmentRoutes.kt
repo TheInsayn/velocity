@@ -160,9 +160,7 @@ class FragmentRoutes : Fragment(), IRvClickListener {
     }
 
     private fun showBottomSheet(route: Route) {
-        val bundle = Bundle()
-        val sheet = BottomSheetRoutes()
-        sheet.arguments = bundle
+        val sheet = BottomSheetRoutes().newInstance(route)
         sheet.show(activity!!.supportFragmentManager, "Bottom Sheet Dialog Fragment")
     }
 

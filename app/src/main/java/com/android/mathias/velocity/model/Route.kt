@@ -18,11 +18,11 @@ internal class Route {
     val approximateDistance: Float
         get() {
             val startLoc = Location("start")
-            startLoc.latitude = startLoc.latitude
-            startLoc.longitude = startLoc.longitude
+            startLoc.latitude = this.startLoc!!.latitude
+            startLoc.longitude = this.startLoc!!.longitude
             val endLoc = Location("end")
-            endLoc.latitude = endLoc.latitude
-            endLoc.longitude = endLoc.longitude
+            endLoc.latitude = this.endLoc!!.latitude
+            endLoc.longitude = this.endLoc!!.longitude
             return startLoc.distanceTo(endLoc)
         }
 

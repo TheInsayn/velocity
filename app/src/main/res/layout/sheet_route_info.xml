@@ -8,29 +8,30 @@
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <TextView
-        android:id="@+id/txtRBSName"
+        android:id="@+id/txt_info_sheet_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:padding="8dp"
         android:text="@string/route_name"
         android:textAlignment="textStart"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtRBSFrom"
+        android:id="@+id/txt_info_sheet_from"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:text="@string/default_route_start_point"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtRBSName" />
+        app:layout_constraintTop_toBottomOf="@id/txt_info_sheet_name" />
 
     <TextView
-        android:id="@+id/txtRBSTo"
+        android:id="@+id/txt_create_sheet_to"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
@@ -38,22 +39,22 @@
         app:layout_constraintBottom_toTopOf="@id/minimap"
         app:layout_constraintEnd_toEndOf="@id/minimap"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtRBSFrom" />
+        app:layout_constraintTop_toBottomOf="@id/txt_info_sheet_from" />
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/minimap"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_edit_route"
-        app:layout_constraintTop_toBottomOf="@id/txtRBSTo"
+        app:layout_constraintBottom_toTopOf="@id/btn_info_sheet_edit_route"
+        app:layout_constraintTop_toBottomOf="@id/txt_create_sheet_to"
         tools:context="com.android.mathias.velocity.FragmentRoutes" />
 
 
     <Button
-        android:id="@+id/btn_edit_route"
+        android:id="@+id/btn_info_sheet_edit_route"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
@@ -62,4 +63,40 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/lbl_info_sheet_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/info_sheet_name_label"
+        app:layout_constraintBottom_toBottomOf="@id/txt_info_sheet_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txt_info_sheet_name" />
+
+    <TextView
+        android:id="@+id/lbl_info_sheet_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/info_sheet_from_label"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_info_sheet_from"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txt_info_sheet_from" />
+
+    <TextView
+        android:id="@+id/lbl_info_sheet_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/info_sheet_to_label"
+        app:layout_constraintBottom_toBottomOf="@id/txt_create_sheet_to"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txt_create_sheet_to" />
 </androidx.constraintlayout.widget.ConstraintLayout>

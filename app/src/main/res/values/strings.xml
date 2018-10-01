@@ -68,4 +68,9 @@
     <string name="current_rbtn_text">STOP</string>
     <string name="title_rearrange">Rearrange</string>
     <string name="btn_edit_route">EDIT</string>
+
+    <!-- BottomSheetRoutes -->
+    <string name="info_sheet_name_label">Name:</string>
+    <string name="info_sheet_from_label">From:</string>
+    <string name="info_sheet_to_label">To:</string>
 </resources>
